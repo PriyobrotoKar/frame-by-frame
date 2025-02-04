@@ -4,7 +4,7 @@ import Stats from "@/components/Stats";
 
 export default function Home() {
   return (
-    <div className="mt-36 space-y-40">
+    <div className="my-36 space-y-40">
       <HeroSection />
       <Stats />
       <Program />
