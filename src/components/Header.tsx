@@ -10,7 +10,7 @@ export default function Header() {
       <nav></nav>
       <div>
         <Button variant={"ghost"} size={"sm"}>
-          Visit Youtube
+          Join Waitlist
         </Button>
         <Button variant={"outline"} size={"sm"}>
           Join Discord

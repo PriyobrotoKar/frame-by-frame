@@ -115,6 +115,15 @@ export default {
           "5": "hsl(var(--chart-5))",
         },
       },
+      keyframes: {
+        marque: {
+          "0%": { transform: "translateX(0%)" },
+          "100%": { transform: "translateX(-50%)" },
+        },
+      },
+      animation: {
+        marque: "marque var(--duration) linear infinite",
+      },
       borderRadius: {
         lg: "var(--radius)",
         md: "calc(var(--radius) - 2px)",

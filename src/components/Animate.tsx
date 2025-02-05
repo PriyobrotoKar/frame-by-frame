@@ -15,6 +15,7 @@ interface AnimateProps extends MotionProps {
   hidden?: MotionStyle;
   visible?: MotionStyle;
   margin?: UseInViewOptions["margin"];
+  once?: boolean;
 }
 
 export default function Animate({
@@ -31,6 +32,7 @@ export default function Animate({
     opacity: 1,
     y: 0,
   },
+  once = true,
   ...props
 }: AnimateProps) {
   const childArray = Children.toArray(children);
@@ -45,20 +47,30 @@ export default function Animate({
         const observer = new IntersectionObserver(
           ([entry]) => {
             if (entry.isIntersecting) {
+              console.log("set inview true");
               setInViewStates((prev) => {
                 const newState = [...prev];
                 newState[i] = true;
                 return newState;
               });
+            } else {
+              if (!once) {
+                console.log("set inview false");
+                setInViewStates((prev) => {
+                  const newState = [...prev];
+                  newState[i] = false;
+                  return newState;
+                });
+              }
             }
           },
-          { rootMargin: margin ?? "-10%", threshold: 0.1 },
+          { rootMargin: margin ?? "0%", threshold: 0.2 },
         );
         observer.observe(ref);
         return () => observer.disconnect();
       }
     });
-  }, [margin]);
+  }, [margin, once]);
 
   return (
     <div className={className}>
@@ -66,20 +78,23 @@ export default function Animate({
         const isInView = inViewStates[i];
         const initialStyles = isInView ? visible : hidden;
         return (
-          <motion.div
+          <div
             ref={(el) => {
               childRefs.current[i] = el;
             }}
-            style={{
-              ...initialStyles,
-              transition: `all ${duration ?? 1}s`,
-              transitionDelay: `${i * 0.2 + (delay ?? 0)}s`,
-            }}
             key={i}
-            {...props}
           >
-            {child}
-          </motion.div>
+            <motion.div
+              style={{
+                ...initialStyles,
+                transition: `all ${duration ?? 1}s`,
+                transitionDelay: `${i * 0.2 + (delay ?? 0)}s`,
+              }}
+              {...props}
+            >
+              {child}
+            </motion.div>
+          </div>
         );
       })}
     </div>

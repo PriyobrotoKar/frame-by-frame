@@ -38,21 +38,22 @@ export default function Program() {
         title="Practical Lessons from Industry Experts"
         subtitle="THE PROGRAM"
       />
-      <div className="flex justify-center gap-4">
+      <div className="flex justify-center gap-12">
         <Animate
           hidden={{
-            x: 70,
-            rotate: -10,
+            x: 60,
+            rotate: -3,
           }}
+          once={false}
           margin="-40%"
           className="relative z-20"
         >
-          <div className="rounded-lg overflow-hidden relative">
+          <div className="rounded-lg w-60 overflow-hidden relative">
             <Image
               src={"/instructor2.jpg"}
               alt="Instructor 2"
-              width={240}
-              height={400}
+              width={340}
+              height={500}
             />
             <div
               className={`${Bethaine.className} text-display font-normal absolute inset-0 bg-gradient-to-t from-primary via-primary/40 to-50% flex items-end justify-center text-primary-foreground w-full h-full`}
@@ -62,19 +63,20 @@ export default function Program() {
           </div>
         </Animate>
         <Animate
+          once={false}
           margin="-40%"
           hidden={{
-            x: -70,
-            rotate: 10,
+            x: -60,
+            rotate: 3,
           }}
         >
-          <div className="rounded-lg overflow-hidden relative">
+          <div className="rounded-lg w-60 overflow-hidden relative">
             <Image
               src={"/instructor1.jpg"}
               alt="Instructor 1"
               className="rounded-lg"
-              width={240}
-              height={400}
+              width={340}
+              height={500}
             />
             <div
               className={`${Bethaine.className} text-display font-normal absolute inset-0 bg-gradient-to-t from-red-600 via-red-600/40 to-50% flex items-end justify-center text-primary-foreground w-full h-full`}
