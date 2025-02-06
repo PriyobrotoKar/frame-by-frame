@@ -129,6 +129,9 @@ export default {
         md: "calc(var(--radius) - 2px)",
         sm: "calc(var(--radius) - 4px)",
       },
+      blur: {
+        "4xl": "235px",
+      },
     },
   },
   plugins: [tailwindAnimate],

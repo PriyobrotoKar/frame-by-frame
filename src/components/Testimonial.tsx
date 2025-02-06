@@ -51,13 +51,18 @@ const testimonials: Testimonial[] = [
       "I am so grateful for the opportunity to learn from the best. I am now a professional animator.",
   },
 ];
+
 export default function Testimonial() {
   return (
-    <section className="max-w-screen-md  mx-auto  space-y-28 overflow-hidden">
+    <section className="max-w-screen-md  mx-auto relative pb-32  space-y-28 overflow-hidden">
       <SectionTitle
+        className="px-6"
         title="Students Who Chose Greatness"
         subtitle="DEFYING LIMITS"
       />
+
+      <div className="bg-accent/50 w-[30rem] h-[20rem] absolute -translate-x-1/2 bottom-28 left-1/2 rounded-[50%] blur-3xl"></div>
+
       <div className="relative space-y-4">
         <div className="absolute z-10 left-0  bottom-0 h-full w-40 bg-gradient-to-r from-background  " />
         <div className="absolute z-10 right-0  bottom-0 h-full w-40 bg-gradient-to-l from-background  " />
@@ -83,7 +88,7 @@ function TestimonailMarquee({
     >
       {[...testimonials, ...testimonials].map((testimonial, i) => {
         return (
-          <div key={i} className="pl-4 w-[24rem] shrink-0 flex-grow ">
+          <div key={i} className="pl-4 w-80 md:w-[24rem] shrink-0 flex-grow ">
             <TestimonialCard testimonial={testimonial} />
           </div>
         );
@@ -98,7 +103,7 @@ function TestimonialCard({
   testimonial: Testimonial;
 }) {
   return (
-    <div className="bg-secondary  rounded-lg space-y-2 p-6">
+    <div className="bg-background  rounded-lg space-y-2 p-6">
       <div className="flex gap-2 items-center">
         <div className="rounded-full overflow-hidden w-fit size-9">
           <Image src={image} alt="pfp" width={36} height={36} />

@@ -15,7 +15,9 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body className={` ${DMSans.className} text-body antialiased`}>
+      <body
+        className={` ${DMSans.className} text-xs md:text-body md:font-normal antialiased`}
+      >
         <Header />
         {children}
       </body>

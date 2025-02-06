@@ -33,22 +33,28 @@ const programs: Program[] = [
 
 export default function Program() {
   return (
-    <section className="space-y-44">
+    <section className="space-y-16 relative md:space-y-44">
       <SectionTitle
         title="Practical Lessons from Industry Experts"
         subtitle="THE PROGRAM"
+        className="px-6"
       />
-      <div className="flex justify-center gap-12">
+      <div className="absolute inset-0 w-full -z-20 h-full   overflow-y-visible">
+        <div className="bg-accent w-[20rem] h-[30rem] md:h-[65rem] -translate-x-3/4 translate-y-0 rounded-[50%] blur-3xl md:blur-4xl"></div>
+        <div className="hidden md:block bg-accent/60  w-[40rem] h-[65rem] left-1/2 relative top-0 -translate-x-1/2 -translate-y-2/3  rounded-[50%] blur-4xl"></div>
+      </div>
+
+      <div className="flex justify-center gap-2 md:gap-12">
         <Animate
           hidden={{
             x: 60,
             rotate: -3,
           }}
           once={false}
-          margin="-40%"
+          margin="-20%"
           className="relative z-20"
         >
-          <div className="rounded-lg w-60 overflow-hidden relative">
+          <div className="rounded-lg w-40 md:w-60 overflow-hidden relative">
             <Image
               src={"/instructor2.jpg"}
               alt="Instructor 2"
@@ -56,7 +62,7 @@ export default function Program() {
               height={500}
             />
             <div
-              className={`${Bethaine.className} text-display font-normal absolute inset-0 bg-gradient-to-t from-primary via-primary/40 to-50% flex items-end justify-center text-primary-foreground w-full h-full`}
+              className={`${Bethaine.className} text-h1 md:text-display font-normal absolute inset-0 bg-gradient-to-t from-primary via-primary/40 to-50% flex items-end justify-center text-primary-foreground w-full h-full`}
             >
               foundation
             </div>
@@ -64,13 +70,13 @@ export default function Program() {
         </Animate>
         <Animate
           once={false}
-          margin="-40%"
+          margin="-20%"
           hidden={{
             x: -60,
             rotate: 3,
           }}
         >
-          <div className="rounded-lg w-60 overflow-hidden relative">
+          <div className="rounded-lg w-40 md:w-60 overflow-hidden relative">
             <Image
               src={"/instructor1.jpg"}
               alt="Instructor 1"
@@ -79,7 +85,7 @@ export default function Program() {
               height={500}
             />
             <div
-              className={`${Bethaine.className} text-display font-normal absolute inset-0 bg-gradient-to-t from-red-600 via-red-600/40 to-50% flex items-end justify-center text-primary-foreground w-full h-full`}
+              className={`${Bethaine.className} text-h1 md:text-display font-normal absolute inset-0 bg-gradient-to-t from-red-600 via-red-600/40 to-50% flex items-end justify-center text-primary-foreground w-full h-full`}
             >
               mastery
             </div>
@@ -92,20 +98,20 @@ export default function Program() {
           y: 20,
           scale: 0.95,
         }}
-        className="space-y-28"
+        className="space-y-28 px-6"
       >
         {programs.map((program) => {
           return (
             <div
               key={program.title}
-              className="flex max-w-4xl mx-auto justify-center gap-16"
+              className="flex flex-col md:flex-row max-w-4xl mx-auto justify-center gap-16"
             >
-              <div className="flex-1 space-y-6">
-                <div className="space-y-4">
+              <div className="flex-1 space-y-4 md:space-y-6">
+                <div className="space-y-2 md:space-y-4">
                   <p className="tracking-widest text-primary font-semibold">
                     {program.subtitle}
                   </p>
-                  <h3 className="text-h1">{program.title}</h3>
+                  <h3 className="text-lg md:text-h1">{program.title}</h3>
                 </div>
                 <p>{program.description}</p>
                 <p className="text-primary text-xs">{program.price} Value</p>
@@ -123,14 +129,17 @@ export default function Program() {
           );
         })}
       </Animate>
-      <Animate className="text-center max-w-screen-md mx-auto space-y-6">
-        <h2 className="text-h1">Beginner to Advance Coverage</h2>
-        <p>
-          From beginner to advanced—master the skills, build your brand, and
-          start closing high-paying clients with confidence
-        </p>
-        <Button>Pre-enroll & save</Button>
-      </Animate>
+      <div className="relative overflow-hidden py-8">
+        <div className="bg-accent/60 -z-20 w-[20rem] h-[10rem] top-1/2 -translate-y-1/2 absolute -translate-x-1/2 bottom-28 left-1/2 rounded-[50%] blur-3xl"></div>
+        <Animate className="text-center max-w-md md:max-w-screen-md mx-auto space-y-6 py-20 px-6">
+          <h2 className="text-h1">Beginner to Advance Coverage</h2>
+          <p className="max-w-80 md:max-w-screen-md mx-auto">
+            From beginner to advanced—master the skills, build your brand, and
+            start closing high-paying clients with confidence
+          </p>
+          <Button>Pre-enroll & save</Button>
+        </Animate>
+      </div>
     </section>
   );
 }

@@ -14,7 +14,7 @@ export default function Footer() {
         />
       </div>
       <div className="space-y-6 text-xs">
-        <p>
+        <p className="max-w-80 md:max-w-none mx-auto">
           Note: The program doesn&apos;t guarantee success, it is up to students
           to implement and assess to attain desired results.
         </p>
