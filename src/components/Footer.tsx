@@ -1,5 +1,5 @@
 import Image from "next/image";
-import { Mail, Phone } from "lucide-react";
+import { Mail } from "lucide-react";
 
 export default function Footer() {
   return (
@@ -18,10 +18,12 @@ export default function Footer() {
           Note: The program doesn&apos;t guarantee success, it is up to students
           to implement and assess to attain desired results.
         </p>
-        <div className="flex justify-center gap-5">
+        <a
+          className="block w-fit mx-auto"
+          href="mailto:moneyprojectd@gmail.com"
+        >
           <Mail />
-          <Phone />
-        </div>
+        </a>
         <p>© Copyright 2025 · All rights reserved</p>
       </div>
     </footer>

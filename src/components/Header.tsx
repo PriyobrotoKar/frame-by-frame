@@ -1,5 +1,8 @@
 import Image from "next/image";
 import { Button } from "./ui/button";
+import { Dialog } from "@radix-ui/react-dialog";
+import { DialogTrigger } from "./ui/dialog";
+import WaitlistDialogContent from "./WaitlistDialogConent";
 
 export default function Header() {
   return (
@@ -14,12 +17,19 @@ export default function Header() {
         />
       </div>
       <div className="hidden md:block">
-        <Button variant={"ghost"} size={"sm"}>
-          Join Waitlist
-        </Button>
-        <Button variant={"outline"} size={"sm"}>
-          Join Discord
-        </Button>
+        <Dialog>
+          <DialogTrigger asChild>
+            <Button variant={"ghost"} size={"sm"}>
+              Join Waitlist
+            </Button>
+          </DialogTrigger>
+          <WaitlistDialogContent />
+        </Dialog>
+        <a href="https://discord.gg/devgotmoney">
+          <Button variant={"outline"} size={"sm"}>
+            Join Discord
+          </Button>
+        </a>
       </div>
     </header>
   );

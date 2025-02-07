@@ -2,6 +2,8 @@ import Image from "next/image";
 import Animate from "./Animate";
 import { Button } from "./ui/button";
 import YoutubePlayer from "./YoutubePlayer";
+import { Dialog, DialogTrigger } from "./ui/dialog";
+import WaitlistDialogContent from "./WaitlistDialogConent";
 
 export default function HeroSection() {
   return (
@@ -22,7 +24,13 @@ export default function HeroSection() {
         <div className="block md:hidden ">
           <YoutubePlayer />
         </div>
-        <Button>Join Waitlist</Button>
+        <Dialog>
+          <DialogTrigger asChild>
+            <Button>Join Waitlist</Button>
+          </DialogTrigger>
+
+          <WaitlistDialogContent />
+        </Dialog>
         <div className="flex gap-4 justify-center">
           <div className="flex">
             {new Array(4).fill(0).map((_, i) => (

@@ -1,57 +1,70 @@
-import Image from "next/image";
 import SectionTitle from "./SectionTitle";
 
 type Testimonial = {
   name: string;
-  image: string;
   testimonial: string;
 };
 
 const testimonials: Testimonial[] = [
   {
-    name: "John Doe",
-    image: "/instructor1.jpg",
-    testimonial:
-      "I am so grateful for the opportunity to learn from the best. I am now a professional animator.",
+    name: "Aman Sharma",
+    testimonial: "I went from struggling with views to constant vitality.",
   },
   {
-    name: "Jane Smith",
-    image: "/instructor1.jpg",
+    name: "Meera Joshi",
     testimonial:
-      "I am so grateful for the opportunity to learn from the best. I am now a professional animator.",
+      "Hands down the best investment I have made, simple and straightforward strategies.",
   },
   {
-    name: "Alice Johnson",
-    image: "/instructor1.jpg",
+    name: "Liam Carter",
     testimonial:
-      "I am so grateful for the opportunity to learn from the best. I am now a professional animator.",
+      "I struggled to get engagement for months—until this. Now, my content gets traction daily!",
   },
   {
-    name: "Bob Brown",
-    image: "/instructor1.jpg",
+    name: "Sophia Martinez",
     testimonial:
-      "I am so grateful for the opportunity to learn from the best. I am now a professional animator.",
+      "This changed the game for me. More leads, more conversions, and zero guesswork.",
   },
   {
-    name: "Charlie Davis",
-    image: "/instructor1.jpg",
+    name: "Ethan Williams",
     testimonial:
-      "I am so grateful for the opportunity to learn from the best. I am now a professional animator.",
+      "From invisible to undeniable. The smartest decision I ever made.",
   },
   {
-    name: "Diana Evans",
-    image: "/instructor1.jpg",
+    name: "Isabella Chen",
     testimonial:
-      "I am so grateful for the opportunity to learn from the best. I am now a professional animator.",
+      "My revenue doubled in just weeks. Wish I had found this sooner!",
   },
   {
-    name: "Frank Green",
-    image: "/instructor1.jpg",
+    name: "Daniel Thompson",
     testimonial:
-      "I am so grateful for the opportunity to learn from the best. I am now a professional animator.",
+      "No fluff, just results. If you're serious about growth, this is it.",
+  },
+  {
+    name: "Olivia Bennett",
+    testimonial:
+      "I was stuck at 500 followers for months. Now I wake up to new leads every day.",
+  },
+  {
+    name: "Raj Patel",
+    testimonial:
+      "Clear, actionable, and no BS. I finally understand what works—and why.",
+  },
+  {
+    name: "Emily Wong",
+    testimonial:
+      "I used to chase clients. Now they come to me. Best investment I’ve made.",
+  },
+  {
+    name: "James Müller",
+    testimonial:
+      "I thought growth was luck. Turns out, it’s just the right strategy.",
+  },
+  {
+    name: "Aisha Khan",
+    testimonial: "From 2 sales a month to 20+. Same effort, better system.",
   },
 ];
-
 export default function Testimonial() {
   return (
     <section className="max-w-screen-md  mx-auto relative pb-32  space-y-28 overflow-hidden">
@@ -67,8 +80,14 @@ export default function Testimonial() {
         <div className="absolute z-10 left-0  bottom-0 h-full w-40 bg-gradient-to-r from-background  " />
         <div className="absolute z-10 right-0  bottom-0 h-full w-40 bg-gradient-to-l from-background  " />
 
-        <TestimonailMarquee testimonials={testimonials} duration={50} />
-        <TestimonailMarquee testimonials={testimonials} duration={35} />
+        <TestimonailMarquee
+          testimonials={testimonials.slice(0, testimonials.length / 2)}
+          duration={50}
+        />
+        <TestimonailMarquee
+          testimonials={testimonials.slice(testimonials.length / 2)}
+          duration={35}
+        />
       </div>
     </section>
   );
@@ -98,18 +117,13 @@ function TestimonailMarquee({
 }
 
 function TestimonialCard({
-  testimonial: { testimonial, image, name },
+  testimonial: { testimonial, name },
 }: {
   testimonial: Testimonial;
 }) {
   return (
     <div className="bg-background  rounded-lg space-y-2 p-6">
-      <div className="flex gap-2 items-center">
-        <div className="rounded-full overflow-hidden w-fit size-9">
-          <Image src={image} alt="pfp" width={36} height={36} />
-        </div>
-        <div className="text-xs">{name}</div>
-      </div>
+      <div className="text-xs">{name}</div>
       <p className="text-xs">{testimonial}</p>
     </div>
   );

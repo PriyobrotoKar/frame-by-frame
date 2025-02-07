@@ -3,6 +3,8 @@ import SectionTitle from "./SectionTitle";
 import { Bethaine } from "@/fonts";
 import Animate from "./Animate";
 import { Button } from "./ui/button";
+import { Dialog, DialogTrigger } from "./ui/dialog";
+import WaitlistDialogContent from "./WaitlistDialogConent";
 
 interface Program {
   title: string;
@@ -137,7 +139,13 @@ export default function Program() {
             From beginner to advanced—master the skills, build your brand, and
             start closing high-paying clients with confidence
           </p>
-          <Button>Join Waitlist</Button>
+          <Dialog>
+            <DialogTrigger asChild>
+              <Button>Join Waitlist</Button>
+            </DialogTrigger>
+
+            <WaitlistDialogContent />
+          </Dialog>
         </Animate>
       </div>
     </section>
