@@ -64,7 +64,7 @@ export default function Program() {
               height={500}
             />
             <div
-              className={`${Bethaine.className} text-h1 md:text-display font-normal absolute inset-0 bg-gradient-to-t from-primary via-primary/40 to-50% flex items-end justify-center text-primary-foreground w-full h-full`}
+              className={`${Bethaine.className} text-h1 md:text-display font-normal md:font-normal absolute inset-0 bg-gradient-to-t from-primary via-primary/40 to-50% flex items-end justify-center text-primary-foreground w-full h-full`}
             >
               foundation
             </div>
@@ -87,7 +87,7 @@ export default function Program() {
               height={500}
             />
             <div
-              className={`${Bethaine.className} text-h1 md:text-display font-normal absolute inset-0 bg-gradient-to-t from-red-600 via-red-600/40 to-50% flex items-end justify-center text-primary-foreground w-full h-full`}
+              className={`${Bethaine.className} text-h1 md:text-display font-normal md:font-normal absolute inset-0 bg-gradient-to-t from-red-600 via-red-600/40 to-50% flex items-end justify-center text-primary-foreground w-full h-full`}
             >
               mastery
             </div>
@@ -100,7 +100,7 @@ export default function Program() {
           y: 20,
           scale: 0.95,
         }}
-        className="space-y-28 px-6"
+        className="space-y-28 px-10 pt-28 md:pt-0"
       >
         {programs.map((program) => {
           return (
@@ -140,7 +140,7 @@ export default function Program() {
             start closing high-paying clients with confidence
           </p>
           <Dialog>
-            <DialogTrigger asChild className="mt-4">
+            <DialogTrigger asChild className="mt-6">
               <Button>Join Waitlist</Button>
             </DialogTrigger>
 
