@@ -10,12 +10,9 @@ export const joinWaitlist = async (data: WaitlistForm) => {
   const { data: parsedData, success } = waitlistFormSchema.safeParse(data);
   const sheetId = process.env.SHEET_ID!;
 
-  console.log("Join waitlist action");
-  console.log(keys, parsedData, sheetId);
-
   if (!success) {
     console.error("Invalid data");
-    return { error: "Invalid data" };
+    throw new Error("Invalid data");
   }
 
   const auth = new GoogleAuth({
@@ -28,11 +25,9 @@ export const joinWaitlist = async (data: WaitlistForm) => {
     auth,
   });
 
-  const range = "Sheet1";
+  const range = "Sheet1!";
 
   const values = [[parsedData.name, parsedData.email]];
-
-  console.log("Calling api");
 
   try {
     const data = await sheets.spreadsheets.values.append({
