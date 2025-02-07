@@ -34,8 +34,8 @@ export const joinWaitlist = async (data: WaitlistForm) => {
 
   console.log("Calling api");
 
-  sheets.spreadsheets.values
-    .append({
+  try {
+    const data = await sheets.spreadsheets.values.append({
       spreadsheetId: sheetId,
       range,
       valueInputOption: "RAW",
@@ -43,12 +43,10 @@ export const joinWaitlist = async (data: WaitlistForm) => {
       requestBody: {
         values,
       },
-    })
-    .then(({ data }) => {
-      console.log("Data appended:", data);
-    })
-    .catch((error) => {
-      console.error((error as Error).message);
-      throw error;
     });
+    console.log("Data appended:", data);
+  } catch (error) {
+    console.error((error as Error).message);
+    throw error;
+  }
 };
