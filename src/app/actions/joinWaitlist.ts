@@ -42,6 +42,6 @@ export const joinWaitlist = async (data: WaitlistForm) => {
       console.log("Data appended:", data);
     })
     .catch((error) => {
-      console.log(error.message);
+      throw error;
     });
 };
