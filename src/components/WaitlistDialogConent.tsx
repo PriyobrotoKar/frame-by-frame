@@ -28,7 +28,7 @@ export default function WaitlistDialogContent() {
       const parsedData = waitlistFormSchema.parse(values);
       await joinWaitlist(parsedData);
       setIsSuccess(true);
-    } catch (e) {
+    } catch {
       toast.error("Something went wrong. Please try again later.");
     } finally {
       setIsLoading(false);
