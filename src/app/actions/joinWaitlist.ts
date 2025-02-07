@@ -14,6 +14,7 @@ export const joinWaitlist = async (data: WaitlistForm) => {
   console.log(keys, parsedData, sheetId);
 
   if (!success) {
+    console.error("Invalid data");
     return { error: "Invalid data" };
   }
 
@@ -31,6 +32,8 @@ export const joinWaitlist = async (data: WaitlistForm) => {
 
   const values = [[parsedData.name, parsedData.email]];
 
+  console.log("Calling api");
+
   sheets.spreadsheets.values
     .append({
       spreadsheetId: sheetId,
@@ -45,6 +48,7 @@ export const joinWaitlist = async (data: WaitlistForm) => {
       console.log("Data appended:", data);
     })
     .catch((error) => {
+      console.error((error as Error).message);
       throw error;
     });
 };
