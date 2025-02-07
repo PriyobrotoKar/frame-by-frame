@@ -6,22 +6,23 @@ import YoutubePlayer from "./YoutubePlayer";
 export default function HeroSection() {
   return (
     <section className="max-w-screen-md mx-auto text-center  px-6 lg:px-0">
-      <div className="absolute inset-0 w-full overflow-hidden -z-20 h-[150vh] md:h-[200vh] flex justify-between">
+      <div className="absolute inset-0 w-full overflow-hidden -z-20 h-[150vh] md:h-[150rem] flex justify-between">
         <div className="bg-accent w-[40rem] h-[30rem] md:h-[65rem] -translate-x-3/4 rounded-[50%] blur-3xl md:blur-4xl"></div>
         <div className="bg-accent translate-y-full md:translate-y-1/2 w-[40rem] h-[30rem] md:h-[65rem] right-0 relative translate-x-1/2 rounded-[50%] blur-3xl md:blur-4xl"></div>
       </div>
 
-      <Animate className="space-y-10 pt-14 md:pt-0">
+      <Animate className="space-y-8 pt-16 md:pt-0">
         <h1 className="text-primary text-h1 md:text-display max-w-md mx-auto md:max-w-none">
           Become More Profitable as a Video Editor
         </h1>
-        <p className="max-w-80 mx-auto md:max-w-none">
-          The Editing Workflow That Keeps Viewers Hooked and Clients Paying
+        <p className="max-w-80 mx-auto md:max-w-screen-sm">
+          Pay <span className="font-bold">60% less</span> & learn the editing
+          workflow that keeps viewers hooked and clients paying
         </p>
         <div className="block md:hidden ">
           <YoutubePlayer />
         </div>
-        <Button>Enroll Now</Button>
+        <Button>Join Waitlist</Button>
         <div className="flex gap-4 justify-center">
           <div className="flex">
             {new Array(4).fill(0).map((_, i) => (
@@ -39,9 +40,9 @@ export default function HeroSection() {
               </div>
             ))}
           </div>
-          <div className="text-sm tracking-widest">
-            <span className="text-sm-semibold mr-2">150+</span>
-            worldwide enrolled
+          <div className="text-sm tracking-wider">
+            <span className="text-sm-semibold mr-2">350+</span>
+            global joins
           </div>
         </div>
         <div className="hidden md:block pt-20">

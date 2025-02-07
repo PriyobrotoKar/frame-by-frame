@@ -44,7 +44,7 @@ export default function Program() {
         <div className="hidden md:block bg-accent/60  w-[40rem] h-[65rem] left-1/2 relative top-0 -translate-x-1/2 -translate-y-2/3  rounded-[50%] blur-4xl"></div>
       </div>
 
-      <div className="flex justify-center gap-2 md:gap-12">
+      <div className="flex justify-center gap-6 md:gap-12">
         <Animate
           hidden={{
             x: 60,
@@ -54,7 +54,7 @@ export default function Program() {
           margin="-20%"
           className="relative z-20"
         >
-          <div className="rounded-lg w-40 md:w-60 overflow-hidden relative">
+          <div className="rounded-lg w-36 md:w-60 overflow-hidden relative">
             <Image
               src={"/instructor2.jpg"}
               alt="Instructor 2"
@@ -76,7 +76,7 @@ export default function Program() {
             rotate: 3,
           }}
         >
-          <div className="rounded-lg w-40 md:w-60 overflow-hidden relative">
+          <div className="rounded-lg w-36 md:w-60 overflow-hidden relative">
             <Image
               src={"/instructor1.jpg"}
               alt="Instructor 1"
@@ -130,14 +130,14 @@ export default function Program() {
         })}
       </Animate>
       <div className="relative overflow-hidden py-8">
-        <div className="bg-accent/60 -z-20 w-[20rem] h-[10rem] top-1/2 -translate-y-1/2 absolute -translate-x-1/2 bottom-28 left-1/2 rounded-[50%] blur-3xl"></div>
+        <div className="bg-accent/50 -z-20 w-[20rem] h-[10rem] top-1/2 -translate-y-1/2 absolute -translate-x-1/2 bottom-28 left-1/2 rounded-[50%] blur-3xl"></div>
         <Animate className="text-center max-w-md md:max-w-screen-md mx-auto space-y-6 py-20 px-6">
-          <h2 className="text-h1">Beginner to Advance Coverage</h2>
+          <h2 className="text-h1">Beginner to Advanced Coverage</h2>
           <p className="max-w-80 md:max-w-screen-md mx-auto">
             From beginner to advanced—master the skills, build your brand, and
             start closing high-paying clients with confidence
           </p>
-          <Button>Pre-enroll & save</Button>
+          <Button>Join Waitlist</Button>
         </Animate>
       </div>
     </section>

@@ -1,6 +1,7 @@
 import Image from "next/image";
 import SectionTitle from "./SectionTitle";
 import Animate from "./Animate";
+import { Button } from "./ui/button";
 
 export default function Stats() {
   return (
@@ -30,11 +31,14 @@ export default function Stats() {
         title={"Our Students are revolutionizing digital growth"}
         subtitle={"150+ GLOBAL STUDENTS"}
       />
-      <Animate delay={0.4}>
+      <Animate className="text-center space-y-8" delay={0.4}>
         <p className="max-w-72 md:max-w-screen-sm mx-auto text-center">
           Learn the industry-standard editing workflow that makes you
           indispensable and puts you in control of your income.
         </p>
+        <Button className="md:hidden" variant={"outline"}>
+          Join Discord
+        </Button>
       </Animate>
     </section>
   );
