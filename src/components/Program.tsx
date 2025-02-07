@@ -140,7 +140,7 @@ export default function Program() {
             start closing high-paying clients with confidence
           </p>
           <Dialog>
-            <DialogTrigger asChild>
+            <DialogTrigger asChild className="mt-4">
               <Button>Join Waitlist</Button>
             </DialogTrigger>
 

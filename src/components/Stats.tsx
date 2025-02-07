@@ -36,9 +36,11 @@ export default function Stats() {
           Learn the industry-standard editing workflow that makes you
           indispensable and puts you in control of your income.
         </p>
-        <Button className="md:hidden" variant={"outline"}>
-          Join Discord
-        </Button>
+        <a href="https://discord.gg/devgotmoney">
+          <Button variant={"outline"} size={"sm"}>
+            Join Discord
+          </Button>
+        </a>
       </Animate>
     </section>
   );

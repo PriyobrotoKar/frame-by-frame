@@ -122,7 +122,7 @@ function TestimonialCard({
   testimonial: Testimonial;
 }) {
   return (
-    <div className="bg-background  rounded-lg space-y-2 p-6">
+    <div className="bg-background h-full  rounded-lg space-y-2 p-6">
       <div className="text-xs">{name}</div>
       <p className="text-xs">{testimonial}</p>
     </div>
