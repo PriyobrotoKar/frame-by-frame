@@ -16,7 +16,7 @@ export default function YoutubePlayer() {
       <ReactPlayer
         width={"100%"}
         height={"100%"}
-        url={"https://www.youtube.com/watch?v=BTIbktPxyz0"}
+        url={"https://youtu.be/Bfh3WL4dRA4?si=rQ2y8YPTE-yqbwFS"}
       />
     </div>
   );
