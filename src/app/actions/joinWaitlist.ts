@@ -8,6 +8,10 @@ const keys = JSON.parse(process.env.CREDS!);
 
 export const joinWaitlist = async (data: WaitlistForm) => {
   const { data: parsedData, success } = waitlistFormSchema.safeParse(data);
+  const sheetId = process.env.SHEET_ID!;
+
+  console.log("Join waitlist action");
+  console.log(keys, parsedData, sheetId);
 
   if (!success) {
     return { error: "Invalid data" };
@@ -23,7 +27,6 @@ export const joinWaitlist = async (data: WaitlistForm) => {
     auth,
   });
 
-  const sheetId = process.env.SHEET_ID!;
   const range = "Sheet1";
 
   const values = [[parsedData.name, parsedData.email]];
