@@ -29,7 +29,6 @@ export default function WaitlistDialogContent() {
       await joinWaitlist(parsedData);
       setIsSuccess(true);
     } catch (e) {
-      console.error((e as Error).message);
       toast.error((e as Error).message);
     } finally {
       setIsLoading(false);
