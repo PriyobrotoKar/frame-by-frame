@@ -1,32 +1,47 @@
 "use server";
 import { WaitlistForm, waitlistFormSchema } from "@/lib/schema";
-import { createBucketClient } from "@cosmicjs/sdk";
+import { GoogleAuth } from "google-auth-library";
 
-const cosmic = createBucketClient({
-  bucketSlug: process.env.COSMIC_BUCKET_SLUG || "",
-  readKey: process.env.COSMIC_READ_KEY || "",
-  writeKey: process.env.COSMIC_WRITE_KEY || "",
-});
+import { google } from "googleapis";
+
+const keys = JSON.parse(process.env.CREDS!);
 
 export const joinWaitlist = async (data: WaitlistForm) => {
   const { data: parsedData, success } = waitlistFormSchema.safeParse(data);
+  const sheetId = process.env.SHEET_ID!;
 
   if (!success) {
-    throw new Error("Invalid Data");
+    console.error("Invalid data");
+    throw new Error("Invalid data");
   }
 
-  const { name, email } = parsedData;
+  const auth = new GoogleAuth({
+    credentials: keys,
+    scopes: ["https://www.googleapis.com/auth/spreadsheets"],
+  });
+
+  const sheets = google.sheets({
+    version: "v4",
+    auth,
+  });
+
+  const range = "Sheet1!";
+
+  const values = [[parsedData.name, parsedData.email]];
 
   try {
-    await cosmic.objects.insertOne({
-      title: name,
-      type: "subscribers",
-      metadata: {
-        name,
-        email,
+    const data = await sheets.spreadsheets.values.append({
+      spreadsheetId: sheetId,
+      range,
+      valueInputOption: "RAW",
+      insertDataOption: "INSERT_ROWS",
+      requestBody: {
+        values,
       },
     });
-  } catch (e) {
-    throw new Error((e as Error).message);
+    console.log("Data appended:", data);
+  } catch (error) {
+    console.error((error as Error).message);
+    throw error;
   }
 };
