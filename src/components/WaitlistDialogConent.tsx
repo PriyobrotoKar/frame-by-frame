@@ -29,7 +29,7 @@ export default function WaitlistDialogContent() {
       await joinWaitlist(parsedData);
       setIsSuccess(true);
     } catch (e) {
-      toast.error((e as Error).message);
+      toast.error("Something went wrong. Please try again later.");
     } finally {
       setIsLoading(false);
     }

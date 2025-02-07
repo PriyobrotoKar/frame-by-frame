@@ -25,7 +25,7 @@ export const joinWaitlist = async (data: WaitlistForm) => {
     auth,
   });
 
-  const range = "Sheet1!";
+  const range = "Sheet1";
 
   const values = [[parsedData.name, parsedData.email]];
 
