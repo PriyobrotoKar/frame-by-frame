@@ -17,8 +17,8 @@ export default function HeroSection() {
         <h1 className="text-primary text-h1 md:text-display max-w-md mx-auto md:max-w-none">
           Become More Profitable as a Video Editor
         </h1>
-        <p className="max-w-80 mt-10 mx-auto md:max-w-screen-sm">
-          Pay <span className="font-bold">60% less</span> & learn the editing
+        <p className="max-w-80 mt-10 text-md mx-auto md:max-w-lg font-normal">
+          Pay <span className="font-bold">50% less</span> & learn the editing
           workflow that keeps viewers hooked and clients paying
         </p>
         <div className="block md:hidden mt-12">

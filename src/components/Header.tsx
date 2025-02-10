@@ -11,7 +11,7 @@ export default function Header() {
         <Image
           src={"/logo.svg"}
           alt="Logo"
-          className="w-24 md:w-36"
+          className="w-24 md:w-32"
           width={150}
           height={80}
         />
