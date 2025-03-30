@@ -5,7 +5,24 @@ import { Button } from "./ui/button";
 
 export default function Stats() {
   return (
-    <section className="space-y-10 px-6 lg:px-0 py-16 md:py-40 relative overflow-hidden">
+    <section className="space-y-10 px-6 lg:px-0 py-16 md:py-32 relative overflow-hidden">
+      <SectionTitle
+        title={"Our Students are revolutionizing digital growth"}
+        subtitle={"150+ GLOBAL STUDENTS"}
+        className="mt-32"
+      />
+      <Animate className="text-center space-y-12" delay={0.4}>
+        <p className="max-w-72 md:max-w-screen-sm mx-auto text-center">
+          Learn the industry-standard editing workflow that makes you
+          indispensable and puts you in control of your income.
+        </p>
+        <a href="https://discord.gg/devgotmoney">
+          <Button variant={"outline"} size={"sm"}>
+            Join Discord
+          </Button>
+        </a>
+      </Animate>
+
       <div className="bg-gradient-to-t -z-10 from-background  w-full h-1/2 absolute bottom-0 "></div>
       <Animate
         duration={2}
@@ -26,21 +43,6 @@ export default function Stats() {
             priority
           />
         </div>
-      </Animate>
-      <SectionTitle
-        title={"Our Students are revolutionizing digital growth"}
-        subtitle={"150+ GLOBAL STUDENTS"}
-      />
-      <Animate className="text-center space-y-8" delay={0.4}>
-        <p className="max-w-72 md:max-w-screen-sm mx-auto text-center">
-          Learn the industry-standard editing workflow that makes you
-          indispensable and puts you in control of your income.
-        </p>
-        <a href="https://discord.gg/devgotmoney">
-          <Button variant={"outline"} size={"sm"}>
-            Join Discord
-          </Button>
-        </a>
       </Animate>
     </section>
   );

@@ -28,9 +28,8 @@ export default function WaitlistDialogContent() {
       const parsedData = waitlistFormSchema.parse(values);
       await joinWaitlist(parsedData);
       setIsSuccess(true);
-    } catch (e) {
-      console.error((e as Error).message);
-      toast.error((e as Error).message);
+    } catch {
+      toast.error("Something went wrong. Please try again later.");
     } finally {
       setIsLoading(false);
     }
@@ -55,7 +54,7 @@ export default function WaitlistDialogContent() {
             </DialogTitle>
             <DialogDescription>
               Enter your name and email below to avail an exclusive{" "}
-              <span className="font-bold">60% off</span> on the ultimate remote
+              <span className="font-bold">50% off</span> on the ultimate remote
               editing course.
             </DialogDescription>
           </>

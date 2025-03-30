@@ -12,26 +12,25 @@ export default function HeroSection() {
         <div className="bg-accent w-[40rem] h-[30rem] md:h-[65rem] -translate-x-3/4 rounded-[50%] blur-3xl md:blur-4xl"></div>
         <div className="bg-accent translate-y-full md:translate-y-1/2 w-[40rem] h-[30rem] md:h-[65rem] right-0 relative translate-x-1/2 rounded-[50%] blur-3xl md:blur-4xl"></div>
       </div>
-
-      <Animate className="space-y-8 pt-16 md:pt-0">
+      <Animate className="pt-16 md:pt-0">
         <h1 className="text-primary text-h1 md:text-display max-w-md mx-auto md:max-w-none">
           Become More Profitable as a Video Editor
         </h1>
-        <p className="max-w-80 mx-auto md:max-w-screen-sm">
-          Pay <span className="font-bold">60% less</span> & learn the editing
+        <p className="max-w-80 mt-10 text-md mx-auto md:max-w-lg font-normal">
+          Pay <span className="font-bold">50% less</span> & learn the editing
           workflow that keeps viewers hooked and clients paying
         </p>
-        <div className="block md:hidden ">
+        <div className="block md:hidden mt-12">
           <YoutubePlayer />
         </div>
         <Dialog>
-          <DialogTrigger asChild>
+          <DialogTrigger asChild className="mt-12">
             <Button>Join Waitlist</Button>
           </DialogTrigger>
 
           <WaitlistDialogContent />
         </Dialog>
-        <div className="flex gap-4 justify-center">
+        <div className="flex gap-4 justify-center mt-12">
           <div className="flex">
             {new Array(4).fill(0).map((_, i) => (
               <div

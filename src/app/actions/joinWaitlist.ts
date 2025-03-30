@@ -25,9 +25,15 @@ export const joinWaitlist = async (data: WaitlistForm) => {
     auth,
   });
 
-  const range = "Sheet1!";
+  const range = "Sheet1";
 
-  const values = [[parsedData.name, parsedData.email]];
+  const values = [
+    [
+      parsedData.name,
+      parsedData.email,
+      new Date().toLocaleString(undefined, { timeZone: "Asia/Kolkata" }),
+    ],
+  ];
 
   try {
     const data = await sheets.spreadsheets.values.append({
