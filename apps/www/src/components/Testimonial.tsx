@@ -1,9 +1,9 @@
 import SectionTitle from './SectionTitle';
 
-type Testimonial = {
+interface Testimonial {
   name: string;
   testimonial: string;
-};
+}
 
 const testimonials: Testimonial[] = [
   {
