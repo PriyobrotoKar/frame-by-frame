@@ -7,6 +7,12 @@
       "dependsOn": ["^build"],
       "outputs": [".next/**", "!.next/cache/**"]
     },
+    "format": {
+      "dependsOn": ["^format"]
+    },
+    "lint": {
+      "outputs": []
+    },
     "dev": {
       "persistent": true,
       "cache": false

@@ -16,6 +16,7 @@ export const nextJsConfig = [
   ...baseConfig,
   js.configs.recommended,
   eslintConfigPrettier,
+  pluginReact.configs.flat.recommended,
   ...tseslint.configs.recommended,
   ...tseslint.configs.stylistic,
   {
