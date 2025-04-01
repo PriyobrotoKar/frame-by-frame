@@ -1,5 +1,6 @@
 import Header from '@/components/Header';
-import Sidebar from '@/components/Sidebar';
+import { ActivitySidebar } from '@/components/sidebar/ActivitySidebar';
+import Sidebar from '@/components/sidebar/Sidebar';
 import React from 'react';
 
 export default function MainLayout({
@@ -10,9 +11,14 @@ export default function MainLayout({
   return (
     <div className="flex min-h-svh">
       <Sidebar />
-      <div className="flex-1">
+      <div className="flex flex-1 flex-col gap-3">
         <Header />
-        {children}
+        <div className="flex h-full">
+          <div className="flex-1">{children}</div>
+          <div className="pb-5 pr-5">
+            <ActivitySidebar />
+          </div>
+        </div>
       </div>
     </div>
   );

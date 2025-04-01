@@ -11,8 +11,8 @@ import {
 } from '@tabler/icons-react';
 import React, { ReactNode } from 'react';
 import Link from 'next/link';
-import { Button, buttonVariants } from './ui/button';
 import { usePathname } from 'next/navigation';
+import { Button, buttonVariants } from '../ui/button';
 
 interface NavLink {
   icon: ReactNode;
@@ -43,7 +43,7 @@ const navLinks: NavLink[] = [
   },
 ];
 
-export default function Sidebar() {
+const Sidebar = () => {
   return (
     <aside className="bg-card flex w-56 flex-col justify-between self-stretch border-r px-7 py-10">
       <div className="space-y-20">
@@ -75,7 +75,7 @@ export default function Sidebar() {
       </div>
     </aside>
   );
-}
+};
 
 const MenuLink = ({ link }: { link: NavLink }) => {
   const path = usePathname();
@@ -94,3 +94,5 @@ const MenuLink = ({ link }: { link: NavLink }) => {
     </Link>
   );
 };
+
+export default Sidebar;

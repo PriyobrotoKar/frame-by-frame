@@ -8,6 +8,7 @@ import {
 } from '@tabler/icons-react';
 import { Button } from './ui/button';
 import { Separator } from './ui/separator';
+import { Avatar, AvatarFallback } from './ui/avatar';
 
 export default function Header() {
   return (
@@ -43,9 +44,11 @@ const SearchBox = () => {
 const Profile = () => {
   return (
     <div className="flex items-center gap-3">
-      <Button size={'icon'} variant={'secondary'}>
-        <IconUser />
-      </Button>
+      <Avatar>
+        <AvatarFallback>
+          <IconUser />
+        </AvatarFallback>
+      </Avatar>
       Priyobroto
     </div>
   );
