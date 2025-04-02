@@ -14,10 +14,10 @@ export default function Header() {
   return (
     <header className="flex items-center gap-6 px-8 py-5">
       <SearchBox />
-      <Button size={'icon'} variant={'secondary'}>
+      <Button title="Settings" size={'icon'} variant={'secondary'}>
         <IconSettings />
       </Button>
-      <Button size={'icon'} variant={'secondary'}>
+      <Button title="Notifications" size={'icon'} variant={'secondary'}>
         <IconBell />
       </Button>
       <Separator

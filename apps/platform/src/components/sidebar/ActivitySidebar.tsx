@@ -20,7 +20,7 @@ export const ActivitySidebar = () => {
 
 const demoVideo = {
   title: 'How to install Premiere Pro 2024 on Windows',
-  progress: 0.5,
+  progress: 0.8,
   course: 'The Desktop Video Editing Masterclass',
   lesson: 'Lesson 4',
   thumbnail:
@@ -32,7 +32,7 @@ const LastPlayedVideo = () => {
     <div className="bg-background rounded-md border pb-2 pt-3">
       <div className="flex items-center justify-between">
         <h2 className="px-4 text-lg">Last Watched</h2>
-        <Button variant={'ghost'} size={'icon'}>
+        <Button title="Options" variant={'ghost'} size={'icon'}>
           <IconDotsVertical />
         </Button>
       </div>
@@ -72,13 +72,13 @@ const VideoCard = ({ video }: { video: VideoCard }) => {
       <div className="space-y-4">
         <div className="space-y-2">
           <div className="text-muted-foreground flex items-center gap-1.5 text-sm">
-            <span className="line-clamp-1 max-w-24">{video.course}</span>
+            <span className="line-clamp-1 max-w-20">{video.course}</span>
             <IconChevronRight className="size-3" />
             <span className="line-clamp-1">{video.lesson}</span>
           </div>
           <h3 className="text-body-semibold">{video.title}</h3>
         </div>
-        <Button variant={'outline'} className="w-full">
+        <Button title="Options" variant={'outline'} className="w-full">
           <IconPlayerPlay />
           Resume
         </Button>

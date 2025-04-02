@@ -14,7 +14,7 @@ export default function MainLayout({
       <div className="flex flex-1 flex-col gap-3">
         <Header />
         <div className="flex h-full">
-          <div className="flex-1">{children}</div>
+          <div className="flex-1 px-8">{children}</div>
           <div className="pb-5 pr-5">
             <ActivitySidebar />
           </div>
