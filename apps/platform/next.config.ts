@@ -9,6 +9,10 @@ const nextConfig: NextConfig = {
         protocol: 'https',
         hostname: 'futurevisioncomputers.com',
       },
+      {
+        protocol: 'https',
+        hostname: 'img.freepik.com',
+      },
     ],
   },
 };

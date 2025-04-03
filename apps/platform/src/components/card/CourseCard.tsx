@@ -3,12 +3,14 @@ import Card from '../ui/card';
 import { Button } from '../ui/button';
 import { IconClock, IconShoppingCart, IconStack2 } from '@tabler/icons-react';
 import Image from 'next/image';
+import { formatPrice } from '@/lib/utils';
 
 export interface Course {
   title: string;
   subtitle: string;
   price: number;
   originalPrice: number;
+  currency: string;
   duration: string;
   lessons: number;
   imageUrl: string;
@@ -39,9 +41,17 @@ const CourseCard = ({ course }: CourseCardProps) => {
 
         <div className="space-y-2">
           <div className="space-x-1">
-            <span className="text-xl">{course.price}</span>
+            <span className="text-xl">
+              {formatPrice({
+                amount: course.price,
+                currency: course.currency,
+              })}
+            </span>
             <span className="text-muted-foreground text-sm line-through">
-              {course.originalPrice}
+              {formatPrice({
+                amount: course.originalPrice,
+                currency: course.currency,
+              })}
             </span>
           </div>
           <div className="space-x-6">

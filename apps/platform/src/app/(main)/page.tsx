@@ -1,11 +1,12 @@
 import Banner from '@/components/Banner';
 import CourseCard, { Course } from '@/components/card/CourseCard';
 
-const demoCourse: Course = {
+export const demoCourse: Course = {
   title: 'The Capcut Video Editing Masterclass',
   subtitle: 'Video Editing on Phone',
   price: 100,
   originalPrice: 200,
+  currency: 'INR',
   duration: '2hrs 30mins',
   lessons: 10,
   imageUrl:
