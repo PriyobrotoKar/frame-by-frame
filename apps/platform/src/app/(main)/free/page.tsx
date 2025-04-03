@@ -1,15 +1,6 @@
 import Banner from '@/components/Banner';
-import YoutubePlaylistCard, {
-  Playlist,
-} from '@/components/card/YoutubePlaylistCard';
-
-const demoPlaylist: Playlist = {
-  title: 'The Desktop Video Editing Masterclass',
-  imageUrl:
-    'https://futurevisioncomputers.com/wp-content/uploads/2023/09/Adobe-Premiere-Pro-course-Adobe-Premiere-Pro.jpg',
-  videos: 10,
-  channel: 'Devgotmoney',
-};
+import YoutubePlaylistCard from '@/components/card/YoutubePlaylistCard';
+import { demoPlaylist } from '@/lib/mocks';
 
 export default function FreeCoursesPage() {
   return (

@@ -54,4 +54,7 @@ export const nextJsConfig = [
       '@typescript-eslint/consistent-type-definitions': 'error',
     },
   },
+  {
+    ignores: ['**/.next/**', '**/.lintstagedrc.js'],
+  },
 ];

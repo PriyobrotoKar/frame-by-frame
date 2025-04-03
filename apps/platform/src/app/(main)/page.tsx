@@ -1,17 +1,6 @@
 import Banner from '@/components/Banner';
-import CourseCard, { Course } from '@/components/card/CourseCard';
-
-export const demoCourse: Course = {
-  title: 'The Capcut Video Editing Masterclass',
-  subtitle: 'Video Editing on Phone',
-  price: 100,
-  originalPrice: 200,
-  currency: 'INR',
-  duration: '2hrs 30mins',
-  lessons: 10,
-  imageUrl:
-    'https://futurevisioncomputers.com/wp-content/uploads/2023/09/Adobe-Premiere-Pro-course-Adobe-Premiere-Pro.jpg',
-};
+import CourseCard from '@/components/card/CourseCard';
+import { demoCourse } from '@/lib/mocks';
 
 export default function CoursesPage() {
   return (

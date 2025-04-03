@@ -1,5 +1,5 @@
 import LibraryCard from '@/components/card/LibraryCard';
-import { demoCourse } from '../page';
+import { demoCourse } from '@/lib/mocks';
 
 export default function LibraryPage() {
   return (
