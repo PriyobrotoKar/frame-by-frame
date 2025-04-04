@@ -25,7 +25,7 @@ export default function Header() {
           </DialogTrigger>
           <WaitlistDialogContent />
         </Dialog>
-        <a href="https://discord.gg/devgotmoney">
+        <a href="https://discord.gg/MjSEtxYdav">
           <Button variant={"outline"} size={"sm"}>
             Join Discord
           </Button>
