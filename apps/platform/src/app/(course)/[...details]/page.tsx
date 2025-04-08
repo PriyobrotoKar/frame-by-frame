@@ -1,9 +1,14 @@
+import { Lesson, Module } from '@/components/card/CourseCard';
 import Navigation from '@/features/course/components/Navigation';
+import VideoDescription from '@/features/course/components/VideoDescription';
 import VideoPlayer from '@/features/course/components/VideoPlayer';
+import VideoResources from '@/features/course/components/VideoResources';
 import { demoCourse } from '@/lib/mocks';
 import { notFound } from 'next/navigation';
 import React from 'react';
 
+const courseModule = demoCourse.modules[0] as Module;
+const courseLesson = courseModule.lessons[0] as Lesson;
 export default async function LessonPage({
   params,
 }: {
@@ -21,7 +26,7 @@ export default async function LessonPage({
   }
 
   return (
-    <div>
+    <div className="space-y-4">
       <Navigation
         current={{
           course: {
@@ -29,18 +34,25 @@ export default async function LessonPage({
             slug: demoCourse.slug,
           },
           module: {
-            name: demoCourse.modules[0]?.title ?? '',
-            slug: demoCourse.modules[0]?.slug ?? '',
+            name: courseModule.title,
+            slug: courseModule.slug,
           },
           lesson: {
-            name: demoCourse.modules[0]?.lessons[0]?.title ?? '',
-            slug: demoCourse.modules[0]?.lessons[0]?.title ?? '',
+            name: courseLesson.title,
+            slug: courseLesson.slug,
           },
         }}
         nextLessonSlug={demoCourse.modules[0]?.lessons[1]?.slug}
       />
 
-      <VideoPlayer />
+      <VideoPlayer
+        lessonName={courseLesson.title}
+        moduleName={courseModule.title}
+      />
+
+      <VideoDescription />
+
+      <VideoResources />
     </div>
   );
 }

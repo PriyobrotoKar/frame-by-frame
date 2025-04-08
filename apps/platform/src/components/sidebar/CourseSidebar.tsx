@@ -17,6 +17,11 @@ const CourseSidebar = () => {
     details: string[];
   }>();
   const lessonSlug = details[2];
+  const courseSlug = details[1];
+
+  const defaultModule = demoCourse.modules.find(
+    (module) => module.slug === courseSlug,
+  );
 
   return (
     <aside className="bg-card flex w-56 flex-col gap-4 self-stretch border-r px-7 py-10">
@@ -29,7 +34,11 @@ const CourseSidebar = () => {
           <p className="text-sm">{demoCourse.subtitle}</p>
         </div>
 
-        <Accordion type="multiple" className="space-y-4">
+        <Accordion
+          defaultValue={defaultModule ? [defaultModule.id] : undefined}
+          type="multiple"
+          className="space-y-4"
+        >
           {demoCourse.modules.map((module) => {
             return (
               <AccordionItem

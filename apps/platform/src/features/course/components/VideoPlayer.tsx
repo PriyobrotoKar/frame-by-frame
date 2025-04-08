@@ -6,33 +6,17 @@ import { MediaPlayer, MediaProvider } from '@vidstack/react';
 import {
   defaultLayoutIcons,
   DefaultVideoLayout,
-  type DefaultLayoutIcons,
 } from '@vidstack/react/player/layouts/default';
-import {
-  IconPlayerPause,
-  IconPlayerPlay,
-  IconRestore,
-  IconVolume,
-  IconVolume2,
-  IconVolumeOff,
-} from '@tabler/icons-react';
+import icons from './playerIcons';
 
-const icons: Partial<DefaultLayoutIcons> = {
-  PlayButton: {
-    Play: () => <IconPlayerPlay />,
-    Pause: () => <IconPlayerPause />,
-    Replay: () => <IconRestore />,
-  },
-  MuteButton: {
-    Mute: () => <IconVolumeOff />,
-    VolumeLow: () => <IconVolume2 />,
-    VolumeHigh: () => <IconVolume />,
-  },
-};
+interface VideoPlayerProps {
+  lessonName: string;
+  moduleName: string;
+}
 
-const VideoPlayer = () => {
+const VideoPlayer = ({ lessonName, moduleName }: VideoPlayerProps) => {
   return (
-    <div>
+    <div className="bg-card space-y-5 rounded-2xl border p-4">
       <MediaPlayer
         title="Thunderbolts Official Teaser Trailer"
         src="https://brightpath-dev.s3.ap-south-1.amazonaws.com/hls/thunderbolts.mp4/index.m3u8"
@@ -45,6 +29,11 @@ const VideoPlayer = () => {
           }}
         />
       </MediaPlayer>
+
+      <div className="space-y-2">
+        <p className="text-muted-foreground text-sm">{moduleName}</p>
+        <h2 className="text-xl">{lessonName}</h2>
+      </div>
     </div>
   );
 };
