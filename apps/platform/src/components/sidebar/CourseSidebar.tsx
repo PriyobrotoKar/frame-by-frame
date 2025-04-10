@@ -59,7 +59,7 @@ const CourseSidebar = () => {
                           lesson.slug === lessonSlug && 'text-primary',
                         )}
                       >
-                        <IconCircleCaretRight className="size-6" />
+                        <IconCircleCaretRight className="size-6 shrink-0" />
                         <div className="space-y-2">
                           <p className="text-sm-md">{lesson.title}</p>
                           <span>{lesson.duration}</span>
