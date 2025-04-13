@@ -45,10 +45,7 @@ export default async function LessonPage({
         nextLessonSlug={demoCourse.modules[0]?.lessons[1]?.slug}
       />
 
-      <VideoPlayer
-        lessonName={courseLesson.title}
-        moduleName={courseModule.title}
-      />
+      <VideoPlayer title={courseLesson.title} subtitle={courseModule.title} />
 
       <VideoDescription />
 
