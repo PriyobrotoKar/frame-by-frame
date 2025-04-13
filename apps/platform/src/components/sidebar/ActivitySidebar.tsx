@@ -11,7 +11,7 @@ import Image from 'next/image';
 
 export const ActivitySidebar = () => {
   return (
-    <aside className="bg-card flex h-full w-72 flex-col gap-7 rounded-xl border p-4">
+    <aside className="bg-card fixed bottom-5 right-5 top-[5.3rem] flex w-72 flex-col gap-7 rounded-xl border p-4">
       <LastPlayedVideo />
       <CourseWatchHistory />
     </aside>

@@ -1,7 +1,15 @@
+import { cn } from '@/lib/utils';
 import { PropsWithChildren } from 'react';
 
-function Card({ children }: PropsWithChildren) {
-  return <div className="bg-card space-y-5 rounded-2xl p-4">{children}</div>;
+function Card({
+  children,
+  className,
+}: PropsWithChildren & { className?: string }) {
+  return (
+    <div className={cn('bg-card space-y-5 rounded-2xl p-4', className)}>
+      {children}
+    </div>
+  );
 }
 
 Card.Content = function CardContent({ children }: PropsWithChildren) {

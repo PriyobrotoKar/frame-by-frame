@@ -36,14 +36,18 @@ export interface Course {
 
 interface CourseCardProps {
   course: Course;
+  showTitle?: boolean;
+  className?: string;
 }
 
-const CourseCard = ({ course }: CourseCardProps) => {
+const CourseCard = ({
+  course,
+  className,
+  showTitle = true,
+}: CourseCardProps) => {
   return (
-    <Link
-      href={`/${course.slug}/${course.modules[0]?.slug}/${course.modules[0]?.lessons[0]?.slug}`}
-    >
-      <Card>
+    <Link className="block" href={`/${course.slug}`}>
+      <Card className={className}>
         <div>
           <Image
             src={course.imageUrl}
@@ -55,11 +59,14 @@ const CourseCard = ({ course }: CourseCardProps) => {
         </div>
 
         <Card.Content>
-          <Card.Header>
-            <Card.Subtitle>{course.subtitle}</Card.Subtitle>
-            <Card.Title>{course.title}</Card.Title>
-          </Card.Header>
-
+          {showTitle && (
+            <div className="space-y-2">
+              <Card.Header>
+                <Card.Subtitle>{course.subtitle}</Card.Subtitle>
+                <Card.Title>{course.title}</Card.Title>
+              </Card.Header>
+            </div>
+          )}
           <div className="space-y-2">
             <div className="space-x-1">
               <span className="text-xl">

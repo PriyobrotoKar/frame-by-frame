@@ -10,17 +10,14 @@ import {
 import icons from './playerIcons';
 
 interface VideoPlayerProps {
-  lessonName: string;
-  moduleName: string;
+  title: string;
+  subtitle: string;
 }
 
-const VideoPlayer = ({ lessonName, moduleName }: VideoPlayerProps) => {
+const VideoPlayer = ({ title, subtitle }: VideoPlayerProps) => {
   return (
     <div className="bg-card space-y-5 rounded-2xl border p-4">
-      <MediaPlayer
-        title="Thunderbolts Official Teaser Trailer"
-        src="https://brightpath-dev.s3.ap-south-1.amazonaws.com/hls/thunderbolts.mp4/index.m3u8"
-      >
+      <MediaPlayer src="https://demo.unified-streaming.com/k8s/features/stable/video/tears-of-steel/tears-of-steel.ism/.m3u8">
         <MediaProvider />
         <DefaultVideoLayout
           icons={{
@@ -31,8 +28,8 @@ const VideoPlayer = ({ lessonName, moduleName }: VideoPlayerProps) => {
       </MediaPlayer>
 
       <div className="space-y-2">
-        <p className="text-muted-foreground text-sm">{moduleName}</p>
-        <h2 className="text-xl">{lessonName}</h2>
+        <p className="text-muted-foreground text-sm">{subtitle}</p>
+        <h2 className="text-xl">{title}</h2>
       </div>
     </div>
   );

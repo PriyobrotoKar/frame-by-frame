@@ -1,0 +1,60 @@
+import {
+  IconCertificate,
+  IconDeviceMobile,
+  IconInfinity,
+  IconNotebook,
+  IconPlayerPlay,
+} from '@tabler/icons-react';
+import CourseCard, { Course } from '../card/CourseCard';
+
+interface CourseInfoSidebarProps {
+  course: Course;
+}
+
+const courseFeatures = [
+  {
+    icon: IconPlayerPlay,
+    title: '3+ hours of on-demand content',
+  },
+  {
+    icon: IconInfinity,
+    title: 'Lifetime access',
+  },
+  {
+    icon: IconCertificate,
+    title: 'Certificate of completion',
+  },
+  {
+    icon: IconDeviceMobile,
+    title: 'Access on mobile and desktop',
+  },
+  {
+    icon: IconNotebook,
+    title: 'Valuable resources',
+  },
+];
+
+export default function CourseInfoSidebar({ course }: CourseInfoSidebarProps) {
+  return (
+    <div className="bg-card fixed right-5 top-[5.3rem] z-20 w-72 space-y-5 rounded-xl border p-4">
+      <CourseCard className="bg-background" showTitle={false} course={course} />
+      <CourseIncludes />
+    </div>
+  );
+}
+
+function CourseIncludes() {
+  return (
+    <div className="space-y-4 rounded-lg border p-4">
+      <h2 className="text-lg">Course Includes</h2>
+      <ul className="space-y-3">
+        {courseFeatures.map((feature, index) => (
+          <li key={index} className="text-sm-md flex items-center gap-2">
+            <feature.icon />
+            <span>{feature.title}</span>
+          </li>
+        ))}
+      </ul>
+    </div>
+  );
+}
