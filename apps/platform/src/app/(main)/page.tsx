@@ -1,3 +1,4 @@
+import Activity from '@/components/Activity';
 import Banner from '@/components/Banner';
 import CourseCard from '@/components/card/CourseCard';
 import { demoCourse } from '@/lib/mocks';
@@ -5,6 +6,7 @@ import { demoCourse } from '@/lib/mocks';
 export default function CoursesPage() {
   return (
     <div className="space-y-10">
+      <Activity />
       <Banner
         title="From Basics to Advanced, Taught by Experts."
         subtitle="Digital Courses"

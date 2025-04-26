@@ -7,14 +7,14 @@ import { demoCourse } from '@/lib/mocks';
 
 export default function CoursePage() {
   return (
-    <div>
-      <CourseInfoSidebar course={demoCourse} />
-      <div className="mr-[19.25rem] space-y-4">
+    <div className="flex gap-8">
+      <div className="space-y-4">
         <VideoPlayer title={demoCourse.title} subtitle={demoCourse.subtitle} />
         <CourseLearnings />
         <CourseContent />
         <Instructor />
       </div>
+      <CourseInfoSidebar course={demoCourse} />
     </div>
   );
 }

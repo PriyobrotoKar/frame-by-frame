@@ -36,7 +36,7 @@ const courseFeatures = [
 
 export default function CourseInfoSidebar({ course }: CourseInfoSidebarProps) {
   return (
-    <div className="bg-card fixed right-5 top-[5.3rem] z-20 w-72 space-y-5 rounded-xl border p-4">
+    <div className="bg-card sticky top-40 h-fit min-w-72 space-y-5 rounded-xl border p-4">
       <CourseCard className="bg-background" showTitle={false} course={course} />
       <CourseIncludes />
     </div>

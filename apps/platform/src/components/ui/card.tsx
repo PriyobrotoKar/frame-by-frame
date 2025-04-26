@@ -6,7 +6,7 @@ function Card({
   className,
 }: PropsWithChildren & { className?: string }) {
   return (
-    <div className={cn('bg-card space-y-5 rounded-2xl p-4', className)}>
+    <div className={cn('bg-card space-y-5 rounded-2xl border p-4', className)}>
       {children}
     </div>
   );

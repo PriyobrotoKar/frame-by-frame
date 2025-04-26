@@ -81,7 +81,7 @@
 
 :root {
   --radius: 0.625rem;
-  --background: oklch(0.97 0.0053 286.3);
+  --background: oklch(1 0 0);
   --foreground: oklch(0.27 0.0045 17.43);
   --card: oklch(1 0 0);
   --card-foreground: oklch(0.145 0 0);
@@ -91,7 +91,7 @@
   --primary-foreground: oklch(0.985 0 0);
   --secondary: oklch(1 0 0);
   --secondary-foreground: oklch(0.205 0 0);
-  --muted: oklch(0.97 0 0);
+  --muted: oklch(0.97 0.0053 286.3);
   --muted-foreground: oklch(0.51 0.0029 345.3);
   --accent: oklch(0.91 0.0216 285.96);
   --accent-foreground: oklch(0.205 0 0);
@@ -155,12 +155,6 @@
   body {
     @apply bg-background text-foreground;
   }
-}
-
-@layer base {
-  .tabler-icon {
-    @apply size-5;
-  }
 
   button,
   [role='button'] {
@@ -169,5 +163,17 @@
   button:disabled,
   [role='button']:disabled {
     cursor: default;
+  }
+}
+
+@layer components {
+  .wrapper {
+    @apply mx-auto max-w-6xl px-8;
+  }
+}
+
+@layer utilities {
+  .tabler-icon {
+    @apply size-5;
   }
 }

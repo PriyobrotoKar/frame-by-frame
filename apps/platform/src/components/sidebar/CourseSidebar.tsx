@@ -24,7 +24,7 @@ const CourseSidebar = () => {
   );
 
   return (
-    <aside className="bg-card flex w-56 flex-col gap-4 self-stretch border-r px-7 py-10">
+    <aside className="bg-card sticky top-0 flex h-svh w-56 flex-col gap-4 self-stretch border-r px-7 py-10">
       <div className="space-y-20">
         <Image src={'/logo.svg'} alt="logo" width={71} height={21} />
       </div>

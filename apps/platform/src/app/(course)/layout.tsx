@@ -8,11 +8,11 @@ export default function CourseLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <div className="flex h-svh">
+    <div className="flex">
       <CourseSidebar />
-      <div className="flex flex-1 flex-col gap-3">
-        <Header />
-        <div className="h-full overflow-auto px-8">{children}</div>
+      <div className="flex-1">
+        <Header showLogo={false} showNavbar={false} />
+        <div className="wrapper py-3">{children}</div>
       </div>
     </div>
   );
