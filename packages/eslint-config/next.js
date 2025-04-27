@@ -55,6 +55,6 @@ export const nextJsConfig = [
     },
   },
   {
-    ignores: ['**/.next/**', '**/.lintstagedrc.js'],
+    ignores: ['**/.next/**'],
   },
 ];
