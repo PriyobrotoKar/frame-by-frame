@@ -1,20 +1,29 @@
 'use client';
 
-import React from 'react';
+import React, { useState } from 'react';
 import { Input } from './ui/input';
 import {
   IconBell,
+  IconBrandDiscordFilled,
+  IconBrandGoogleFilled,
   IconSearch,
   IconSettings,
-  IconUser,
 } from '@tabler/icons-react';
 import { Button } from './ui/button';
 import { Separator } from './ui/separator';
-import { Avatar, AvatarFallback } from './ui/avatar';
 import Image from 'next/image';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { cn } from '@/lib/utils';
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from './ui/dialog';
 
 const navLinks = [
   {
@@ -62,7 +71,7 @@ export default function Header({
           className="data-[orientation=vertical]:h-5"
           orientation="vertical"
         />
-        <Profile />
+        <Login />
       </header>
 
       {showNavbar && <Navbar />}
@@ -82,18 +91,18 @@ const SearchBox = () => {
   );
 };
 
-const Profile = () => {
-  return (
-    <div className="flex items-center gap-3">
-      <Avatar>
-        <AvatarFallback>
-          <IconUser />
-        </AvatarFallback>
-      </Avatar>
-      Priyobroto
-    </div>
-  );
-};
+// const Profile = () => {
+//   return (
+//     <div className="flex items-center gap-3">
+//       <Avatar>
+//         <AvatarFallback>
+//           <IconUser />
+//         </AvatarFallback>
+//       </Avatar>
+//       Priyobroto
+//     </div>
+//   );
+// };
 
 const Navbar = () => {
   const path = usePathname();
@@ -120,5 +129,53 @@ const Navbar = () => {
         </ul>
       </nav>
     </div>
+  );
+};
+
+const Login = () => {
+  const [selectedMethod, setSelectedMethod] = useState<
+    'google' | 'discord' | null
+  >(null);
+
+  return (
+    <Dialog>
+      <DialogTrigger asChild>
+        <Button variant={'outline'}>Login</Button>
+      </DialogTrigger>
+      <DialogContent className="gap-12 px-10 py-12 sm:max-w-md">
+        <DialogHeader className="sm:text-center">
+          <DialogTitle className="text-xl">
+            Create an account or login to an existing one
+          </DialogTitle>
+          <DialogDescription>
+            View library and personalized content
+          </DialogDescription>
+        </DialogHeader>
+
+        <div className="flex flex-col gap-4">
+          <Button
+            variant={selectedMethod === 'google' ? 'outline' : 'secondary'}
+            onClick={() => setSelectedMethod('google')}
+          >
+            <IconBrandGoogleFilled /> Sign in with Google
+          </Button>
+          <Button
+            variant={selectedMethod === 'discord' ? 'outline' : 'secondary'}
+            onClick={() => setSelectedMethod('discord')}
+          >
+            <IconBrandDiscordFilled /> Sign in with Discord
+          </Button>
+        </div>
+
+        <DialogFooter className="sm:flex-col sm:items-center">
+          <Button disabled={!selectedMethod} className="w-full">
+            Continue
+          </Button>
+          <p className="text-sm">
+            By signing in you agree to the terms and conditions
+          </p>
+        </DialogFooter>
+      </DialogContent>
+    </Dialog>
   );
 };
