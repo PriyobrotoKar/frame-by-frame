@@ -1,0 +1,19 @@
+name: "frame-by-frame"
+
+services:
+  db:
+    container_name: "db"
+    image: "postgres:17"
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: password
+      POSTGRES_DB: framebyframe
+    ports:
+      - '5432:5432'
+    volumes:
+      - db:/var/lib/postgresql/data
+
+volumes:
+  db:
+
+

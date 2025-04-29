@@ -1,0 +1,26 @@
+{
+  "name": "@frame-by-frame/db",
+  "version": "1.0.0",
+  "description": "",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "scripts": {
+    "generate": "pnpx prisma generate",
+    "migrate": "pnpx dotenv-cli -e ../../.env -- pnpx prisma migrate dev",
+    "migrate-deploy": "pnpx dotenv-cli -e ../../.env -- pnpx prisma migrate deploy",
+    "studio": "pnpx dotenv-cli -e ../../.env -- pnpx prisma studio",
+    "build": "pnpm generate && npx tsc"
+  },
+  "devDependencies": {
+    "@types/node": "^22.15.2",
+    "@frame-by-frame/typescript-config": "workspace:*",
+    "@frame-by-frame/eslint-config": "workspace:*",
+    "prisma": "6.6.0"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "@prisma/client": "6.6.0"
+  }
+}
