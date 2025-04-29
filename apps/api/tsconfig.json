@@ -5,6 +5,7 @@
     "experimentalDecorators": true,
     "allowSyntheticDefaultImports": true,
     "sourceMap": true,
+    "strictNullChecks": false,
     "outDir": "./dist",
     "baseUrl": "./",
     "paths": {
