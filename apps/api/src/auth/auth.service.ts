@@ -43,33 +43,23 @@ export class AuthService {
           authProvider: AuthProvider.GOOGLE,
         },
       });
+    } else {
+      // If the user exists, update their profile information in case it has changed
+      user = await db.user.update({
+        where: { id: user.id },
+        data: {
+          name: profile.displayName,
+          email: profile.emails[0].value,
+          profilePic: profile.photos[0].value,
+        },
+      });
     }
-    // If the user exists, update their profile information in case it has changed
-    user = await db.user.update({
-      where: { id: user.id },
-      data: {
-        name: profile.displayName,
-        email: profile.emails[0].value,
-        profilePic: profile.photos[0].value,
-      },
-    });
 
     // Generate JWT tokens for the user
-    const access_token = await this.jwtService.signAsync({
-      email: profile.emails[0].value,
-      id: profile.id,
-    });
-    const refresh_token = await this.jwtService.signAsync(
-      {
-        email: profile.emails[0].value,
-        id: profile.id,
-      },
-      this.refreshJwtConfiguration,
-    );
+    const tokens = await this.generateTokens(profile.emails[0].value, user.id);
 
     return {
-      access_token,
-      refresh_token,
+      ...tokens,
       user,
     };
   }
@@ -99,16 +89,17 @@ export class AuthService {
           discordId: profile.id,
         },
       });
+    } else {
+      // If the user exists, update their profile information in case it has changed
+      user = await db.user.update({
+        where: { id: user.id },
+        data: {
+          name: profile.global_name ?? profile.username,
+          email: profile.email,
+          profilePic: `https://cdn.discordapp.com/avatars/${profile.id}/${profile.avatar}.png`,
+        },
+      });
     }
-    // If the user exists, update their profile information in case it has changed
-    user = await db.user.update({
-      where: { id: user.id },
-      data: {
-        name: profile.global_name ?? profile.username,
-        email: profile.email,
-        profilePic: `https://cdn.discordapp.com/avatars/${profile.id}/${profile.avatar}.png`,
-      },
-    });
 
     // Generate JWT tokens for the user
     const tokens = await this.generateTokens(profile.email, user.id);

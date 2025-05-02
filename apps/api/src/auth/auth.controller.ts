@@ -2,6 +2,7 @@ import {
   Controller,
   Get,
   Logger,
+  Post,
   Query,
   Req,
   Res,
@@ -13,18 +14,21 @@ import { type Response, type Request } from 'express';
 import { Profile as GoogleProfile } from 'passport-google-oauth20';
 import { Profile as DiscordProfile } from 'passport-discord';
 
-import { setCookie } from '@/common/utils';
+import { clearCookies, setCookies } from '@/common/utils';
 import { DiscordAuth } from './guards/discord.guard';
+import Public from '@/decorators/public.decorator';
 
 @Controller('auth')
 export class AuthController {
   private readonly logger = new Logger(AuthController.name);
   constructor(private readonly authService: AuthService) {}
 
+  @Public()
   @Get('google')
   @UseGuards(GoogleAuth)
   async googleAuth() {}
 
+  @Public()
   @Get('google/callback')
   @UseGuards(GoogleAuth)
   async googleAuthCallback(
@@ -40,7 +44,7 @@ export class AuthController {
       const { access_token, refresh_token, user } =
         await this.authService.handleGoogleLogin(req.user as GoogleProfile);
 
-      setCookie(res, { access_token, refresh_token });
+      setCookies(res, { access_token, refresh_token });
 
       return this.redirect(
         '/auth/success',
@@ -54,10 +58,12 @@ export class AuthController {
     }
   }
 
+  @Public()
   @Get('discord')
   @UseGuards(DiscordAuth)
   async discordAuth() {}
 
+  @Public()
   @Get('discord/callback')
   @UseGuards(DiscordAuth)
   async discordAuthCallback(
@@ -73,7 +79,7 @@ export class AuthController {
       const { access_token, refresh_token, user } =
         await this.authService.handleDiscordLogin(req.user as DiscordProfile);
 
-      setCookie(res, { access_token, refresh_token });
+      setCookies(res, { access_token, refresh_token });
 
       return this.redirect(
         '/auth/success',
@@ -86,6 +92,19 @@ export class AuthController {
         return this.redirect('/auth/failure', { error: error.message }, res);
       }
     }
+  }
+
+  @Post('logout')
+  logout(
+    @Res({
+      passthrough: true,
+    })
+    res: Response,
+  ) {
+    clearCookies(res);
+    return {
+      message: 'Logout successful',
+    };
   }
 
   private async redirect(

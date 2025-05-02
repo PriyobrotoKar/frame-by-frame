@@ -9,6 +9,7 @@ import refreshJwtConfig from './config/refresh-jwt.config';
 import jwtConfig from './config/jwt.config';
 import discordConfig from './config/discord.config';
 import { DiscordStrategy } from './strategies/discord.strategy';
+import { JwtStrategy } from './strategies/jwt.strategy';
 
 @Module({
   imports: [
@@ -19,6 +20,6 @@ import { DiscordStrategy } from './strategies/discord.strategy';
     ConfigModule.forFeature(discordConfig),
   ],
   controllers: [AuthController],
-  providers: [AuthService, GoogleStrategy, DiscordStrategy],
+  providers: [AuthService, GoogleStrategy, DiscordStrategy, JwtStrategy],
 })
 export class AuthModule {}
