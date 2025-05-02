@@ -1,18 +1,13 @@
 import React from 'react';
-import {
-  IconBell,
-  IconSearch,
-  IconSettings,
-  IconUser,
-} from '@tabler/icons-react';
+import { IconBell, IconSearch, IconSettings } from '@tabler/icons-react';
 import { Button } from '../ui/button';
 import { Separator } from '../ui/separator';
 import Image from 'next/image';
 import Navbar from './Navbar';
 import Login from './Login';
-import { getSession, Session } from '@/lib/session';
-import { Avatar, AvatarFallback, AvatarImage } from '../ui/avatar';
 import { Input } from '../ui/input';
+import { getSession } from '@/lib/session';
+import Profile from './Profile';
 
 interface HeaderProps {
   showLogo?: boolean;
@@ -61,20 +56,6 @@ const SearchBox = () => {
         placeholder="Discover a course..."
         className="bg-card rounded-full pl-10"
       />
-    </div>
-  );
-};
-
-const Profile = ({ session }: { session: Session }) => {
-  return (
-    <div className="flex items-center gap-3">
-      <Avatar>
-        <AvatarImage src={session.user.image} referrerPolicy="no-referrer" />
-        <AvatarFallback>
-          <IconUser />
-        </AvatarFallback>
-      </Avatar>
-      {session.user.name.split(' ')[0]}
     </div>
   );
 };

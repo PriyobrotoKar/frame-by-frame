@@ -49,7 +49,7 @@ const Login = () => {
             }
             onClick={() => setSelectedMethod(AuthProvider.GOOGLE)}
           >
-            <IconBrandGoogleFilled /> Sign in with Google
+            <IconBrandGoogleFilled /> Login with Google
           </Button>
           <Button
             variant={
@@ -57,7 +57,7 @@ const Login = () => {
             }
             onClick={() => setSelectedMethod(AuthProvider.DISCORD)}
           >
-            <IconBrandDiscordFilled /> Sign in with Discord
+            <IconBrandDiscordFilled /> Login with Discord
           </Button>
         </div>
 

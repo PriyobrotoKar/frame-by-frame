@@ -1,5 +1,4 @@
 import { demoCourse } from '@/lib/mocks';
-import Image from 'next/image';
 import React from 'react';
 import { Button } from './ui/button';
 import { IconPlayerPlay } from '@tabler/icons-react';
@@ -18,24 +17,14 @@ const Activity = () => {
 
 const LastWatched = () => {
   return (
-    <div className="flex flex-1 gap-6 rounded-xl border p-4">
-      <div>
-        <Image
-          src={demoCourse.imageUrl}
-          alt="course image"
-          width={220}
-          height={140}
-          className="rounded-lg"
-        />
-      </div>
-      <div className="flex-1 space-y-6">
+    <div className="flex flex-1 items-center gap-6 rounded-xl border px-6 py-5">
+      <div className="flex-1 space-y-3">
         <div className="space-y-1">
           <h4 className="text-muted-foreground text-sm">{demoCourse.title}</h4>
-          <h3 className="text-body-semibold">
-            {demoCourse.modules[0]?.lessons[0]?.title}
-          </h3>
+          <h3 className="text-lg">{demoCourse.modules[0]?.title}</h3>
         </div>
         <div className="space-y-3">
+          <div className="text-muted-foreground text-sm">50% Progress</div>
           <div className="bg-muted h-1 w-full rounded-full">
             <div
               className="bg-primary h-full rounded-full"
@@ -44,10 +33,17 @@ const LastWatched = () => {
               }}
             ></div>
           </div>
-          <Button className="w-full" variant={'outline'}>
-            <IconPlayerPlay /> Resume
-          </Button>
         </div>
+      </div>
+      <div className="bg-muted flex items-center gap-4 rounded-lg px-7 py-4">
+        <div className="space-y-1">
+          <h3 className="text-md">Chapter 1</h3>
+          <p className="text-sm">{demoCourse.modules[0]?.lessons[0]?.title}</p>
+        </div>
+        <Button variant={'outline'}>
+          <IconPlayerPlay />
+          Resume
+        </Button>
       </div>
     </div>
   );
@@ -58,10 +54,7 @@ const weekdays = ['M', 'T', 'W', 'T', 'F', 'S', 'S'];
 const WeekActivity = () => {
   return (
     <div className="h-fit space-y-4 rounded-lg border p-4">
-      <div className="space-y-2">
-        <h3 className="text-lg">Activity</h3>
-        <p className="text-sm">Track your weekly progress</p>
-      </div>
+      <h3 className="text-lg">Activity</h3>
       <div className="flex gap-4">
         {weekdays.map((day, index) => (
           <div

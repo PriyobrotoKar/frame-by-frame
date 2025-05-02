@@ -12,6 +12,8 @@ interface User {
 
 export interface Session extends JWTPayload {
   user: User;
+  accessToken: string;
+  refreshToken: string;
 }
 
 const JWT_SECRET = process.env.JWT_SECRET;
@@ -48,8 +50,25 @@ const decodeSession = async (token: string): Promise<Session | null> => {
 };
 
 export const createSession = async (payload: Session): Promise<void> => {
-  const session = await encodeSession(payload);
   const cookieStore = await cookies();
+  const accessToken = cookieStore.get('access_token')?.value;
+  const refreshToken = cookieStore.get('refresh_token')?.value;
+
+  if (!accessToken || !refreshToken) {
+    throw new Error('Missing access or refresh token');
+  }
+
+  const session = await encodeSession({
+    ...payload,
+    accessToken,
+    refreshToken,
+  });
+
+  if (process.env.NODE_ENV === 'production') {
+    cookieStore.delete('access_token');
+    cookieStore.delete('refresh_token');
+  }
+
   cookieStore.set('session', session, cookieOptions);
 };
 
@@ -60,3 +79,10 @@ export const getSession = async (): Promise<Session | null> => {
 
   return decodeSession(token);
 };
+
+export const removeSession = async (): Promise<void> => {
+  const cookieStore = await cookies();
+  cookieStore.delete('session');
+};
+
+//TODO: Add the logic for refreshing the session

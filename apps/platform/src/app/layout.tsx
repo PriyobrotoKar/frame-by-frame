@@ -1,9 +1,9 @@
 import type { Metadata } from 'next';
-import { DM_Sans } from 'next/font/google';
+import { Inter } from 'next/font/google';
 import './globals.css';
 import { Toaster } from '@/components/ui/sonner';
 
-const DmSans = DM_Sans({
+const inter = Inter({
   subsets: ['latin'],
 });
 
@@ -19,7 +19,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body className={`${DmSans.className} antialiased`}>
+      <body className={`${inter.className} antialiased`}>
         <Toaster richColors />
         {children}
       </body>

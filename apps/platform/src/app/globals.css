@@ -4,7 +4,7 @@
 @custom-variant dark (&:is(.dark *));
 
 @theme inline {
-  --font-sans: 'DM Sans', 'sans-serif';
+  --font-sans: 'Inter', 'sans-serif';
 
   --text-*: initial;
 
@@ -168,11 +168,9 @@
 
 @layer components {
   .wrapper {
-    @apply mx-auto max-w-6xl px-8;
+    @apply mx-auto max-w-[1200px] px-8;
   }
-}
 
-@layer utilities {
   .tabler-icon {
     @apply size-5;
   }
