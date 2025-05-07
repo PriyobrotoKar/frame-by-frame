@@ -7,8 +7,9 @@
   "scripts": {
     "generate": "pnpx prisma generate",
     "migrate": "pnpx dotenv-cli -e ../../.env -- pnpx prisma migrate dev",
-    "migrate-deploy": "pnpx dotenv-cli -e ../../.env -- pnpx prisma migrate deploy",
     "studio": "pnpx dotenv-cli -e ../../.env -- pnpx prisma studio",
+    "migrate-stage": "pnpx dotenv-cli -e ../../.env.staging -- pnpx prisma migrate deploy",
+    "studio-stage": "pnpx dotenv-cli -e ../../.env.staging -- pnpx prisma studio",
     "build": "pnpm generate && npx tsc"
   },
   "devDependencies": {
