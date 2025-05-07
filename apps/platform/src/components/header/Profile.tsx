@@ -26,8 +26,8 @@ import { deleteSelf } from '@/features/user/actions/delete';
 
 const Profile = ({ session }: { session: Session }) => {
   const handleLogout = async () => {
-    await logout();
     await removeSession();
+    await logout();
   };
 
   const handleDeleteAccount = async () => {

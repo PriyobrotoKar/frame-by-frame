@@ -4,6 +4,7 @@
   "private": true,
   "scripts": {
     "dev": "pnpx dotenv-cli -e ../../.env -- next dev --turbopack -p 3000",
+    "staging": "pnpx dotenv-cli -e ../../.env.staging -- next dev --turbopack -p 3000",
     "build": "next build",
     "start": "next start",
     "lint": "next lint",

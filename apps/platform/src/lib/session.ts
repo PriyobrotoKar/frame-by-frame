@@ -51,23 +51,7 @@ const decodeSession = async (token: string): Promise<Session | null> => {
 
 export const createSession = async (payload: Session): Promise<void> => {
   const cookieStore = await cookies();
-  const accessToken = cookieStore.get('access_token')?.value;
-  const refreshToken = cookieStore.get('refresh_token')?.value;
-
-  if (!accessToken || !refreshToken) {
-    throw new Error('Missing access or refresh token');
-  }
-
-  const session = await encodeSession({
-    ...payload,
-    accessToken,
-    refreshToken,
-  });
-
-  if (process.env.NODE_ENV === 'production') {
-    cookieStore.delete('access_token');
-    cookieStore.delete('refresh_token');
-  }
+  const session = await encodeSession(payload);
 
   cookieStore.set('session', session, cookieOptions);
 };

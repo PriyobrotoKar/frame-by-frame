@@ -18,7 +18,15 @@ export default function AuthSucessPage() {
       return;
     }
 
-    const { id, email, name, profilePic }: User = JSON.parse(data);
+    const {
+      id,
+      email,
+      name,
+      profilePic,
+      access_token,
+      refresh_token,
+    }: User & { access_token: string; refresh_token: string } =
+      JSON.parse(data);
 
     createSession({
       user: {
@@ -27,6 +35,8 @@ export default function AuthSucessPage() {
         name,
         image: profilePic ?? undefined,
       },
+      accessToken: access_token,
+      refreshToken: refresh_token,
     }).then(() => {
       if (redirectUrl) {
         router.replace(redirectUrl);
