@@ -48,7 +48,14 @@ export class AuthController {
 
       return this.redirect(
         '/auth/success',
-        { data: JSON.stringify(user), redirect: path },
+        {
+          data: JSON.stringify({
+            ...user,
+            access_token,
+            refresh_token,
+          }),
+          redirect: path,
+        },
         res,
       );
     } catch (error) {
@@ -83,7 +90,14 @@ export class AuthController {
 
       return this.redirect(
         '/auth/success',
-        { data: JSON.stringify(user), redirect: path },
+        {
+          data: JSON.stringify({
+            ...user,
+            access_token,
+            refresh_token,
+          }),
+          redirect: path,
+        },
         res,
       );
     } catch (error) {
@@ -112,7 +126,7 @@ export class AuthController {
     params: Record<string, string>,
     res: Response,
   ) {
-    const redirectUrl = new URL(path, 'http://localhost:3000');
+    const redirectUrl = new URL(path, process.env.FRONTEND_URL);
     Object.entries(params).forEach(([key, value]) => {
       if (!value) return;
       redirectUrl.searchParams.set(key, value);
