@@ -6,7 +6,9 @@
     "dev": "turbo dev",
     "prepare": "husky",
     "lint": "turbo lint",
-    "format": "turbo format"
+    "lint:api": "turbo lint --filter=api",
+    "format": "turbo format",
+    "format:check:api": "pnpm run --filter=api format:check"
   },
   "devDependencies": {
     "husky": "^9.1.7",

@@ -3,22 +3,28 @@
 # Exit immediately if a command exits with a non-zero status
 set -e
 
+DIR="./infra/envs/dev"
+
+if [ $# -ge 1 ]; then
+  DIR=$1
+fi
+
 # Configuration
 AWS_REGION="ap-south-1"
-ECR_REPOSITORY_NAME="$(cd ./infra/envs/dev && terraform output -raw ecr_repository)"
+ECR_REPOSITORY_NAME="$(cd $DIR && terraform output -raw ecr_repository)"
 IMAGE_TAG="latest"
 
 # You can override these with command line arguments
-if [ $# -ge 1 ]; then
-  ECR_REPOSITORY_NAME=$1
-fi
-
 if [ $# -ge 2 ]; then
-  IMAGE_TAG=$2
+  ECR_REPOSITORY_NAME=$2
 fi
 
 if [ $# -ge 3 ]; then
-  AWS_REGION=$3
+  IMAGE_TAG=$3
+fi
+
+if [ $# -ge 4 ]; then
+  AWS_REGION=$4
 fi
 
 echo "🔍 Using configuration:"
@@ -84,7 +90,7 @@ fi
 echo "📋 Extracted image digest: ${SHA_DIGEST}"
 
 # Run terraform apply with the digest as a variable
-cd ./infra/envs/dev
+cd $DIR
 echo "🔄 Running terraform apply with image digest..."
 terraform apply -var="image_tag=@${SHA_DIGEST}" -target="module.lambda" -auto-approve
 
