@@ -9,9 +9,14 @@ if [ $# -ge 1 ]; then
   DIR=$1
 fi
 
+if [ ! -d "$DIR" ]; then
+  echo "❌ Directory $DIR does not exist."
+  exit 1
+fi
+
 # Configuration
 AWS_REGION="ap-south-1"
-ECR_REPOSITORY_NAME="$(cd $DIR && terraform output -raw ecr_repository)"
+ECR_REPOSITORY_NAME="dev-framebyframe/api"
 IMAGE_TAG="latest"
 
 # You can override these with command line arguments
@@ -68,7 +73,7 @@ aws ecr get-login-password --region ${AWS_REGION} | docker login --username AWS 
 
 # Build Docker image
 echo "🔨 Building Docker image..."
-docker build -f apps/api/Dockerfile -t ${ECR_REPOSITORY_NAME}:${IMAGE_TAG} .
+docker build --platform linux/amd64 -f apps/api/Dockerfile -t ${ECR_REPOSITORY_NAME}:${IMAGE_TAG} .
 
 # Tag the image for ECR
 echo "🏷️ Tagging image for ECR..."
@@ -92,6 +97,7 @@ echo "📋 Extracted image digest: ${SHA_DIGEST}"
 # Run terraform apply with the digest as a variable
 cd $DIR
 echo "🔄 Running terraform apply with image digest..."
-terraform apply -var="image_tag=@${SHA_DIGEST}" -target="module.lambda" -auto-approve
+terraform init
+terraform apply -var="image_tag=@${SHA_DIGEST}" -var="ecr_repo=${ECR_REPOSITORY_NAME}" -auto-approve
 
 echo "✅ Successfully built, pushed, and deployed image with digest: ${SHA_DIGEST}"
