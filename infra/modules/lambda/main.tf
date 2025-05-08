@@ -1,17 +1,3 @@
-resource "aws_ecr_repository" "app_repo" {
-  name                 = "${var.env}-${var.app_name}/api"
-  image_tag_mutability = "MUTABLE"
-
-  image_scanning_configuration {
-    scan_on_push = true
-  }
-
-  tags = {
-    Environment = var.env
-    Application = var.app_name
-  }
-}
-
 resource "aws_iam_role" "lambda_execution_role" {
   name = "${var.env}-${var.app_name}-lambda-execution-role"
 
@@ -69,18 +55,22 @@ resource "aws_iam_role_policy_attachment" "api_logs" {
   policy_arn = aws_iam_policy.api_logging.arn
 }
 
+data "aws_caller_identity" "current" {}
+
 resource "aws_lambda_function" "api_lambda" {
   function_name = "${var.env}-${var.app_name}-api"
   role          = aws_iam_role.lambda_execution_role.arn
   package_type  = "Image"
-  image_uri     = "${aws_ecr_repository.app_repo.repository_url}${var.image_tag}"
+  image_uri     = "${data.aws_caller_identity.current.account_id}.dkr.ecr.${var.aws_region}.amazonaws.com/${var.ecr_repo}${var.image_tag}"
   timeout       = 30
   memory_size   = 128
 
-  architectures = ["arm64"]
-
   environment {
-    variables = var.env_vars
+    variables = merge({
+      BACKEND_URL = var.backend_api_url
+      },
+      var.env_vars
+    )
   }
 
   tags = {

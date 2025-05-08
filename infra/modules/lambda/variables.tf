@@ -3,6 +3,17 @@ variable "env" {
   type        = string
 }
 
+variable "aws_region" {
+  description = "The AWS region to deploy resources."
+  type        = string
+  default     = "ap-south-1"
+}
+
+variable "ecr_repo" {
+  description = "The ECR repository name."
+  type        = string
+}
+
 variable "app_name" {
   description = "Application name"
   type        = string
@@ -24,6 +35,11 @@ variable "env_vars" {
   description = "Environment variables to pass to the Lambda function."
   type        = map(string)
   default     = {}
+}
+
+variable "backend_api_url" {
+  description = "Backend API URL"
+  type        = string
 }
 
 variable "api_gateway_execution_arn" {
