@@ -1,7 +1,7 @@
 'use client';
 import { cn } from '@/lib/utils';
 import Link from 'next/link';
-import { usePathname } from 'next/navigation';
+import { useParams, usePathname } from 'next/navigation';
 import React from 'react';
 
 const navLinks = [
@@ -23,14 +23,37 @@ const navLinks = [
   },
 ];
 
+const adminNavLinks = (slug: string) => [
+  {
+    title: 'Content',
+    href: `/admin/course/${slug}/content`,
+  },
+  {
+    title: 'Analytics',
+    href: `/admin/course/${slug}/analytics`,
+  },
+  {
+    title: 'Sales',
+    href: `/admin/course/${slug}/sales`,
+  },
+  {
+    title: 'Certificates',
+    href: `/admin/course/${slug}/certificates`,
+  },
+];
+
 const Navbar = () => {
   const path = usePathname();
+  const { slug } = useParams<{ slug: string }>();
+
+  const isAdmin = path.startsWith('/admin');
+  const links = isAdmin ? adminNavLinks(slug) : navLinks;
 
   return (
     <div className="wrapper py-2">
       <nav>
         <ul className="space-x-4">
-          {navLinks.map((link, index) => {
+          {links.map((link, index) => {
             const isActive = path === link.href;
 
             return (
