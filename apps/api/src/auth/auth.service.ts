@@ -1,7 +1,7 @@
 import { BadRequestException, Inject, Injectable } from '@nestjs/common';
-import { AuthProvider, db, Prisma } from '@frame-by-frame/db';
+import { AuthProvider, db, Prisma, Role } from '@frame-by-frame/db';
 import { JwtService } from '@nestjs/jwt';
-import { type ConfigType } from '@nestjs/config';
+import { ConfigService, type ConfigType } from '@nestjs/config';
 import refreshJwtConfig from './config/refresh-jwt.config';
 import { Profile as GoogleProfile } from 'passport-google-oauth20';
 import { Profile as DiscordProfile } from 'passport-discord';
@@ -10,6 +10,7 @@ import { Profile as DiscordProfile } from 'passport-discord';
 export class AuthService {
   constructor(
     private readonly jwtService: JwtService,
+    private readonly config: ConfigService,
     @Inject(refreshJwtConfig.KEY)
     private readonly refreshJwtConfiguration: ConfigType<
       typeof refreshJwtConfig
@@ -34,6 +35,12 @@ export class AuthService {
 
     // Create a new user if it doesn't exist
     if (!user) {
+      // Check if the user is an Admin or not
+      const isAdmin = this.config
+        .get('ADMIN_EMAILS')
+        .split(',')
+        .includes(profile.emails[0].value);
+
       user = await db.user.create({
         data: {
           name: profile.displayName,
@@ -41,6 +48,7 @@ export class AuthService {
           googleId: profile.id,
           profilePic: profile.photos[0].value,
           authProvider: AuthProvider.GOOGLE,
+          role: isAdmin ? Role.ADMIN : Role.USER,
         },
       });
     } else {
@@ -56,7 +64,11 @@ export class AuthService {
     }
 
     // Generate JWT tokens for the user
-    const tokens = await this.generateTokens(profile.emails[0].value, user.id);
+    const tokens = await this.generateTokens(
+      profile.emails[0].value,
+      user.id,
+      user.role,
+    );
 
     return {
       ...tokens,
@@ -80,6 +92,12 @@ export class AuthService {
 
     // Create a new user if it doesn't exist
     if (!user) {
+      // Check if the user is an Admin or not
+      const isAdmin = this.config
+        .get('ADMIN_EMAILS')
+        .split(',')
+        .includes(profile.emails[0].value);
+
       user = await db.user.create({
         data: {
           name: profile.global_name ?? profile.username,
@@ -87,6 +105,7 @@ export class AuthService {
           profilePic: `https://cdn.discordapp.com/avatars/${profile.id}/${profile.avatar}.png`,
           authProvider: AuthProvider.DISCORD,
           discordId: profile.id,
+          role: isAdmin ? Role.ADMIN : Role.USER,
         },
       });
     } else {
@@ -102,7 +121,7 @@ export class AuthService {
     }
 
     // Generate JWT tokens for the user
-    const tokens = await this.generateTokens(profile.email, user.id);
+    const tokens = await this.generateTokens(profile.email, user.id, user.role);
 
     return {
       ...tokens,
@@ -139,16 +158,18 @@ export class AuthService {
     return user;
   }
 
-  private async generateTokens(email: string, id: string) {
+  private async generateTokens(email: string, id: string, role: Role) {
     const access_token = await this.jwtService.signAsync({
       email,
       id,
+      role,
     });
 
     const refresh_token = await this.jwtService.signAsync(
       {
         email,
         id,
+        role,
       },
       this.refreshJwtConfiguration,
     );
