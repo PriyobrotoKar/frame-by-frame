@@ -3,9 +3,9 @@ import React, { ReactNode } from 'react';
 
 export default function DashboardLayout({ children }: { children: ReactNode }) {
   return (
-    <div>
+    <div className="flex min-h-svh flex-col">
       <Header />
-      {children}
+      <div className="wrapper flex w-full flex-1">{children}</div>
     </div>
   );
 }
