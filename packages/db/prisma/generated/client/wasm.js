@@ -143,6 +143,16 @@ exports.Prisma.CourseScalarFieldEnum = {
   updatedAt: 'updatedAt'
 };
 
+exports.Prisma.ChapterScalarFieldEnum = {
+  id: 'id',
+  title: 'title',
+  slug: 'slug',
+  order: 'order',
+  courseId: 'courseId',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+};
+
 exports.Prisma.SortOrder = {
   asc: 'asc',
   desc: 'desc'
@@ -169,7 +179,8 @@ exports.AuthProvider = exports.$Enums.AuthProvider = {
 
 exports.Prisma.ModelName = {
   User: 'User',
-  Course: 'Course'
+  Course: 'Course',
+  Chapter: 'Chapter'
 };
 
 /**
