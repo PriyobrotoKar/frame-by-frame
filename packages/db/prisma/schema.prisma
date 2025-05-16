@@ -62,6 +62,22 @@ model Chapter {
   courseId String
   course   Course @relation(fields: [courseId], references: [id])
 
+  documents Document[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model Document {
+  id      String  @id @default(cuid())
+  title   String
+  content String?
+  order   Int
+  slug    String  @unique
+
+  chapterId String
+  chapter   Chapter @relation(fields: [chapterId], references: [id])
+
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 }
