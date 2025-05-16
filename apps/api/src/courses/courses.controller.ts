@@ -11,6 +11,8 @@ import { CoursesService } from './courses.service';
 import { CreateCourseDto } from './dto/create.course';
 import Admin from '@/decorators/admin.decorator';
 import { UpdateChapterDto } from './dto/update.chapter';
+import { CreateDocumentDto } from './dto/create.document';
+import { UpdateDocumentDto } from './dto/update.document';
 
 @Controller('courses')
 export class CoursesController {
@@ -56,11 +58,47 @@ export class CoursesController {
     return this.coursesService.getChapters(slug);
   }
 
+  @Admin()
   @Delete(':slug/chapters/:chapterSlug')
   async deleteChapter(
     @Param('slug') slug: string,
     @Param('chapterSlug') chapterSlug: string,
   ) {
     return this.coursesService.deleteChapter(slug, chapterSlug);
+  }
+
+  @Admin()
+  @Post(':slug/chapters/:chapterSlug/lessons/document')
+  async createDocument(
+    @Param('slug') slug: string,
+    @Param('chapterSlug') chapterSlug: string,
+    @Body() body: CreateDocumentDto,
+  ) {
+    return this.coursesService.createDocument(slug, chapterSlug, body);
+  }
+
+  @Admin()
+  @Patch(':slug/chapters/:chapterSlug/lessons/documents/:documentSlug')
+  async updateDocument(
+    @Param('slug') slug: string,
+    @Param('chapterSlug') chapterSlug: string,
+    @Param('documentSlug') documentSlug: string,
+    @Body() body: UpdateDocumentDto,
+  ) {
+    return this.coursesService.updateDocument(
+      slug,
+      chapterSlug,
+      documentSlug,
+      body,
+    );
+  }
+
+  @Get(':slug/chapters/:chapterSlug/lessons/:lessonSlug')
+  async getLesson(
+    @Param('slug') slug: string,
+    @Param('chapterSlug') chapterSlug: string,
+    @Param('lessonSlug') lessonSlug: string,
+  ) {
+    return this.coursesService.getLesson(slug, chapterSlug, lessonSlug);
   }
 }

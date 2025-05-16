@@ -3,6 +3,8 @@ import { CreateCourseDto } from './dto/create.course';
 import { slugify } from '@/common/utils';
 import { db } from '@frame-by-frame/db';
 import { UpdateChapterDto } from './dto/update.chapter';
+import { CreateDocumentDto } from './dto/create.document';
+import { UpdateDocumentDto } from './dto/update.document';
 
 @Injectable()
 export class CoursesService {
@@ -94,6 +96,15 @@ export class CoursesService {
       where: {
         courseId: course.id,
       },
+      include: {
+        documents: {
+          select: {
+            id: true,
+            title: true,
+            slug: true,
+          },
+        },
+      },
       orderBy: {
         order: 'asc',
       },
@@ -175,5 +186,152 @@ export class CoursesService {
     return {
       message: 'Chapter deleted successfully',
     };
+  }
+
+  async createDocument(
+    courseSlug: string,
+    chapterSlug: string,
+    dto: CreateDocumentDto,
+  ) {
+    const course = await this.getCourseBySlug(courseSlug);
+
+    if (!course) {
+      throw new BadRequestException('Course not found');
+    }
+
+    const chapter = await db.chapter.findUnique({
+      where: {
+        slug: chapterSlug,
+      },
+      include: {
+        _count: {
+          select: {
+            documents: true,
+          },
+        },
+      },
+    });
+
+    if (!chapter) {
+      throw new BadRequestException('Chapter not found');
+    }
+
+    const documentSlug = slugify(dto.title);
+
+    const existingDocument = await db.document.findUnique({
+      where: {
+        slug: documentSlug,
+      },
+    });
+
+    if (existingDocument) {
+      throw new BadRequestException('Document with this name already exists');
+    }
+
+    const document = await db.document.create({
+      data: {
+        title: dto.title,
+        slug: documentSlug,
+        order: chapter._count.documents + 1,
+        chapterId: chapter.id,
+      },
+    });
+
+    return document;
+  }
+
+  async updateDocument(
+    courseSlug: string,
+    chapterSlug: string,
+    documentSlug: string,
+    dto: UpdateDocumentDto,
+  ) {
+    const course = await this.getCourseBySlug(courseSlug);
+
+    if (!course) {
+      throw new BadRequestException('Course not found');
+    }
+
+    const chapter = await db.chapter.findUnique({
+      where: {
+        slug: chapterSlug,
+      },
+    });
+
+    if (!chapter) {
+      throw new BadRequestException('Chapter not found');
+    }
+
+    const document = await db.document.findUnique({
+      where: {
+        slug: documentSlug,
+        chapterId: chapter.id,
+      },
+    });
+
+    if (!document) {
+      throw new BadRequestException('Document not found');
+    }
+
+    if (dto.title) {
+      const newSlug = slugify(dto.title);
+
+      const existingDocument = await db.document.findUnique({
+        where: {
+          slug: newSlug,
+        },
+      });
+
+      if (existingDocument && existingDocument.id !== document.id) {
+        throw new BadRequestException('Document with this name already exists');
+      }
+
+      document.slug = newSlug;
+    }
+
+    const updatedDocument = await db.document.update({
+      where: {
+        id: document.id,
+      },
+      data: {
+        ...dto,
+        slug: document.slug,
+      },
+    });
+
+    return updatedDocument;
+  }
+
+  async getLesson(courseSlug: string, chapterSlug: string, lessonSlug: string) {
+    const course = await this.getCourseBySlug(courseSlug);
+
+    if (!course) {
+      throw new BadRequestException('Course not found');
+    }
+
+    const chapter = await db.chapter.findUnique({
+      where: {
+        slug: chapterSlug,
+      },
+    });
+
+    if (!chapter) {
+      throw new BadRequestException('Chapter not found');
+    }
+
+    const lesson = await db.document.findUnique({
+      where: {
+        slug: lessonSlug,
+        chapter: {
+          slug: chapterSlug,
+        },
+      },
+    });
+
+    if (!lesson) {
+      throw new BadRequestException('Lesson not found');
+    }
+
+    return lesson;
   }
 }
