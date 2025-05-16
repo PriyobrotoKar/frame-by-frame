@@ -30,7 +30,7 @@ const ModulePreview = ({
   }
 
   if (isError || !data) {
-    return <div>Error</div>;
+    return <div>Error in fetching module</div>;
   }
 
   return (
