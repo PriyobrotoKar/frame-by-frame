@@ -1,5 +1,10 @@
 import React, { useState } from 'react';
-import { IconDotsVertical, IconPencil, IconTrash } from '@tabler/icons-react';
+import {
+  IconCirclePlus,
+  IconDotsVertical,
+  IconPencil,
+  IconTrash,
+} from '@tabler/icons-react';
 import {
   DropdownMenu,
   DropdownMenuItem,
@@ -7,6 +12,7 @@ import {
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
 import { Chapter } from '@frame-by-frame/db';
+import { useParams, useRouter } from 'next/navigation';
 
 const ChapterActionDropdown = ({
   chapter,
@@ -15,9 +21,11 @@ const ChapterActionDropdown = ({
 }: {
   chapter: Chapter;
   setChapter: (data: { name: string; slug: string } | undefined) => void;
-  setOpenDialog: (data: 'EDIT' | 'DELETE' | undefined) => void;
+  setOpenDialog: (data: 'EDIT' | 'DELETE' | 'ADD' | undefined) => void;
 }) => {
   const [openMenu, setOpenMenu] = useState(false);
+  const router = useRouter();
+  const { slug: courseSlug } = useParams<{ slug: string }>();
 
   return (
     <DropdownMenu open={openMenu} onOpenChange={setOpenMenu}>
@@ -28,6 +36,20 @@ const ChapterActionDropdown = ({
         <IconDotsVertical />
       </DropdownMenuTrigger>
       <DropdownMenuContent onClick={(e) => e.stopPropagation()}>
+        <DropdownMenuItem
+          onSelect={(e) => {
+            e.stopPropagation();
+            setOpenMenu(false);
+            router.push(`/admin/course/${courseSlug}/content/new`);
+            setChapter({
+              name: chapter.title,
+              slug: chapter.slug,
+            });
+            setOpenDialog('ADD');
+          }}
+        >
+          <IconCirclePlus /> Add Module
+        </DropdownMenuItem>
         <DropdownMenuItem
           onSelect={(e) => {
             e.stopPropagation();

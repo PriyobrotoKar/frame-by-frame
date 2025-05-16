@@ -12,6 +12,7 @@
   },
   "dependencies": {
     "@frame-by-frame/db": "workspace:*",
+    "@hookform/resolvers": "^5.0.1",
     "@radix-ui/react-accordion": "^1.2.3",
     "@radix-ui/react-avatar": "^1.1.3",
     "@radix-ui/react-dialog": "^1.1.6",
@@ -31,9 +32,11 @@
     "next-themes": "^0.4.4",
     "react": "^19.0.0",
     "react-dom": "^19.0.0",
+    "react-hook-form": "^7.56.3",
     "sonner": "^1.7.4",
     "tailwind-merge": "^3.0.1",
-    "tw-animate-css": "^1.2.5"
+    "tw-animate-css": "^1.2.5",
+    "zod": "^3.24.1"
   },
   "devDependencies": {
     "@frame-by-frame/eslint-config": "workspace:*",
