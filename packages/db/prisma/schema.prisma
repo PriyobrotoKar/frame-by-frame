@@ -24,6 +24,11 @@ enum AuthProvider {
   GOOGLE
 }
 
+enum AttachmentType {
+  PDF
+  ZIP
+}
+
 model User {
   id         String  @id @default(cuid())
   name       String
@@ -77,6 +82,22 @@ model Document {
 
   chapterId String
   chapter   Chapter @relation(fields: [chapterId], references: [id])
+
+  attachments Attachment[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model Attachment {
+  id   String         @id @default(cuid())
+  name String
+  url  String
+  type AttachmentType
+  size Int
+
+  documentId String
+  document   Document @relation(fields: [documentId], references: [id])
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt

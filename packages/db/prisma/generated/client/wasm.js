@@ -20,11 +20,11 @@ exports.Prisma = Prisma
 exports.$Enums = {}
 
 /**
- * Prisma Client JS version: 6.8.0
+ * Prisma Client JS version: 6.8.2
  * Query Engine version: 2060c79ba17c6bb9f5823312b6f6b7f4a845738e
  */
 Prisma.prismaVersion = {
-  client: "6.8.0",
+  client: "6.8.2",
   engine: "2060c79ba17c6bb9f5823312b6f6b7f4a845738e"
 }
 
@@ -164,6 +164,17 @@ exports.Prisma.DocumentScalarFieldEnum = {
   updatedAt: 'updatedAt'
 };
 
+exports.Prisma.AttachmentScalarFieldEnum = {
+  id: 'id',
+  name: 'name',
+  url: 'url',
+  type: 'type',
+  size: 'size',
+  documentId: 'documentId',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+};
+
 exports.Prisma.SortOrder = {
   asc: 'asc',
   desc: 'desc'
@@ -188,11 +199,17 @@ exports.AuthProvider = exports.$Enums.AuthProvider = {
   GOOGLE: 'GOOGLE'
 };
 
+exports.AttachmentType = exports.$Enums.AttachmentType = {
+  PDF: 'PDF',
+  ZIP: 'ZIP'
+};
+
 exports.Prisma.ModelName = {
   User: 'User',
   Course: 'Course',
   Chapter: 'Chapter',
-  Document: 'Document'
+  Document: 'Document',
+  Attachment: 'Attachment'
 };
 
 /**
