@@ -34,11 +34,28 @@ const ModulePreview = ({
   }
 
   return (
-    <div className="w-72 rounded-lg border p-4">
+    <div className="flex w-72 flex-col rounded-lg border p-4">
       <h2 className="text-xl">Module Preview</h2>
-      <div className="space-y-4 px-4 py-5">
+      <div className="flex-1 space-y-4 px-4 py-5">
         <h3 className="text-body-semibold">{data.title}</h3>
-        <p className="text-muted-foreground">{data.content}</p>
+        <p className="text-muted-foreground line-clamp-[10]">{data.content}</p>
+      </div>
+      <div className="space-y-2">
+        {data.attachments.map((attachment) => {
+          return (
+            <div key={attachment.id}>
+              <div className="bg-primary-foreground flex items-center gap-4 rounded-lg border p-4">
+                {attachment.type === 'PDF' ? <IconPdf /> : <IconZip />}
+                <div className="text-sm-md line-clamp-1 flex-1">
+                  {attachment.name}
+                </div>
+                <div className="text-muted-foreground min-w-8 text-sm">
+                  {(attachment.size / Math.pow(2, 20)).toFixed(2)} MB
+                </div>
+              </div>
+            </div>
+          );
+        })}
       </div>
     </div>
   );

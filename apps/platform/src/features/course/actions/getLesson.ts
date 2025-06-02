@@ -1,7 +1,11 @@
 import apiClient from '@/lib/api-client';
-import { Document } from '@frame-by-frame/db';
+import { Prisma } from '@frame-by-frame/db';
 
-export type DocuementLessonWithType = Document & {
+export type DocuementLessonWithType = Prisma.DocumentGetPayload<{
+  include: {
+    attachments: true;
+  };
+}> & {
   type: 'document';
 };
 

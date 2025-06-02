@@ -1,4 +1,5 @@
 import { getLessonBySlug } from '@/features/course/actions/getLesson';
+import EditAttachments from '@/features/course/components/EditAttachments';
 import EditModule from '@/features/course/components/EditModule';
 import ModulePreview from '@/features/course/components/ModulePreview';
 import { notFound } from 'next/navigation';
@@ -23,11 +24,18 @@ export default async function AdminLessonPage({
     <div className="space-y-6">
       <h2 className="text-xl">Specifications</h2>
       <div className="flex gap-8">
-        <EditModule
-          courseSlug={slug}
-          chapterSlug={chapterSlug}
-          module={lesson}
-        />
+        <div className="flex-1 space-y-6">
+          <EditModule
+            courseSlug={slug}
+            chapterSlug={chapterSlug}
+            module={lesson}
+          />
+          <EditAttachments
+            courseSlug={slug}
+            chapterSlug={chapterSlug}
+            module={lesson}
+          />
+        </div>
         <ModulePreview
           initialData={lesson}
           courseSlug={slug}
