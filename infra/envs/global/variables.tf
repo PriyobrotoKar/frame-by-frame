@@ -16,3 +16,9 @@ variable "app_name" {
   default     = "framebyframe"
 }
 
+variable "allowed_origins" {
+  description = "The allowed origins for CORS configuration."
+  type        = list(string)
+  default     = ["http://localhost:3000"]
+}
+

@@ -6,7 +6,32 @@ resource "aws_s3_bucket" "state_bucket" {
   }
 
   tags = {
-    Environment = var.env
+    Environment = "global"
     Application = var.app_name
+  }
+}
+
+resource "aws_s3_bucket" "primary_dev_bucket" {
+  bucket = "${var.app_name}-dev"
+
+  lifecycle {
+    prevent_destroy = true
+  }
+
+  tags = {
+    Environment = "dev"
+    Application = var.app_name
+  }
+}
+
+resource "aws_s3_bucket_cors_configuration" "primary_dev_bucket_cors" {
+  bucket = aws_s3_bucket.primary_dev_bucket.id
+
+  cors_rule {
+    allowed_methods = ["GET", "PUT", "POST", "DELETE"]
+    allowed_origins = var.allowed_origins
+    allowed_headers = ["*"]
+    expose_headers  = ["ETag"]
+    max_age_seconds = 3000
   }
 }
