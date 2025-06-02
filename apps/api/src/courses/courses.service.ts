@@ -6,6 +6,8 @@ import { UpdateChapterDto } from './dto/update.chapter';
 import { CreateDocumentDto } from './dto/create.document';
 import { UpdateDocumentDto } from './dto/update.document';
 import { CreateAttachmentDto } from './dto/create.attachment';
+import { CreateVideoDto } from './dto/create.video';
+import { UpdateVideoDto } from './dto/update.video';
 
 @Injectable()
 export class CoursesService {
@@ -103,6 +105,15 @@ export class CoursesService {
             id: true,
             title: true,
             slug: true,
+            order: true,
+          },
+        },
+        videos: {
+          select: {
+            id: true,
+            title: true,
+            slug: true,
+            order: true,
           },
         },
       },
@@ -111,7 +122,15 @@ export class CoursesService {
       },
     });
 
-    return chapters;
+    return chapters.map((chapter) => {
+      return {
+        ...chapter,
+        lessons: [
+          ...chapter.documents.map((doc) => ({ ...doc, type: 'document' })),
+          ...chapter.videos.map((video) => ({ ...video, type: 'video' })),
+        ].sort((a, b) => a.order - b.order),
+      };
+    });
   }
 
   async updateChapter(
@@ -208,6 +227,7 @@ export class CoursesService {
         _count: {
           select: {
             documents: true,
+            videos: true,
           },
         },
       },
@@ -233,7 +253,7 @@ export class CoursesService {
       data: {
         title: dto.title,
         slug: documentSlug,
-        order: chapter._count.documents + 1,
+        order: chapter._count.documents + chapter._count.videos + 1,
         chapterId: chapter.id,
       },
     });
@@ -320,23 +340,45 @@ export class CoursesService {
       throw new BadRequestException('Chapter not found');
     }
 
-    const lesson = await db.document.findUnique({
-      where: {
-        slug: lessonSlug,
-        chapter: {
-          slug: chapterSlug,
+    const queries = [
+      db.document.findUnique({
+        where: {
+          slug: lessonSlug,
+          chapter: {
+            slug: chapterSlug,
+          },
         },
-      },
-      include: {
-        attachments: true,
-      },
-    });
+        include: {
+          attachments: true,
+        },
+      }),
+      db.video.findUnique({
+        where: {
+          slug: lessonSlug,
+          chapter: {
+            slug: chapterSlug,
+          },
+        },
+      }),
+    ];
 
-    if (!lesson) {
+    const [document, video] = await Promise.all(queries);
+
+    if (!document && !video) {
       throw new BadRequestException('Lesson not found');
     }
 
-    return lesson;
+    if (document) {
+      return {
+        type: 'document',
+        ...document,
+      };
+    }
+
+    return {
+      type: 'video',
+      ...video,
+    };
   }
 
   async addAttachment(
@@ -380,5 +422,119 @@ export class CoursesService {
     });
 
     return attachment;
+  }
+
+  async createVideo(
+    courseSlug: string,
+    chapterSlug: string,
+    dto: CreateVideoDto,
+  ) {
+    const course = await this.getCourseBySlug(courseSlug);
+
+    if (!course) {
+      throw new BadRequestException('Course not found');
+    }
+
+    const chapter = await db.chapter.findUnique({
+      where: {
+        slug: chapterSlug,
+      },
+      include: {
+        _count: {
+          select: {
+            documents: true,
+            videos: true,
+          },
+        },
+      },
+    });
+
+    if (!chapter) {
+      throw new BadRequestException('Chapter not found');
+    }
+
+    const videoSlug = slugify(dto.title);
+
+    const existingVideo = await db.video.findUnique({
+      where: {
+        slug: videoSlug,
+      },
+    });
+    if (existingVideo) {
+      throw new BadRequestException('Video with this name already exists');
+    }
+
+    const video = await db.video.create({
+      data: {
+        title: dto.title,
+        slug: videoSlug,
+        order: chapter._count.documents + chapter._count.videos + 1,
+        chapterId: chapter.id,
+      },
+    });
+
+    return video;
+  }
+
+  async updateVideo(
+    courseSlug: string,
+    chapterSlug: string,
+    videoSlug: string,
+    dto: UpdateVideoDto,
+  ) {
+    const course = await this.getCourseBySlug(courseSlug);
+
+    if (!course) {
+      throw new BadRequestException('Course not found');
+    }
+
+    const chapter = await db.chapter.findUnique({
+      where: {
+        slug: chapterSlug,
+      },
+    });
+
+    if (!chapter) {
+      throw new BadRequestException('Chapter not found');
+    }
+
+    const video = await db.video.findUnique({
+      where: {
+        slug: videoSlug,
+        chapterId: chapter.id,
+      },
+    });
+
+    if (!video) {
+      throw new BadRequestException('Video not found');
+    }
+
+    if (dto.title) {
+      const newSlug = slugify(dto.title);
+
+      const existingVideo = await db.video.findUnique({
+        where: {
+          slug: newSlug,
+        },
+      });
+
+      if (existingVideo && existingVideo.id !== video.id) {
+        throw new BadRequestException('Video with this name already exists');
+      }
+
+      video.slug = newSlug;
+    }
+
+    const updatedVideo = await db.video.update({
+      where: {
+        id: video.id,
+      },
+      data: {
+        ...dto,
+        slug: video.slug,
+      },
+    });
+
+    return updatedVideo;
   }
 }

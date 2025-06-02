@@ -14,6 +14,8 @@ import { UpdateChapterDto } from './dto/update.chapter';
 import { CreateDocumentDto } from './dto/create.document';
 import { UpdateDocumentDto } from './dto/update.document';
 import { CreateAttachmentDto } from './dto/create.attachment';
+import { CreateVideoDto } from './dto/create.video';
+import { UpdateVideoDto } from './dto/update.video';
 
 @Controller('courses')
 export class CoursesController {
@@ -119,5 +121,26 @@ export class CoursesController {
       documentSlug,
       body,
     );
+  }
+
+  @Admin()
+  @Post(':slug/chapters/:chapterSlug/lessons/videos')
+  async createVideo(
+    @Param('slug') slug: string,
+    @Param('chapterSlug') chapterSlug: string,
+    @Body() body: CreateVideoDto,
+  ) {
+    return this.coursesService.createVideo(slug, chapterSlug, body);
+  }
+
+  @Admin()
+  @Patch(':slug/chapters/:chapterSlug/lessons/videos/:videoSlug')
+  async updateVideo(
+    @Param('slug') slug: string,
+    @Param('chapterSlug') chapterSlug: string,
+    @Param('videoSlug') videoSlug: string,
+    @Body() body: UpdateVideoDto,
+  ) {
+    return this.coursesService.updateVideo(slug, chapterSlug, videoSlug, body);
   }
 }
