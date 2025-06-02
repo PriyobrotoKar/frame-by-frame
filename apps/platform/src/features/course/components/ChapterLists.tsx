@@ -1,7 +1,7 @@
 'use client';
 import { useQuery } from '@tanstack/react-query';
 import { useParams } from 'next/navigation';
-import { ChapterWithDocuments, getAllChapters } from '../actions/getChapters';
+import { ChapterWithLessons, getAllChapters } from '../actions/getChapters';
 import {
   Accordion,
   AccordionContent,
@@ -13,12 +13,12 @@ import { useState } from 'react';
 import ChapterActionDropdown from './ChapterActionDropdown';
 import DeleteChapter from './DeleteChapter';
 import AddModule from './AddModule';
-import { IconFileDescription } from '@tabler/icons-react';
+import { IconCircleCaretRight, IconFileDescription } from '@tabler/icons-react';
 import Link from 'next/link';
 import { cn } from '@/lib/utils';
 
 interface ChapterListsProps {
-  chapters: ChapterWithDocuments[];
+  chapters: ChapterWithLessons[];
 }
 
 const ChapterLists = ({ chapters }: ChapterListsProps) => {
@@ -72,20 +72,24 @@ const ChapterLists = ({ chapters }: ChapterListsProps) => {
                 </div>
               </AccordionTrigger>
               <AccordionContent className="space-y-5">
-                {chapter.documents.map((document) => {
-                  const isActive = lessonSlug === document.slug;
+                {chapter.lessons.map((lesson) => {
+                  const isActive = lessonSlug === lesson.slug;
 
                   return (
                     <Link
-                      href={`/admin/course/${slug}/content/${chapter.slug}/${document.slug}`}
+                      href={`/admin/course/${slug}/content/${chapter.slug}/${lesson.slug}`}
                       className={cn(
                         'flex items-center gap-2',
                         isActive && 'text-primary',
                       )}
-                      key={document.id}
+                      key={lesson.id}
                     >
-                      <IconFileDescription className="shrink-0" />
-                      <span className="line-clamp-2">{document.title}</span>
+                      {lesson.type === 'video' ? (
+                        <IconCircleCaretRight className="shrink-0" />
+                      ) : (
+                        <IconFileDescription className="shrink-0" />
+                      )}
+                      <span className="line-clamp-2">{lesson.title}</span>
                     </Link>
                   );
                 })}

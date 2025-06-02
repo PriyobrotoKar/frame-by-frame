@@ -17,6 +17,7 @@ import { useParams, useRouter } from 'next/navigation';
 import React from 'react';
 import { createDocument } from '../actions/createDocument';
 import { toast } from 'sonner';
+import { createVideo } from '../actions/createVideo';
 
 interface AddModuleProps {
   chapter: { name: string; slug: string } | undefined;
@@ -28,27 +29,54 @@ const AddModule = ({ chapter, open, setOpen }: AddModuleProps) => {
   const router = useRouter();
   const { slug: courseSlug } = useParams<{ slug: string }>();
 
-  const { mutate, isPending } = useMutation({
-    mutationFn: async (data: { title: string }) => {
-      if (chapter === undefined) {
-        return;
-      }
-      return await createDocument(courseSlug, chapter.slug, data);
-    },
-    onSuccess: (data) => {
-      if (!chapter || !data) {
-        return;
-      }
-      setOpen(undefined);
-      router.push(
-        `/admin/course/${courseSlug}/content/${chapter.slug}/${data.slug}`,
-      );
-    },
-    onError: (error) => {
-      console.error('Error uploading video:', error);
-      toast.error(error.message);
-    },
-  });
+  const { mutate: createVideoMutation, isPending: isCreatingVideo } =
+    useMutation({
+      mutationFn: async (data: { title: string; videoFile: File }) => {
+        if (!chapter) {
+          return;
+        }
+
+        return await createVideo(courseSlug, chapter.slug, {
+          title: data.title,
+        });
+      },
+      onSuccess: (data) => {
+        if (!chapter || !data) {
+          return;
+        }
+        setOpen(undefined);
+        router.push(
+          `/admin/course/${courseSlug}/content/${chapter.slug}/${data.slug}`,
+        );
+      },
+      onError: (error) => {
+        console.error('Error uploading video:', error);
+        toast.error(error.message);
+      },
+    });
+
+  const { mutate: createDocumentMutation, isPending: isCreatingDocument } =
+    useMutation({
+      mutationFn: async (data: { title: string }) => {
+        if (chapter === undefined) {
+          return;
+        }
+        return await createDocument(courseSlug, chapter.slug, data);
+      },
+      onSuccess: (data) => {
+        if (!chapter || !data) {
+          return;
+        }
+        setOpen(undefined);
+        router.push(
+          `/admin/course/${courseSlug}/content/${chapter.slug}/${data.slug}`,
+        );
+      },
+      onError: (error) => {
+        console.error('Error uploading video:', error);
+        toast.error(error.message);
+      },
+    });
 
   return (
     <Dialog
@@ -85,12 +113,31 @@ const AddModule = ({ chapter, open, setOpen }: AddModuleProps) => {
             <div>
               <Label
                 tabIndex={0}
-                className={cn(buttonVariants({ variant: 'outline' }))}
+                className={cn(
+                  buttonVariants({ variant: 'outline' }),
+                  isCreatingVideo &&
+                    'pointer-events-none cursor-not-allowed opacity-50',
+                )}
                 htmlFor="video-input"
               >
                 Select File
               </Label>
-              <Input type="file" accept="video/mp4" hidden id="video-input" />
+              <Input
+                onChange={(e) => {
+                  const file = e.target.files?.[0];
+                  if (!file) return;
+
+                  createVideoMutation({
+                    title: 'Untitled Video',
+                    videoFile: file,
+                  });
+                }}
+                disabled={isCreatingVideo}
+                type="file"
+                accept="video/mp4"
+                hidden
+                id="video-input"
+              />
             </div>
           </div>
 
@@ -98,8 +145,8 @@ const AddModule = ({ chapter, open, setOpen }: AddModuleProps) => {
 
           <Button
             variant={'outline'}
-            disabled={isPending}
-            onClick={() => mutate({ title: 'Untitled' })}
+            disabled={isCreatingDocument}
+            onClick={() => createDocumentMutation({ title: 'Untitled' })}
           >
             <IconFileDescription /> Create a reading document
           </Button>

@@ -7,14 +7,14 @@ import { cn } from '@/lib/utils';
 import { IconPdf, IconPlus } from '@tabler/icons-react';
 import React from 'react';
 import { createAttachment } from '../actions/createAttachment';
-import { DocuementLessonWithType } from '../actions/getLesson';
+import { Lesson } from '../actions/getLesson';
 import { AttachmentType } from '@frame-by-frame/db';
 import { toast } from 'sonner';
 
 interface EditAttachmentsProps {
   courseSlug: string;
   chapterSlug: string;
-  module: DocuementLessonWithType;
+  module: Lesson;
 }
 
 const EditAttachments = ({
@@ -81,7 +81,7 @@ const EditAttachments = ({
             hidden
           />
         </div>
-        {module.attachments.map((attachment) => {
+        {module.attachments?.map((attachment) => {
           return (
             <div
               key={attachment.id}

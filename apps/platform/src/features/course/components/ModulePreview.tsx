@@ -1,14 +1,14 @@
 'use client';
 import { useQuery } from '@tanstack/react-query';
 import React from 'react';
-import { DocuementLessonWithType, getLessonBySlug } from '../actions/getLesson';
+import { Lesson, getLessonBySlug } from '../actions/getLesson';
 import { IconPdf, IconZip } from '@tabler/icons-react';
 
 interface ModulePreviewProps {
   courseSlug: string;
   chapterSlug: string;
   lessonSlug: string;
-  initialData: DocuementLessonWithType;
+  initialData: Lesson;
 }
 
 const ModulePreview = ({
@@ -34,14 +34,15 @@ const ModulePreview = ({
   }
 
   return (
-    <div className="flex w-72 flex-col rounded-lg border p-4">
+    <div className="flex w-72 flex-col space-y-4 rounded-lg border p-4">
       <h2 className="text-xl">Module Preview</h2>
-      <div className="flex-1 space-y-4 px-4 py-5">
-        <h3 className="text-body-semibold">{data.title}</h3>
-        <p className="text-muted-foreground line-clamp-[10]">{data.content}</p>
-      </div>
+      {data.type === 'video' ? (
+        <VideoPreview title={data.title} description={data.description} />
+      ) : (
+        <DocumentPreview title={data.title} content={data.content} />
+      )}
       <div className="space-y-2">
-        {data.attachments.map((attachment) => {
+        {data.attachments?.map((attachment) => {
           return (
             <div key={attachment.id}>
               <div className="bg-primary-foreground flex items-center gap-4 rounded-lg border p-4">
@@ -56,6 +57,44 @@ const ModulePreview = ({
             </div>
           );
         })}
+      </div>
+    </div>
+  );
+};
+
+interface DocumentPreviewProps {
+  title: string;
+  content: string | null;
+}
+
+const DocumentPreview = ({ title, content }: DocumentPreviewProps) => {
+  return (
+    <div className="flex-1 space-y-4 px-4 py-5">
+      <h3 className="text-body-semibold">{title}</h3>
+      <p className="text-muted-foreground line-clamp-[10]">{content}</p>
+    </div>
+  );
+};
+
+interface VideoPreviewProps {
+  title: string;
+  description: string | null;
+}
+
+const VideoPreview = ({ title, description }: VideoPreviewProps) => {
+  return (
+    <div className="space-y-5">
+      <div className="bg-primary-foreground space-y-5 rounded-xl p-4">
+        <div className="bg-muted text-muted-foreground flex aspect-video items-center justify-center rounded-lg border">
+          Uploading...
+        </div>
+        <div>
+          <div className="text-lg">{title}</div>
+        </div>
+      </div>
+      <div className="space-y-4">
+        <h3 className="text-body-semibold">Description</h3>
+        <p className="text-muted-foreground line-clamp-6">{description}</p>
       </div>
     </div>
   );

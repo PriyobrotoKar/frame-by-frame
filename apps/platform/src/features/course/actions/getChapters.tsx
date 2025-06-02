@@ -1,12 +1,12 @@
 import apiClient from '@/lib/api-client';
-import { Prisma } from '@frame-by-frame/db';
+import { Document, Chapter, Video } from '@frame-by-frame/db';
 
-export type ChapterWithDocuments = Prisma.ChapterGetPayload<{
-  include: { documents: { select: { id: true; title: true; slug: true } } };
-}>;
+export type ChapterWithLessons = Chapter & {
+  lessons: ((Document & { type: 'document' }) | (Video & { type: 'video' }))[];
+};
 
 export const getAllChapters = async (couresSlug: string) => {
-  return await apiClient.get<ChapterWithDocuments[]>(
+  return await apiClient.get<ChapterWithLessons[]>(
     `/courses/${couresSlug}/chapters`,
   );
 };

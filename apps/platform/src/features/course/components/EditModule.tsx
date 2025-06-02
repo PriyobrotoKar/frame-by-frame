@@ -12,18 +12,19 @@ import React from 'react';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
-import { DocuementLessonWithType } from '../actions/getLesson';
+import { Lesson } from '../actions/getLesson';
 import { Textarea } from '@/components/ui/textarea';
 import useFormWatch from '../hooks/useFormWatch';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { updateDocument } from '../actions/updateDocument';
 import { toast } from 'sonner';
 import { useRouter } from 'next/navigation';
+import { updateVideo } from '../actions/updateVideo';
 
 interface EditModuleProps {
   chapterSlug: string;
   courseSlug: string;
-  module: DocuementLessonWithType;
+  module: Lesson;
 }
 
 const ModuleSchema = z.object({
@@ -40,7 +41,8 @@ const EditModule = ({ module, chapterSlug, courseSlug }: EditModuleProps) => {
     resolver: zodResolver(ModuleSchema),
     defaultValues: {
       title: module.title,
-      description: module.content ?? '',
+      description:
+        (module.type === 'video' ? module.description : module.content) ?? '',
     },
   });
 
@@ -49,14 +51,20 @@ const EditModule = ({ module, chapterSlug, courseSlug }: EditModuleProps) => {
 
   const { mutate } = useMutation({
     mutationFn: async (data: z.infer<typeof ModuleSchema>) => {
+      if (module.type === 'video') {
+        return await updateVideo(courseSlug, chapterSlug, module.slug, {
+          title: data.title,
+          description: data.description,
+        });
+      }
       return await updateDocument(courseSlug, chapterSlug, module.slug, {
         title: data.title,
         content: data.description,
       });
     },
     onError: (error) => {
-      console.error('Error updating document:', error);
-      toast.error('Failed to update document');
+      console.error('Error updating lesson:', error);
+      toast.error('Failed to update lesson');
     },
     onSuccess: (data) => {
       if (data.title !== module.title) {
@@ -67,7 +75,7 @@ const EditModule = ({ module, chapterSlug, courseSlug }: EditModuleProps) => {
           `/admin/course/${courseSlug}/content/${chapterSlug}/${data.slug}`,
         );
       }
-      toast.success('Document updated successfully');
+      toast.success('Lesson updated successfully');
       queryClient.invalidateQueries({
         queryKey: ['lesson', module.slug],
       });
@@ -78,7 +86,8 @@ const EditModule = ({ module, chapterSlug, courseSlug }: EditModuleProps) => {
     control: form.control,
     defaultValues: {
       title: module.title,
-      description: module.content ?? '',
+      description:
+        (module.type === 'video' ? module.description : module.content) ?? '',
     },
     callbackFn: () => {
       const submitForm = form.handleSubmit(
