@@ -5,6 +5,7 @@ import { db } from '@frame-by-frame/db';
 import { UpdateChapterDto } from './dto/update.chapter';
 import { CreateDocumentDto } from './dto/create.document';
 import { UpdateDocumentDto } from './dto/update.document';
+import { CreateAttachmentDto } from './dto/create.attachment';
 
 @Injectable()
 export class CoursesService {
@@ -326,6 +327,9 @@ export class CoursesService {
           slug: chapterSlug,
         },
       },
+      include: {
+        attachments: true,
+      },
     });
 
     if (!lesson) {
@@ -333,5 +337,48 @@ export class CoursesService {
     }
 
     return lesson;
+  }
+
+  async addAttachment(
+    courseSlug: string,
+    chapterSlug: string,
+    documentSlug: string,
+    dto: CreateAttachmentDto,
+  ) {
+    const course = await this.getCourseBySlug(courseSlug);
+
+    if (!course) {
+      throw new BadRequestException('Course not found');
+    }
+
+    const chapter = await db.chapter.findUnique({
+      where: {
+        slug: chapterSlug,
+      },
+    });
+
+    if (!chapter) {
+      throw new BadRequestException('Chapter not found');
+    }
+
+    const document = await db.document.findUnique({
+      where: {
+        slug: documentSlug,
+        chapterId: chapter.id,
+      },
+    });
+
+    if (!document) {
+      throw new BadRequestException('Document not found');
+    }
+
+    const attachment = await db.attachment.create({
+      data: {
+        ...dto,
+        documentId: document.id,
+      },
+    });
+
+    return attachment;
   }
 }

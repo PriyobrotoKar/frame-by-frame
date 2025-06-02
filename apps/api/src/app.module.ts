@@ -7,6 +7,7 @@ import { JwtAuthGuard } from './auth/guards/auth.guard';
 import { UserModule } from './user/user.module';
 import { CoursesModule } from './courses/courses.module';
 import { AdminGuard } from './auth/guards/admin.guard';
+import { StorageModule } from './storage/storage.module';
 
 @Module({
   imports: [
@@ -17,6 +18,7 @@ import { AdminGuard } from './auth/guards/admin.guard';
     AuthModule,
     UserModule,
     CoursesModule,
+    StorageModule,
   ],
   controllers: [AppController],
   providers: [

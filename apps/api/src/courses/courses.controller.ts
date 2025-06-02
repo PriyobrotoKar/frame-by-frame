@@ -13,6 +13,7 @@ import Admin from '@/decorators/admin.decorator';
 import { UpdateChapterDto } from './dto/update.chapter';
 import { CreateDocumentDto } from './dto/create.document';
 import { UpdateDocumentDto } from './dto/update.document';
+import { CreateAttachmentDto } from './dto/create.attachment';
 
 @Controller('courses')
 export class CoursesController {
@@ -100,5 +101,23 @@ export class CoursesController {
     @Param('lessonSlug') lessonSlug: string,
   ) {
     return this.coursesService.getLesson(slug, chapterSlug, lessonSlug);
+  }
+
+  @Admin()
+  @Post(
+    ':slug/chapters/:chapterSlug/lessons/documents/:documentSlug/attachments',
+  )
+  async addAttachment(
+    @Param('slug') slug: string,
+    @Param('chapterSlug') chapterSlug: string,
+    @Param('documentSlug') documentSlug: string,
+    @Body() body: CreateAttachmentDto,
+  ) {
+    return this.coursesService.addAttachment(
+      slug,
+      chapterSlug,
+      documentSlug,
+      body,
+    );
   }
 }
