@@ -68,6 +68,7 @@ model Chapter {
   course   Course @relation(fields: [courseId], references: [id])
 
   documents Document[]
+  videos    Video[]
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
@@ -84,6 +85,21 @@ model Document {
   chapter   Chapter @relation(fields: [chapterId], references: [id])
 
   attachments Attachment[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model Video {
+  id          String  @id @default(cuid())
+  title       String
+  slug        String  @unique
+  description String?
+  url         String?
+  order       Int
+
+  chapterId String
+  chapter   Chapter @relation(fields: [chapterId], references: [id])
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt

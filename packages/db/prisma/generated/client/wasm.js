@@ -164,6 +164,18 @@ exports.Prisma.DocumentScalarFieldEnum = {
   updatedAt: 'updatedAt'
 };
 
+exports.Prisma.VideoScalarFieldEnum = {
+  id: 'id',
+  title: 'title',
+  slug: 'slug',
+  description: 'description',
+  url: 'url',
+  order: 'order',
+  chapterId: 'chapterId',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+};
+
 exports.Prisma.AttachmentScalarFieldEnum = {
   id: 'id',
   name: 'name',
@@ -209,6 +221,7 @@ exports.Prisma.ModelName = {
   Course: 'Course',
   Chapter: 'Chapter',
   Document: 'Document',
+  Video: 'Video',
   Attachment: 'Attachment'
 };
 
