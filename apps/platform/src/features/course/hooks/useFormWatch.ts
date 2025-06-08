@@ -22,7 +22,7 @@ export default function useFormWatch<T extends FieldValues>({
     control,
   });
 
-  const debouncedValues = useDebounce(watchValues, 500);
+  const debouncedValues = useDebounce(watchValues, 800);
 
   useEffect(() => {
     if (JSON.stringify(debouncedValues) === JSON.stringify(defaultValues))

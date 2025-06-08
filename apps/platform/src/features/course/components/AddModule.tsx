@@ -12,12 +12,13 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { cn } from '@/lib/utils';
 import { IconCircleCaretRight, IconFileDescription } from '@tabler/icons-react';
-import { useMutation } from '@tanstack/react-query';
+import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { useParams, useRouter } from 'next/navigation';
 import React from 'react';
 import { createDocument } from '../actions/createDocument';
 import { toast } from 'sonner';
 import { createVideo } from '../actions/createVideo';
+import { useMultipartUpload } from '@/providers/MultipartUploadProvider';
 
 interface AddModuleProps {
   chapter: { name: string; slug: string } | undefined;
@@ -27,6 +28,8 @@ interface AddModuleProps {
 
 const AddModule = ({ chapter, open, setOpen }: AddModuleProps) => {
   const router = useRouter();
+  const queryClient = useQueryClient();
+  const { uploadFile } = useMultipartUpload();
   const { slug: courseSlug } = useParams<{ slug: string }>();
 
   const { mutate: createVideoMutation, isPending: isCreatingVideo } =
@@ -36,15 +39,23 @@ const AddModule = ({ chapter, open, setOpen }: AddModuleProps) => {
           return;
         }
 
+        uploadFile({
+          file: data.videoFile,
+          key: `${courseSlug}-${chapter.slug}-${data.videoFile.name}`,
+        });
+
         return await createVideo(courseSlug, chapter.slug, {
           title: data.title,
         });
       },
-      onSuccess: (data) => {
+      onSuccess: async (data) => {
         if (!chapter || !data) {
           return;
         }
         setOpen(undefined);
+        await queryClient.invalidateQueries({
+          queryKey: ['course', courseSlug, 'chapters'],
+        });
         router.push(
           `/admin/course/${courseSlug}/content/${chapter.slug}/${data.slug}`,
         );

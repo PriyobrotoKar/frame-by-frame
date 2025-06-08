@@ -1,8 +1,11 @@
 'use client';
-import { useQuery } from '@tanstack/react-query';
-import React from 'react';
+import { useQuery, useQueryClient, useMutation } from '@tanstack/react-query';
+import React, { useEffect } from 'react';
 import { Lesson, getLessonBySlug } from '../actions/getLesson';
 import { IconPdf, IconZip } from '@tabler/icons-react';
+import { useMultipartUpload } from '@/providers/MultipartUploadProvider';
+import { updateVideoStatus } from '../actions/updateVideoStatus';
+import { Video, VideoStatus } from '@frame-by-frame/db';
 
 interface ModulePreviewProps {
   courseSlug: string;
@@ -37,7 +40,13 @@ const ModulePreview = ({
     <div className="flex w-72 flex-col space-y-4 rounded-lg border p-4">
       <h2 className="text-xl">Module Preview</h2>
       {data.type === 'video' ? (
-        <VideoPreview title={data.title} description={data.description} />
+        <VideoPreview
+          courseSlug={courseSlug}
+          chapterSlug={chapterSlug}
+          video={data}
+          title={data.title}
+          description={data.description}
+        />
       ) : (
         <DocumentPreview title={data.title} content={data.content} />
       )}
@@ -77,16 +86,52 @@ const DocumentPreview = ({ title, content }: DocumentPreviewProps) => {
 };
 
 interface VideoPreviewProps {
+  courseSlug: string;
+  chapterSlug: string;
+  video: Video;
   title: string;
   description: string | null;
 }
 
-const VideoPreview = ({ title, description }: VideoPreviewProps) => {
+const VideoPreview = ({
+  title,
+  description,
+  courseSlug,
+  chapterSlug,
+  video,
+}: VideoPreviewProps) => {
+  const { progress, isUploading, isSuccess } = useMultipartUpload();
+  const queryClient = useQueryClient();
+
+  const { mutate } = useMutation({
+    mutationFn: async () =>
+      updateVideoStatus(courseSlug, chapterSlug, video.slug, 'PENDING'),
+    onSuccess: async () => {
+      await queryClient.invalidateQueries({
+        queryKey: ['lesson', video.slug],
+      });
+    },
+    onError: (error) => {
+      console.error('Error updating video status:', error);
+    },
+  });
+
+  useEffect(() => {
+    if (isSuccess) {
+      mutate();
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [isSuccess]);
+
   return (
     <div className="space-y-5">
       <div className="bg-primary-foreground space-y-5 rounded-xl p-4">
         <div className="bg-muted text-muted-foreground flex aspect-video items-center justify-center rounded-lg border">
-          Uploading...
+          {isUploading
+            ? `Uploading ${progress}%...`
+            : isSuccess
+              ? VideoStatus.PENDING
+              : video.status}
         </div>
         <div>
           <div className="text-lg">{title}</div>

@@ -29,6 +29,14 @@ enum AttachmentType {
   ZIP
 }
 
+enum VideoStatus {
+  NOT_STARTED
+  PENDING
+  PROCESSING
+  READY
+  FAILED
+}
+
 model User {
   id         String  @id @default(cuid())
   name       String
@@ -68,7 +76,7 @@ model Chapter {
   course   Course @relation(fields: [courseId], references: [id])
 
   documents Document[]
-  videos     Video[]
+  videos    Video[]
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
@@ -91,12 +99,13 @@ model Document {
 }
 
 model Video {
-  id       String @id @default(cuid())
-  title    String
-  slug    String @unique
+  id          String      @id @default(cuid())
+  title       String
+  slug        String      @unique
   description String?
-  url      String?
-  order   Int
+  url         String?
+  order       Int
+  status      VideoStatus @default(NOT_STARTED)
 
   chapterId String
   chapter   Chapter @relation(fields: [chapterId], references: [id])

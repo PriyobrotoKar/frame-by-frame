@@ -5,12 +5,12 @@
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
   "scripts": {
-    "generate": "pnpx prisma generate",
-    "migrate": "pnpx dotenv-cli -e ../../.env -- pnpx prisma migrate dev",
-    "reset": "pnpx dotenv-cli -e ../../.env -- pnpx prisma migrate reset",
-    "studio": "pnpx dotenv-cli -e ../../.env -- pnpx prisma studio",
-    "migrate-stage": "pnpx dotenv-cli -e ../../.env.staging -- pnpx prisma migrate deploy",
-    "studio-stage": "pnpx dotenv-cli -e ../../.env.staging -- pnpx prisma studio",
+    "generate": "prisma generate",
+    "migrate": "pnpx dotenv-cli -e ../../.env -- prisma migrate dev",
+    "reset": "pnpx dotenv-cli -e ../../.env -- prisma migrate reset",
+    "studio": "pnpx dotenv-cli -e ../../.env -- prisma studio",
+    "migrate-stage": "pnpx dotenv-cli -e ../../.env.staging -- prisma migrate deploy",
+    "studio-stage": "pnpx dotenv-cli -e ../../.env.staging -- prisma studio",
     "build": "pnpm generate && npx tsc"
   },
   "devDependencies": {

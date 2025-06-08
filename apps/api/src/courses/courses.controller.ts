@@ -6,6 +6,7 @@ import {
   Param,
   Patch,
   Post,
+  Query,
 } from '@nestjs/common';
 import { CoursesService } from './courses.service';
 import { CreateCourseDto } from './dto/create.course';
@@ -16,6 +17,8 @@ import { UpdateDocumentDto } from './dto/update.document';
 import { CreateAttachmentDto } from './dto/create.attachment';
 import { CreateVideoDto } from './dto/create.video';
 import { UpdateVideoDto } from './dto/update.video';
+import Public from '@/decorators/public.decorator';
+import { VideoStatus } from '@frame-by-frame/db';
 
 @Controller('courses')
 export class CoursesController {
@@ -142,5 +145,22 @@ export class CoursesController {
     @Body() body: UpdateVideoDto,
   ) {
     return this.coursesService.updateVideo(slug, chapterSlug, videoSlug, body);
+  }
+
+  //TODO: Impletement api key for this as this is a public endpoint
+  @Public()
+  @Patch(':slug/chapters/:chapterSlug/lessons/videos/:videoSlug/status')
+  async updateVideoStatus(
+    @Param('slug') slug: string,
+    @Param('chapterSlug') chapterSlug: string,
+    @Param('videoSlug') videoSlug: string,
+    @Query('status') status: VideoStatus,
+  ) {
+    return this.coursesService.updateVideoStatus(
+      slug,
+      chapterSlug,
+      videoSlug,
+      status,
+    );
   }
 }

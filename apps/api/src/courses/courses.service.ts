@@ -1,7 +1,7 @@
 import { BadRequestException, Injectable } from '@nestjs/common';
 import { CreateCourseDto } from './dto/create.course';
 import { slugify } from '@/common/utils';
-import { db } from '@frame-by-frame/db';
+import { db, VideoStatus } from '@frame-by-frame/db';
 import { UpdateChapterDto } from './dto/update.chapter';
 import { CreateDocumentDto } from './dto/create.document';
 import { UpdateDocumentDto } from './dto/update.document';
@@ -532,6 +532,52 @@ export class CoursesService {
       data: {
         ...dto,
         slug: video.slug,
+      },
+    });
+
+    return updatedVideo;
+  }
+
+  //TODO: Impletement api key for this as this is a public endpoint
+  async updateVideoStatus(
+    courseSlug: string,
+    chapterSlug: string,
+    videoSlug: string,
+    status: VideoStatus,
+  ) {
+    const course = await this.getCourseBySlug(courseSlug);
+
+    if (!course) {
+      throw new BadRequestException('Course not found');
+    }
+
+    const chapter = await db.chapter.findUnique({
+      where: {
+        slug: chapterSlug,
+      },
+    });
+
+    if (!chapter) {
+      throw new BadRequestException('Chapter not found');
+    }
+
+    const video = await db.video.findUnique({
+      where: {
+        slug: videoSlug,
+        chapterId: chapter.id,
+      },
+    });
+
+    if (!video) {
+      throw new BadRequestException('Video not found');
+    }
+
+    const updatedVideo = await db.video.update({
+      where: {
+        id: video.id,
+      },
+      data: {
+        status,
       },
     });
 

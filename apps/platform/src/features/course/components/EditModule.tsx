@@ -20,6 +20,7 @@ import { updateDocument } from '../actions/updateDocument';
 import { toast } from 'sonner';
 import { useRouter } from 'next/navigation';
 import { updateVideo } from '../actions/updateVideo';
+import { ChapterWithLessons } from '../actions/getChapters';
 
 interface EditModuleProps {
   chapterSlug: string;
@@ -31,9 +32,7 @@ const ModuleSchema = z.object({
   title: z.string().min(1, {
     message: 'Module name is required',
   }),
-  description: z.string().min(1, {
-    message: 'Description is required',
-  }),
+  description: z.string(),
 });
 
 const EditModule = ({ module, chapterSlug, courseSlug }: EditModuleProps) => {
@@ -66,11 +65,26 @@ const EditModule = ({ module, chapterSlug, courseSlug }: EditModuleProps) => {
       console.error('Error updating lesson:', error);
       toast.error('Failed to update lesson');
     },
-    onSuccess: (data) => {
+    onSuccess: async (data) => {
       if (data.title !== module.title) {
-        queryClient.invalidateQueries({
-          queryKey: ['course', courseSlug, 'chapters'],
-        });
+        queryClient.setQueryData(
+          ['course', courseSlug, 'chapters'],
+          (oldData: ChapterWithLessons[]) => {
+            return oldData?.map((chapter) => {
+              if (chapter.slug === chapterSlug) {
+                return {
+                  ...chapter,
+                  lessons: chapter.lessons.map((mod) =>
+                    mod.slug === module.slug
+                      ? { ...mod, title: data.title, slug: data.slug }
+                      : mod,
+                  ),
+                };
+              }
+              return chapter;
+            });
+          },
+        );
         router.replace(
           `/admin/course/${courseSlug}/content/${chapterSlug}/${data.slug}`,
         );
