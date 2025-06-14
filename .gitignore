@@ -63,3 +63,5 @@ terraform.rc
 terraform.tfvars
 
 prisma/generated
+
+*.zip

@@ -61,3 +61,12 @@ resource "aws_s3_bucket_cors_configuration" "temp_dev_bucket_cors" {
     max_age_seconds = 3000
   }
 }
+
+resource "aws_s3_bucket_notification" "temp_bucket_notification" {
+  bucket = aws_s3_bucket.temp_dev_bucket.id
+
+  queue {
+    queue_arn = var.video_transcoding_queue_arn
+    events    = ["s3:ObjectCreated:CompleteMultipartUpload"]
+  }
+}

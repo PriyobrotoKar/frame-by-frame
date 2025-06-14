@@ -46,3 +46,33 @@ variable "api_gateway_execution_arn" {
   description = "API Gateway execution ARN"
   type        = string
 }
+
+variable "video_transcoding_queue_arn" {
+  description = "The ARN of the SQS queue for video transcoding."
+  type        = string
+}
+
+variable "ecs_cluster_arn" {
+  description = "The ARN of the ECS cluster."
+  type        = string
+}
+
+variable "ecs_task_definition_arn" {
+  description = "The ARN of the ECS task definition."
+  type        = string
+}
+
+variable "ecs_task_role_arn" {
+  description = "The ARN of the ECS task role."
+  type        = string
+}
+
+variable "ecs_execution_role_arn" {
+  description = "The ARN of the ECS execution role."
+  type        = string
+}
+
+variable "primary_bucket" {
+  description = "The primary S3 bucket used for video storage."
+  type        = string
+}
