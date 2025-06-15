@@ -19,6 +19,7 @@ variable "app_name" {
 variable "ecr_repo" {
   description = "The ECR repository name."
   type        = string
+  default     = "stage-framebyframe/api"
 }
 
 variable "image_tag" {

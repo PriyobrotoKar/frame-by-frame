@@ -36,6 +36,31 @@ resource "aws_s3_bucket_cors_configuration" "primary_dev_bucket_cors" {
   }
 }
 
+resource "aws_s3_bucket_public_access_block" "primary_bucket_public_access" {
+  bucket                  = aws_s3_bucket.primary_dev_bucket.id
+  block_public_acls       = false
+  block_public_policy     = false
+  ignore_public_acls      = false
+  restrict_public_buckets = false
+}
+
+resource "aws_s3_bucket_policy" "primary_bucket_policy" {
+  bucket = aws_s3_bucket.primary_dev_bucket.id
+
+  policy = jsonencode({
+    Version = "2012-10-17",
+    Statement = [
+      {
+        Sid       = "PublicReadGetObject"
+        Effect    = "Allow"
+        Principal = "*"
+        Action    = "s3:GetObject"
+        Resource  = "${aws_s3_bucket.primary_dev_bucket.arn}/*"
+      }
+    ]
+  })
+}
+
 
 resource "aws_s3_bucket" "temp_dev_bucket" {
   bucket = "${var.app_name}-dev-temp"
