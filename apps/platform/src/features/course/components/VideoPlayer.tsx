@@ -11,13 +11,16 @@ import icons from './playerIcons';
 
 interface VideoPlayerProps {
   title: string;
-  subtitle: string;
+  subtitle?: string;
+  src?: string | null;
 }
 
-const VideoPlayer = ({ title, subtitle }: VideoPlayerProps) => {
+const VideoPlayer = ({ title, subtitle, src }: VideoPlayerProps) => {
+  const defaultSrc =
+    'https://demo.unified-streaming.com/k8s/features/stable/video/tears-of-steel/tears-of-steel.ism/.m3u8';
   return (
-    <div className="bg-card space-y-5 rounded-2xl border p-4">
-      <MediaPlayer src="https://demo.unified-streaming.com/k8s/features/stable/video/tears-of-steel/tears-of-steel.ism/.m3u8">
+    <div className="bg-card space-y-4 rounded-2xl border p-4">
+      <MediaPlayer src={src || defaultSrc}>
         <MediaProvider />
         <DefaultVideoLayout
           icons={{
@@ -29,7 +32,7 @@ const VideoPlayer = ({ title, subtitle }: VideoPlayerProps) => {
 
       <div className="space-y-2">
         <p className="text-muted-foreground text-sm">{subtitle}</p>
-        <h2 className="text-xl">{title}</h2>
+        <h2 className="text-lg">{title}</h2>
       </div>
     </div>
   );

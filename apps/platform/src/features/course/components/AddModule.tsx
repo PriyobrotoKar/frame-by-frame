@@ -39,14 +39,17 @@ const AddModule = ({ chapter, open, setOpen }: AddModuleProps) => {
           return;
         }
 
-        uploadFile({
-          file: data.videoFile,
-          key: `${courseSlug}-${chapter.slug}-${data.videoFile.name}`,
-        });
-
-        return await createVideo(courseSlug, chapter.slug, {
+        const video = await createVideo(courseSlug, chapter.slug, {
           title: data.title,
         });
+
+        // Key format: courseSlug-chapterSlug-videoName-videoId.fileExtension
+        uploadFile({
+          file: data.videoFile,
+          key: `${courseSlug}-${chapter.slug}-${data.videoFile.name.split('.')[0]}-${video.id}.${data.videoFile.name.split('.').pop()}`,
+        });
+
+        return video;
       },
       onSuccess: async (data) => {
         if (!chapter || !data) {

@@ -6,7 +6,7 @@ export default function DashboardLayout({ children }: { children: ReactNode }) {
   return (
     <div className="flex min-h-svh flex-col">
       <Header />
-      <div className="wrapper flex w-full flex-1">
+      <div className="flex w-full flex-1 px-10">
         <MultipartUploadProvider>{children}</MultipartUploadProvider>
       </div>
     </div>

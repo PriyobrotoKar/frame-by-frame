@@ -1,11 +1,13 @@
 'use client';
 import { useQuery, useQueryClient, useMutation } from '@tanstack/react-query';
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Lesson, getLessonBySlug } from '../actions/getLesson';
 import { IconPdf, IconZip } from '@tabler/icons-react';
 import { useMultipartUpload } from '@/providers/MultipartUploadProvider';
 import { updateVideoStatus } from '../actions/updateVideoStatus';
 import { Video, VideoStatus } from '@frame-by-frame/db';
+import usePollUploadStatus from '../hooks/usePollUploadStatus';
+import VideoPlayer from './VideoPlayer';
 
 interface ModulePreviewProps {
   courseSlug: string;
@@ -37,7 +39,7 @@ const ModulePreview = ({
   }
 
   return (
-    <div className="flex w-72 flex-col space-y-4 rounded-lg border p-4">
+    <div className="flex w-80 flex-col space-y-4 rounded-lg border p-4">
       <h2 className="text-xl">Module Preview</h2>
       {data.type === 'video' ? (
         <VideoPreview
@@ -96,17 +98,27 @@ interface VideoPreviewProps {
 const VideoPreview = ({
   title,
   description,
+  video,
   courseSlug,
   chapterSlug,
-  video,
 }: VideoPreviewProps) => {
+  const [status, setStatus] = useState<VideoStatus>(video.status);
   const { progress, isUploading, isSuccess } = useMultipartUpload();
+
+  usePollUploadStatus({
+    courseSlug,
+    chapterSlug,
+    lessonSlug: video.slug,
+    status,
+    setStatus,
+  });
+
   const queryClient = useQueryClient();
 
   const { mutate } = useMutation({
-    mutationFn: async () =>
-      updateVideoStatus(courseSlug, chapterSlug, video.slug, 'PENDING'),
+    mutationFn: async () => updateVideoStatus(video.id, 'PENDING'),
     onSuccess: async () => {
+      setStatus(VideoStatus.PENDING);
       await queryClient.invalidateQueries({
         queryKey: ['lesson', video.slug],
       });
@@ -125,18 +137,22 @@ const VideoPreview = ({
 
   return (
     <div className="space-y-5">
-      <div className="bg-primary-foreground space-y-5 rounded-xl p-4">
-        <div className="bg-muted text-muted-foreground flex aspect-video items-center justify-center rounded-lg border">
-          {isUploading
-            ? `Uploading ${progress}%...`
-            : isSuccess
-              ? VideoStatus.PENDING
-              : video.status}
+      {status !== VideoStatus.READY ? (
+        <div className="bg-primary-foreground space-y-5 rounded-xl p-4">
+          <div className="bg-muted text-muted-foreground flex aspect-video items-center justify-center rounded-lg border">
+            {isUploading ? `Uploading ${progress}%...` : status}
+          </div>
+          <div>
+            <div className="text-lg">{title}</div>
+          </div>
         </div>
-        <div>
-          <div className="text-lg">{title}</div>
-        </div>
-      </div>
+      ) : (
+        <VideoPlayer
+          title={video.title}
+          src={`https://framebyframe-dev.s3.ap-south-1.amazonaws.com/${video.url}`}
+        />
+      )}
+
       <div className="space-y-4">
         <h3 className="text-body-semibold">Description</h3>
         <p className="text-muted-foreground line-clamp-6">{description}</p>
