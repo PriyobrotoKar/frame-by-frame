@@ -149,18 +149,12 @@ export class CoursesController {
 
   //TODO: Impletement api key for this as this is a public endpoint
   @Public()
-  @Patch(':slug/chapters/:chapterSlug/lessons/videos/:videoSlug/status')
+  @Patch('lessons/videos/:videoId/status')
   async updateVideoStatus(
-    @Param('slug') slug: string,
-    @Param('chapterSlug') chapterSlug: string,
-    @Param('videoSlug') videoSlug: string,
+    @Param('videoId') videoId: string,
     @Query('status') status: VideoStatus,
+    @Query('key') key?: string,
   ) {
-    return this.coursesService.updateVideoStatus(
-      slug,
-      chapterSlug,
-      videoSlug,
-      status,
-    );
+    return this.coursesService.updateVideoStatus(videoId, status, key);
   }
 }

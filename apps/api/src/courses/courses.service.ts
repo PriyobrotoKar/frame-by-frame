@@ -539,37 +539,42 @@ export class CoursesService {
   }
 
   //TODO: Impletement api key for this as this is a public endpoint
-  async updateVideoStatus(
-    courseSlug: string,
-    chapterSlug: string,
-    videoSlug: string,
-    status: VideoStatus,
-  ) {
-    const course = await this.getCourseBySlug(courseSlug);
-
-    if (!course) {
-      throw new BadRequestException('Course not found');
-    }
-
-    const chapter = await db.chapter.findUnique({
-      where: {
-        slug: chapterSlug,
-      },
-    });
-
-    if (!chapter) {
-      throw new BadRequestException('Chapter not found');
+  async updateVideoStatus(videoId: string, status: VideoStatus, key?: string) {
+    // check if the status is valid
+    if (!Object.values(VideoStatus).includes(status)) {
+      throw new BadRequestException(
+        'Status is not valid. It should be one of the following: NOT_STARTED, PENDING, PROCESSING, READY, FAILED',
+      );
     }
 
     const video = await db.video.findUnique({
       where: {
-        slug: videoSlug,
-        chapterId: chapter.id,
+        id: videoId,
       },
     });
 
     if (!video) {
       throw new BadRequestException('Video not found');
+    }
+
+    if (status === VideoStatus.READY) {
+      if (!key) {
+        throw new BadRequestException(
+          'Video Source key is required to update video status to READY',
+        );
+      }
+
+      const updatedVideo = await db.video.update({
+        where: {
+          id: video.id,
+        },
+        data: {
+          status,
+          url: `hls/${key}/index.m3u8`,
+        },
+      });
+
+      return updatedVideo;
     }
 
     const updatedVideo = await db.video.update({

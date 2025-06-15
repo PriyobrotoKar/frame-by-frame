@@ -16,7 +16,9 @@ export class StorageService {
   private readonly tempBucketName = process.env.AWS_TEMP_BUCKET;
 
   constructor() {
-    this.s3 = new S3();
+    this.s3 = new S3({
+      region: 'ap-south-1',
+    });
   }
 
   async generateUploadUrl(directory: string, fileType: string) {
