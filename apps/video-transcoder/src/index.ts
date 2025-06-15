@@ -69,7 +69,7 @@ export const handler: SQSHandler = async (event) => {
         await ecs.send(command);
         console.log('Task submitted to ECS', task);
 
-        await updateJobStatus(key.split('.')[0]); // videoId is the key
+        await updateJobStatus(key.split('.')[0]);
       } catch (error) {
         console.error('Error submitting ECS task', error);
       }
@@ -77,7 +77,9 @@ export const handler: SQSHandler = async (event) => {
   }
 };
 
-const updateJobStatus = async (videoId: string) => {
+const updateJobStatus = async (key: string) => {
+  const videoId = key.split('-').pop();
+
   if (!process.env.BACKEND_URL || !process.env.API_KEY) {
     console.error('Missing BACKEND_URL or API_KEY environment variables');
     throw new Error('Configuration error: BACKEND_URL or API_KEY is not set');
@@ -85,9 +87,12 @@ const updateJobStatus = async (videoId: string) => {
 
   const baseUrl = process.env.BACKEND_URL;
   // :slug/chapters/:chapterSlug/lessons/videos/:videoSlug/status
+  console.log(
+    `${baseUrl}/api/courses/lessons/videos/${videoId}/status?status=PROCESSING`,
+  );
   try {
     const response = await fetch(
-      `${baseUrl}/api/courses/lessons/video/${videoId}/status?status=PROCESSING`,
+      `${baseUrl}/api/courses/lessons/videos/${videoId}/status?status=PROCESSING`,
       {
         method: 'PATCH',
         headers: {

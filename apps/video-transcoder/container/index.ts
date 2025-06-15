@@ -32,7 +32,6 @@ async function main() {
 
   const resolutions: Resolution[] = [
     { size: '1280x720', bitrate: '3000k', isUploaded: false },
-    { size: '854x480', bitrate: '1600k', isUploaded: false },
     { size: '640x360', bitrate: '1024k', isUploaded: false },
   ];
 
@@ -180,11 +179,17 @@ async function downloadFromS3(key: string): Promise<string> {
 }
 
 const updateJobStatus = async (key: string) => {
+  console.log(key);
+  const keyWithoutExtension = key.split('.')[0];
+  const videoId = keyWithoutExtension.split('-').pop();
+
+  console.log(key, keyWithoutExtension, videoId);
+
   const baseUrl = process.env.BACKEND_URL;
 
   try {
     const response = await fetch(
-      `${baseUrl}/api/module/video/status/${key}?status=COMPLETED`,
+      `${baseUrl}/api/courses/lessons/videos/${videoId}/status?status=READY&key=${key}`,
       {
         method: 'PATCH',
         headers: {
