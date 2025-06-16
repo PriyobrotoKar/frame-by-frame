@@ -94,6 +94,10 @@ fi
 
 echo "📋 Extracted image digest: ${SHA_DIGEST}"
 
+# Build the Video Transcoder app
+turbo build --filter=video-transcoder
+
+
 # Run terraform apply with the digest as a variable
 cd $DIR
 echo "🔄 Running terraform apply with image digest..."
