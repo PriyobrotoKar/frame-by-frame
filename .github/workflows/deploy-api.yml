@@ -62,7 +62,8 @@ jobs:
           "DATABASE_URL": "${{ secrets.DATABASE_URL }}",
           "ADMIN_EMAILS": "${{secrets.ADMIN_EMAILS}}",
           "AWS_BUCKET": "${{secrets.AWS_BUCKET}}",
-          "AWS_TEMP_BUCKET": "${{secrets.AWS_TEMP_BUCKET}}"
+          "AWS_TEMP_BUCKET": "${{secrets.AWS_TEMP_BUCKET}}",
+          "API_KEY": "${{secrets.API_KEY}}"
         }
 
     steps:

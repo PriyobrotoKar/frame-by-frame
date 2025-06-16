@@ -7,6 +7,7 @@ import {
   Patch,
   Post,
   Query,
+  UseGuards,
 } from '@nestjs/common';
 import { CoursesService } from './courses.service';
 import { CreateCourseDto } from './dto/create.course';
@@ -19,6 +20,7 @@ import { CreateVideoDto } from './dto/create.video';
 import { UpdateVideoDto } from './dto/update.video';
 import Public from '@/decorators/public.decorator';
 import { VideoStatus } from '@frame-by-frame/db';
+import { ApiKeyGuard } from '@/auth/guards/api-key.guard';
 
 @Controller('courses')
 export class CoursesController {
@@ -147,8 +149,8 @@ export class CoursesController {
     return this.coursesService.updateVideo(slug, chapterSlug, videoSlug, body);
   }
 
-  //TODO: Impletement api key for this as this is a public endpoint
   @Public()
+  @UseGuards(ApiKeyGuard)
   @Patch('lessons/videos/:videoId/status')
   async updateVideoStatus(
     @Param('videoId') videoId: string,
