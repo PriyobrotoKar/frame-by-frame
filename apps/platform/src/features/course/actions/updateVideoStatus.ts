@@ -7,5 +7,9 @@ export const updateVideoStatus = async (
 ) => {
   return apiClient.patch<Video>(
     `/courses/lessons/videos/${videoSlug}/status?status=${status}`,
+    undefined,
+    {
+      'x-api-key': process.env.API_KEY || '',
+    },
   );
 };

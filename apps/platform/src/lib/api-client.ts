@@ -62,11 +62,16 @@ class ApiClient {
     });
   }
 
-  patch<T>(url: string, data?: Record<string, unknown>): Promise<T> {
+  patch<T>(
+    url: string,
+    data?: Record<string, unknown>,
+    headers?: Record<string, string>,
+  ): Promise<T> {
     return this.request<T>(url, {
       method: 'PATCH',
       headers: {
         'Content-type': 'application/json',
+        ...headers,
       },
       body: JSON.stringify(data),
     });
