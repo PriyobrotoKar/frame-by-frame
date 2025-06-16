@@ -17,6 +17,7 @@ variable "app_name" {
 }
 
 variable "ecr_repo" {
+  default     = "stage-framebyframe/api"
   description = "The ECR repository name."
   type        = string
 }
