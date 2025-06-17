@@ -28,7 +28,7 @@ resource "aws_s3_bucket_cors_configuration" "primary_dev_bucket_cors" {
   bucket = aws_s3_bucket.primary_dev_bucket.id
 
   cors_rule {
-    allowed_methods = ["GET", "PUT", "POST", "DELETE"]
+    allowed_methods = ["GET", "PUT", "POST", "DELETE", "HEAD"]
     allowed_origins = var.allowed_origins
     allowed_headers = ["*"]
     expose_headers  = ["ETag"]

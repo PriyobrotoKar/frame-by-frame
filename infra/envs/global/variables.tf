@@ -19,6 +19,6 @@ variable "app_name" {
 variable "allowed_origins" {
   description = "The allowed origins for CORS configuration."
   type        = list(string)
-  default     = ["http://localhost:3000"]
+  default     = ["http://localhost:3000", "https://frame-by-frame-course-dev.vercel.app"]
 }
 

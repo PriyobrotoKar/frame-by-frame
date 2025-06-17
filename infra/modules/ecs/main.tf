@@ -98,7 +98,8 @@ resource "aws_iam_policy" "ecs_task_policy" {
         Effect = "Allow",
         Action = [
           "s3:GetObject",
-          "s3:PutObject"
+          "s3:PutObject",
+          "s3:DeleteObject"
         ],
         Resource = [
           "${var.primary_bucket_arn}/*",

@@ -13,7 +13,7 @@ data "aws_s3_bucket" "temp_dev_bucket" {
 module "sqs" {
   source = "../../modules/sqs"
 
-  env             = "dev"
+  env             = "global"
   app_name        = var.app_name
   temp_bucket_arn = data.aws_s3_bucket.temp_dev_bucket.arn
 }

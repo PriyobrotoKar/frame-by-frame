@@ -40,12 +40,6 @@ variable "env_vars" {
   default     = {}
 }
 
-variable "cors_allow_origins" {
-  description = "List of allowed origins for CORS"
-  type        = list(string)
-  default     = ["http://localhost:3000"]
-}
-
 variable "throttling_burst_limit" {
   description = "Throttling burst limit for API Gateway"
   type        = number

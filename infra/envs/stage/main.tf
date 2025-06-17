@@ -40,7 +40,7 @@ module "ecs" {
   source = "../../modules/ecs"
 
   app_name           = var.app_name
-  env                = "dev"
+  env                = "stage"
   temp_bucket_arn    = data.terraform_remote_state.global.outputs.temp_bucket_arn
   primary_bucket_arn = data.terraform_remote_state.global.outputs.primary_bucket_arn
 }
