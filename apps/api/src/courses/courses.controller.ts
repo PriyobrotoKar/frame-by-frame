@@ -114,16 +114,32 @@ export class CoursesController {
   @Post(
     ':slug/chapters/:chapterSlug/lessons/documents/:documentSlug/attachments',
   )
-  async addAttachment(
+  async addAttachmentToDoc(
     @Param('slug') slug: string,
     @Param('chapterSlug') chapterSlug: string,
     @Param('documentSlug') documentSlug: string,
     @Body() body: CreateAttachmentDto,
   ) {
-    return this.coursesService.addAttachment(
+    return this.coursesService.addAttachmentToDoc(
       slug,
       chapterSlug,
       documentSlug,
+      body,
+    );
+  }
+
+  @Admin()
+  @Post(':slug/chapters/:chapterSlug/lessons/videos/:videoSlug/attachments')
+  async addAttachmentToVideo(
+    @Param('slug') slug: string,
+    @Param('chapterSlug') chapterSlug: string,
+    @Param('videoSlug') videoSlug: string,
+    @Body() body: CreateAttachmentDto,
+  ) {
+    return this.coursesService.addAttachmentToVideo(
+      slug,
+      chapterSlug,
+      videoSlug,
       body,
     );
   }

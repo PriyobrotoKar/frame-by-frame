@@ -359,6 +359,9 @@ export class CoursesService {
             slug: chapterSlug,
           },
         },
+        include: {
+          attachments: true,
+        },
       }),
     ];
 
@@ -381,7 +384,7 @@ export class CoursesService {
     };
   }
 
-  async addAttachment(
+  async addAttachmentToDoc(
     courseSlug: string,
     chapterSlug: string,
     documentSlug: string,
@@ -418,6 +421,49 @@ export class CoursesService {
       data: {
         ...dto,
         documentId: document.id,
+      },
+    });
+
+    return attachment;
+  }
+
+  async addAttachmentToVideo(
+    courseSlug: string,
+    chapterSlug: string,
+    videoSlug: string,
+    dto: CreateAttachmentDto,
+  ) {
+    const course = await this.getCourseBySlug(courseSlug);
+
+    if (!course) {
+      throw new BadRequestException('Course not found');
+    }
+
+    const chapter = await db.chapter.findUnique({
+      where: {
+        slug: chapterSlug,
+      },
+    });
+
+    if (!chapter) {
+      throw new BadRequestException('Chapter not found');
+    }
+
+    const video = await db.video.findUnique({
+      where: {
+        slug: videoSlug,
+        chapterId: chapter.id,
+      },
+    });
+
+    if (!video) {
+      throw new BadRequestException('Video not found');
+    }
+
+    const attachment = await db.attachment.create({
+      data: {
+        ...dto,
+        videoId: video.id,
       },
     });
 
