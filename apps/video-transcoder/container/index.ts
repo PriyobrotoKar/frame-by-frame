@@ -2,7 +2,11 @@ import ffmpeg from 'fluent-ffmpeg';
 import { promises as fs, createWriteStream } from 'fs';
 import { Readable } from 'stream';
 import {
+  DeleteObjectCommand,
+  DeleteObjectCommandInput,
+  DeleteObjectsCommand,
   GetObjectCommand,
+  ListObjectsV2Command,
   PutObjectCommand,
   S3Client,
 } from '@aws-sdk/client-s3';
@@ -71,7 +75,10 @@ async function main() {
         const hasAllUploaded = resolutions.every((res) => res.isUploaded);
         if (hasAllUploaded) {
           await updateJobStatus(video);
-          //TODO: remove the video from temporary S3 bucket
+          await deleteFileFromS3({
+            bucket: process.env.BUCKET_TEMP,
+            key: video,
+          });
         }
       })
       .on('error', (err) => {
@@ -209,6 +216,23 @@ const updateJobStatus = async (key: string) => {
     console.error('Error updating job status');
     throw error;
   }
+};
+
+const deleteFileFromS3 = async ({
+  bucket,
+  key,
+}: {
+  bucket: string;
+  key: string;
+}) => {
+  const params: DeleteObjectCommandInput = {
+    Bucket: bucket,
+    Key: key,
+  };
+
+  const command = new DeleteObjectCommand(params);
+
+  await s3.send(command);
 };
 
 main();
