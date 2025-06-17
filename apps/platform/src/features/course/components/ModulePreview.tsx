@@ -30,6 +30,8 @@ const ModulePreview = ({
     initialData,
   });
 
+  console.log('ModulePreview data:', data);
+
   if (isLoading) {
     return <ModulePreviewSkeleton type="document" />;
   }
@@ -105,7 +107,7 @@ const VideoPreview = ({
   const [status, setStatus] = useState<VideoStatus>(video.status);
   const { progress, isUploading, isSuccess } = useMultipartUpload();
 
-  usePollUploadStatus({
+  const { data } = usePollUploadStatus({
     courseSlug,
     chapterSlug,
     lessonSlug: video.slug,
@@ -118,7 +120,6 @@ const VideoPreview = ({
   const { mutate } = useMutation({
     mutationFn: async () => updateVideoStatus(video.id, 'PENDING'),
     onSuccess: async () => {
-      setStatus(VideoStatus.PENDING);
       await queryClient.invalidateQueries({
         queryKey: ['lesson', video.slug],
       });
@@ -129,11 +130,12 @@ const VideoPreview = ({
   });
 
   useEffect(() => {
-    if (isSuccess) {
+    if (isSuccess && status === VideoStatus.NOT_STARTED) {
+      setStatus(VideoStatus.PENDING);
       mutate();
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [isSuccess]);
+  }, [isSuccess, status]);
 
   return (
     <div className="space-y-5">
@@ -149,7 +151,7 @@ const VideoPreview = ({
       ) : (
         <VideoPlayer
           title={video.title}
-          src={`https://framebyframe-dev.s3.ap-south-1.amazonaws.com/${video.url}`}
+          src={`https://framebyframe-dev.s3.ap-south-1.amazonaws.com/${data?.url ?? video.url}`}
         />
       )}
 

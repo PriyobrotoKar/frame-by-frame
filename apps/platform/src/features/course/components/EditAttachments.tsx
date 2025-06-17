@@ -1,15 +1,17 @@
 'use client';
+
 import { buttonVariants } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { getUploadSignedUrl } from '@/features/storage/actions/getUploadSignedUrl';
 import { cn } from '@/lib/utils';
-import { IconPdf, IconPlus } from '@tabler/icons-react';
-import React from 'react';
+import { IconLoader, IconPdf, IconPlus, IconZip } from '@tabler/icons-react';
+import React, { useState } from 'react';
 import { createAttachment } from '../actions/createAttachment';
-import { Lesson } from '../actions/getLesson';
+import { getLessonBySlug, Lesson } from '../actions/getLesson';
 import { AttachmentType } from '@frame-by-frame/db';
 import { toast } from 'sonner';
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 
 interface EditAttachmentsProps {
   courseSlug: string;
@@ -22,15 +24,21 @@ const EditAttachments = ({
   chapterSlug,
   module,
 }: EditAttachmentsProps) => {
-  const handleFileInput = async (
-    event: React.ChangeEvent<HTMLInputElement>,
-  ) => {
-    if (!event.target.files) return;
+  const [isUploading, setIsUploading] = useState(false);
 
-    const file = event.target.files[0];
-    if (!file) return;
+  const queryClient = useQueryClient();
 
-    try {
+  const { data, isLoading, isError } = useQuery({
+    queryKey: ['lesson', module.slug],
+    queryFn: async () => {
+      return await getLessonBySlug(courseSlug, chapterSlug, module.slug);
+    },
+    initialData: module,
+  });
+
+  const { mutate } = useMutation({
+    mutationFn: async (file: File) => {
+      setIsUploading(true);
       const type = file.type.split('/')[1]!;
 
       const uploadUrl = await getUploadSignedUrl({
@@ -47,17 +55,62 @@ const EditAttachments = ({
         throw new Error(await response.text());
       }
 
-      await createAttachment(courseSlug, chapterSlug, module.slug, {
-        name: file.name,
-        size: file.size,
-        url: uploadUrl.key,
-        type: type.toUpperCase() as AttachmentType,
-      });
-    } catch (error) {
+      return await createAttachment(
+        courseSlug,
+        chapterSlug,
+        module.slug,
+        module.type,
+        {
+          name: file.name,
+          size: file.size,
+          url: uploadUrl.key,
+          type: type.toUpperCase() as AttachmentType,
+        },
+      );
+    },
+    onError: (error) => {
       console.error('Error uploading file:', error);
       toast.error((error as Error).message);
-    }
+      setIsUploading(false);
+    },
+    onSuccess: async (newData) => {
+      setIsUploading(false);
+
+      queryClient.setQueryData(
+        ['lesson', module.slug],
+        (oldData: Lesson | undefined) => {
+          console.log('New attachment added:', newData);
+          console.log('Old attachments:', oldData?.attachments);
+
+          if (!oldData) return oldData;
+
+          return {
+            ...oldData,
+            attachments: [...(oldData.attachments || []), newData],
+          };
+        },
+      );
+    },
+  });
+
+  const handleFileInput = async (
+    event: React.ChangeEvent<HTMLInputElement>,
+  ) => {
+    if (!event.target.files) return;
+
+    const file = event.target.files[0];
+    if (!file) return;
+
+    mutate(file);
   };
+
+  if (isLoading) {
+    return <div>Loading attachments...</div>;
+  }
+
+  if (isError || !data) {
+    return <div>Error loading attachments</div>;
+  }
 
   return (
     <div className="space-y-2">
@@ -65,15 +118,19 @@ const EditAttachments = ({
       <div className="flex flex-wrap gap-2">
         <div>
           <Label
-            className={cn(
-              buttonVariants({ variant: 'outline' }),
-              'h-full w-28',
-            )}
+            className={cn(buttonVariants({ variant: 'outline' }), 'h-12 w-28')}
             htmlFor="attachment"
           >
-            <IconPlus /> New
+            {isUploading ? (
+              <IconLoader className="animate-spin" />
+            ) : (
+              <>
+                <IconPlus /> New
+              </>
+            )}
           </Label>
           <Input
+            disabled={isUploading}
             accept="application/pdf,application/zip"
             type="file"
             id="attachment"
@@ -81,17 +138,15 @@ const EditAttachments = ({
             hidden
           />
         </div>
-        {module.attachments?.map((attachment) => {
+        {data.attachments.map((attachment) => {
           return (
             <div
               key={attachment.id}
               className="bg-muted flex max-w-40 items-center gap-2 rounded-lg border px-4 py-3"
             >
-              <div>
-                <IconPdf />
-              </div>
+              <div>{attachment.type === 'PDF' ? <IconPdf /> : <IconZip />}</div>
               <div className="flex flex-col">
-                <span className="text-sm-md line-clamp-1">
+                <span className="text-sm-md line-clamp-1 break-all">
                   {attachment.name}
                 </span>
                 <span className="text-muted-foreground text-sm">

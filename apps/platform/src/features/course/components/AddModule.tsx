@@ -10,7 +10,7 @@ import {
 } from '@/components/ui/dialog';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
-import { cn } from '@/lib/utils';
+import { cn, slugify } from '@/lib/utils';
 import { IconCircleCaretRight, IconFileDescription } from '@tabler/icons-react';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { useParams, useRouter } from 'next/navigation';
@@ -46,7 +46,7 @@ const AddModule = ({ chapter, open, setOpen }: AddModuleProps) => {
         // Key format: courseSlug-chapterSlug-videoName-videoId.fileExtension
         uploadFile({
           file: data.videoFile,
-          key: `${courseSlug}-${chapter.slug}-${data.videoFile.name.split('.')[0]}-${video.id}.${data.videoFile.name.split('.').pop()}`,
+          key: `${courseSlug}-${chapter.slug}-${slugify(data.videoFile.name.split('.')[0])}-${video.id}.${data.videoFile.name.split('.').pop()}`,
         });
 
         return video;

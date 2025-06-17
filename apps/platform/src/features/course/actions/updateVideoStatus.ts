@@ -1,3 +1,5 @@
+'use server';
+
 import apiClient from '@/lib/api-client';
 import { Video, VideoStatus } from '@frame-by-frame/db';
 
