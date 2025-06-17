@@ -110,6 +110,8 @@ model Video {
   chapterId String
   chapter   Chapter @relation(fields: [chapterId], references: [id])
 
+  attachments Attachment[]
+
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 }
@@ -121,8 +123,11 @@ model Attachment {
   type AttachmentType
   size Int
 
-  documentId String
-  document   Document @relation(fields: [documentId], references: [id])
+  documentId String?
+  document   Document? @relation(fields: [documentId], references: [id])
+
+  videoId String?
+  video   Video?  @relation(fields: [videoId], references: [id])
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
