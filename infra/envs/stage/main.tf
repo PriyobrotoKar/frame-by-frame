@@ -24,7 +24,8 @@ module "lambda" {
   ecs_task_definition_arn     = module.ecs.ecs_task_definition_arn
   ecs_task_role_arn           = module.ecs.ecs_task_role_arn
   ecs_execution_role_arn      = module.ecs.ecs_execution_role_arn
-  primary_bucket              = data.terraform_remote_state.global.outputs.primary_bucket_name
+  primary_bucket              = data.terraform_remote_state.global.outputs.primary_dev_bucket
+  temp_bucket                 = data.terraform_remote_state.global.outputs.temp_dev_bucket
 }
 
 module "api-gateway" {
@@ -41,6 +42,6 @@ module "ecs" {
 
   app_name           = var.app_name
   env                = "stage"
-  temp_bucket_arn    = data.terraform_remote_state.global.outputs.temp_bucket_arn
-  primary_bucket_arn = data.terraform_remote_state.global.outputs.primary_bucket_arn
+  temp_bucket_arn    = data.terraform_remote_state.global.outputs.temp_dev_bucket.arn
+  primary_bucket_arn = data.terraform_remote_state.global.outputs.primary_dev_bucket.arn
 }

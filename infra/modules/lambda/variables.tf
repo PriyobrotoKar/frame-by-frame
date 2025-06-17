@@ -73,6 +73,17 @@ variable "ecs_execution_role_arn" {
 }
 
 variable "primary_bucket" {
-  description = "The primary S3 bucket used for video storage."
-  type        = string
+  description = "The primary S3 bucket used for storage."
+  type = object({
+    name = string
+    arn  = string
+  })
+}
+
+variable "temp_bucket" {
+  description = "The temp S3 bucket used for video storage."
+  type = object({
+    name = string
+    arn  = string
+  })
 }

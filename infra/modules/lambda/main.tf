@@ -54,7 +54,10 @@ resource "aws_iam_policy" "api_logging" {
           "s3:DeleteObject",
           "s3:ListBucket"
         ],
-        Resource = "arn:aws:s3:::framebyframe-dev-temp/*"
+        Resource = [
+          "${var.primary_bucket.arn}/*",
+          "${var.temp_bucket.arn}/*"
+        ]
       }
     ]
   })
@@ -200,7 +203,7 @@ resource "aws_lambda_function" "video_transcoding_consumer" {
   environment {
     variables = merge({
       BACKEND_URL         = var.backend_api_url
-      BUCKET              = var.primary_bucket
+      BUCKET              = var.primary_bucket.name
       ECS_CLUSTER         = var.ecs_cluster_arn
       ECS_TASK_DEFINITION = var.ecs_task_definition_arn
       ECS_CONTAINER_NAME  = "${var.app_name}-${var.env}-video-transcoder",
