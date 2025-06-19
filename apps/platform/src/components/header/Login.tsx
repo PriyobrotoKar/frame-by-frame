@@ -16,8 +16,10 @@ import {
 } from '@tabler/icons-react';
 import { OAUTH_PATH } from '@/lib/constants';
 import { Button } from '../ui/button';
+import { useLoginDialog } from '@/providers/LoginDialogProvider';
 
 const Login = () => {
+  const { open, setOpen } = useLoginDialog();
   const [selectedMethod, setSelectedMethod] = useState<AuthProvider | null>(
     null,
   );
@@ -28,7 +30,7 @@ const Login = () => {
   };
 
   return (
-    <Dialog>
+    <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
         <Button variant={'outline'}>Login</Button>
       </DialogTrigger>

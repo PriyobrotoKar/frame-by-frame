@@ -1,4 +1,5 @@
 import { Header } from '@/components/header';
+import LoginDialogProvider from '@/providers/LoginDialogProvider';
 
 export default function MainLayout({
   children,
@@ -7,8 +8,10 @@ export default function MainLayout({
 }>) {
   return (
     <div className="space-y-10">
-      <Header />
-      <div className="wrapper">{children}</div>
+      <LoginDialogProvider>
+        <Header />
+        <div className="wrapper">{children}</div>
+      </LoginDialogProvider>
     </div>
   );
 }

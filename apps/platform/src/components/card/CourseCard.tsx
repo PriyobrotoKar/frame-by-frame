@@ -1,3 +1,5 @@
+'use client';
+
 import React from 'react';
 import Card from '../ui/card';
 import { Button } from '../ui/button';
@@ -5,6 +7,11 @@ import { IconClock, IconShoppingCart, IconStack2 } from '@tabler/icons-react';
 import Image from 'next/image';
 import { formatPrice } from '@/lib/utils';
 import Link from 'next/link';
+import Script from 'next/script';
+import { useMutation } from '@tanstack/react-query';
+import { createOrder } from '@/features/course/actions/createOrder';
+import { ApiError } from '@/lib/api-client';
+import { useLoginDialog } from '@/providers/LoginDialogProvider';
 
 export interface Lesson {
   id: string;
@@ -40,11 +47,58 @@ interface CourseCardProps {
   className?: string;
 }
 
+interface RazorpayOptions {
+  amount: number;
+  currency?: string;
+  description: string;
+  order_id: string;
+}
+
+function displayRazorpay(options: RazorpayOptions) {
+  const payload = {
+    key: process.env.NEXT_PUBLIC_RAZORPAY_KEY_ID,
+    currency: 'INR',
+    name: 'Frame By Frame',
+    image: 'https://example.com/your_logo',
+    callback_url: 'http://localhost:3000/',
+    theme: {
+      color: '#3399cc',
+    },
+    ...options,
+  };
+
+  // eslint-disable-next-line
+  const razorpay = new (window as any).Razorpay(payload);
+  razorpay.open();
+}
+
 const CourseCard = ({
   course,
   className,
   showTitle = true,
 }: CourseCardProps) => {
+  const { setOpen } = useLoginDialog();
+
+  const { mutate, isPending } = useMutation({
+    mutationFn: async () => {
+      const order = await createOrder('cmbo23e680001l708k8fvn5jd');
+
+      console.log('Order created:', order);
+
+      displayRazorpay({
+        amount: order.amount,
+        currency: order.currency,
+        description: `Purchase of course ${course.title}`,
+        order_id: order.orderId,
+      });
+    },
+    onError: (error: ApiError) => {
+      if (error.status === 401) {
+        setOpen(true);
+      }
+    },
+  });
+
   return (
     <Link className="block" href={`/${course.slug}`}>
       <Card className={className}>
@@ -93,7 +147,11 @@ const CourseCard = ({
           </div>
 
           <Card.Footer>
-            <Button className="w-full">
+            <Button
+              disabled={isPending}
+              onClick={() => mutate()}
+              className="w-full"
+            >
               <IconShoppingCart />
               Buy Now
             </Button>
@@ -103,6 +161,7 @@ const CourseCard = ({
           </Card.Footer>
         </Card.Content>
       </Card>
+      <Script src="https://checkout.razorpay.com/v1/checkout.js" />
     </Link>
   );
 };
