@@ -8,6 +8,8 @@ import { UserModule } from './user/user.module';
 import { CoursesModule } from './courses/courses.module';
 import { AdminGuard } from './auth/guards/admin.guard';
 import { StorageModule } from './storage/storage.module';
+import { OrderModule } from './order/order.module';
+import { PaymentModule } from './payment/payment.module';
 
 @Module({
   imports: [
@@ -19,6 +21,8 @@ import { StorageModule } from './storage/storage.module';
     UserModule,
     CoursesModule,
     StorageModule,
+    OrderModule,
+    PaymentModule,
   ],
   controllers: [AppController],
   providers: [

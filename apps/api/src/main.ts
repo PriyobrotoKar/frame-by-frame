@@ -20,7 +20,11 @@ export function configureApp(app: INestApplication) {
 }
 
 async function bootstrap() {
-  const app = configureApp(await NestFactory.create(AppModule));
+  const app = configureApp(
+    await NestFactory.create(AppModule, {
+      rawBody: true,
+    }),
+  );
   await app.listen(8000);
 }
 bootstrap();

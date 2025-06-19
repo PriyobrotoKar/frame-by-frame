@@ -12,7 +12,9 @@ async function bootstrap() {
   if (!cachedServer) {
     const expressApp = express();
     const app = configureApp(
-      await NestFactory.create(AppModule, new ExpressAdapter(expressApp)),
+      await NestFactory.create(AppModule, new ExpressAdapter(expressApp), {
+        rawBody: true,
+      }),
     );
 
     await app.init();
