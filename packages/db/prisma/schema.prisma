@@ -1,8 +1,7 @@
 // This is your Prisma schema file,
 // learn more about it in the docs: https://pris.ly/d/prisma-schema
 
-// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
-// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions? Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
 
 generator client {
   provider = "prisma-client-js"
@@ -37,6 +36,19 @@ enum VideoStatus {
   FAILED
 }
 
+enum OrderStatus {
+  PENDING
+  COMPLETED
+  FAILED
+}
+
+enum PaymentStatus {
+  AUTHORIZED
+  SUCCESS
+  FAILED
+  REFUNDED
+}
+
 model User {
   id         String  @id @default(cuid())
   name       String
@@ -48,6 +60,7 @@ model User {
   googleId  String? @unique
 
   authProvider AuthProvider
+  orders       Order[]
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
@@ -59,8 +72,12 @@ model Course {
   description String?
   image       String?
   slug        String  @unique
+  price       Int? // Price in cents, e.g., 1999 for $19.99
+  currency    String? @default("INR")
+  isPublished Boolean @default(false)
 
   chapters Chapter[]
+  orders   Order[]
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
@@ -128,6 +145,45 @@ model Attachment {
 
   videoId String?
   video   Video?  @relation(fields: [videoId], references: [id])
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model Order {
+  id String @id @default(cuid())
+
+  userId String
+  user   User   @relation(fields: [userId], references: [id])
+
+  courseId String
+  course   Course @relation(fields: [courseId], references: [id])
+
+  status   OrderStatus @default(PENDING)
+  amount   Int // Amount in cents, e.g., 1999 for $19.99
+  currency String      @default("INR")
+
+  orderId String @unique
+
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+  payments  Payment[]
+
+  @@unique([userId, courseId]) // Ensure a user can only order a course once
+}
+
+model Payment {
+  id String @id @default(cuid())
+
+  orderId String
+  order   Order  @relation(fields: [orderId], references: [id])
+
+  status   PaymentStatus
+  amount   Int // Amount in cents, e.g., 1999 for $19.99
+  currency String        @default("INR")
+
+  paymentId     String @unique
+  paymentMethod String
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
