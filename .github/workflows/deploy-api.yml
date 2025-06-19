@@ -63,7 +63,10 @@ jobs:
           "ADMIN_EMAILS": "${{secrets.ADMIN_EMAILS}}",
           "AWS_BUCKET": "${{secrets.AWS_BUCKET}}",
           "AWS_TEMP_BUCKET": "${{secrets.AWS_TEMP_BUCKET}}",
-          "API_KEY": "${{secrets.API_KEY}}"
+          "API_KEY": "${{secrets.API_KEY}}",
+          "RAZORPAY_KEY_ID": "${{secrets.RAZORPAY_KEY_ID}}",
+          "RAZORPAY_KEY_SECRET": "${{secrets.RAZORPAY_KEY_SECRET}}",
+          "RAZORPAY_WEBHOOK_SECRET": "${{secrets.RAZORPAY_WEBHOOK_SECRET}}"
         }
 
     steps:
