@@ -67,8 +67,20 @@ model User {
 }
 
 model Course {
-  id          String  @id @default(cuid())
+  id String @id @default(cuid())
+
+  versions CourseVersion[]
+  orders   Order[]
+
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+}
+
+model CourseVersion {
+  id String @id @default(cuid())
+
   title       String
+  subtitle    String?
   description String?
   image       String?
   slug        String  @unique
@@ -76,8 +88,10 @@ model Course {
   currency    String? @default("INR")
   isPublished Boolean @default(false)
 
+  courseId String
+  course   Course @relation(fields: [courseId], references: [id])
+
   chapters Chapter[]
-  orders   Order[]
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
@@ -89,14 +103,14 @@ model Chapter {
   slug  String @unique
   order Int
 
-  courseId String
-  course   Course @relation(fields: [courseId], references: [id])
-
   documents Document[]
   videos    Video[]
 
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+  courseVersion   CourseVersion? @relation(fields: [courseVersionId], references: [id])
+  courseVersionId String?
+
+  createdAt       DateTime       @default(now())
+  updatedAt       DateTime       @updatedAt
 }
 
 model Document {
