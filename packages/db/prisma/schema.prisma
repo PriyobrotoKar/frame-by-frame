@@ -72,8 +72,8 @@ model Course {
   versions CourseVersion[]
   orders   Order[]
 
-  createdAt DateTime  @default(now())
-  updatedAt DateTime  @updatedAt
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 }
 
 model CourseVersion {
@@ -83,15 +83,50 @@ model CourseVersion {
   subtitle    String?
   description String?
   image       String?
-  slug        String  @unique
+  slug        String
   price       Int? // Price in cents, e.g., 1999 for $19.99
   currency    String? @default("INR")
   isPublished Boolean @default(false)
 
+  trailer   Video?  @relation(fields: [trailerId], references: [id])
+  trailerId String? @unique
+
   courseId String
   course   Course @relation(fields: [courseId], references: [id])
 
-  chapters Chapter[]
+  chapters    Chapter[]
+  learnings   CourseLearnings[]
+  instructors Instructor[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model CourseLearnings {
+  id String @id @default(cuid())
+
+  title       String
+  description String?
+
+  courseVersionId String
+  courseVersion   CourseVersion @relation(fields: [courseVersionId], references: [id])
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model Instructor {
+  id String @id @default(cuid())
+
+  name            String
+  specialization  String?
+  profilePic      String?
+  experienceYears Int     @default(0)
+  followers       Int     @default(0)
+  revenue         Int     @default(0)
+
+  courseVersionId String
+  courseVersion   CourseVersion @relation(fields: [courseVersionId], references: [id])
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
@@ -100,7 +135,7 @@ model CourseVersion {
 model Chapter {
   id    String @id @default(cuid())
   title String
-  slug  String @unique
+  slug  String
   order Int
 
   documents Document[]
@@ -109,8 +144,10 @@ model Chapter {
   courseVersion   CourseVersion? @relation(fields: [courseVersionId], references: [id])
   courseVersionId String?
 
-  createdAt       DateTime       @default(now())
-  updatedAt       DateTime       @updatedAt
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@unique([courseVersionId, slug]) // Ensure unique slug per course version
 }
 
 model Document {
@@ -118,33 +155,39 @@ model Document {
   title   String
   content String?
   order   Int
-  slug    String  @unique
+  slug    String
 
   chapterId String
-  chapter   Chapter @relation(fields: [chapterId], references: [id])
+  chapter   Chapter @relation(fields: [chapterId], references: [id], onDelete: Cascade)
 
   attachments Attachment[]
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
+
+  @@unique([chapterId, slug]) // Ensure unique slug per chapter
 }
 
 model Video {
   id          String      @id @default(cuid())
   title       String
-  slug        String      @unique
+  slug        String
   description String?
   url         String?
   order       Int
   status      VideoStatus @default(NOT_STARTED)
 
-  chapterId String
-  chapter   Chapter @relation(fields: [chapterId], references: [id])
+  course CourseVersion?
+
+  chapter   Chapter? @relation(fields: [chapterId], references: [id], onDelete: Cascade)
+  chapterId String?
 
   attachments Attachment[]
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
+
+  @@unique([chapterId, slug]) // Ensure unique slug per chapter
 }
 
 model Attachment {
@@ -155,10 +198,10 @@ model Attachment {
   size Int
 
   documentId String?
-  document   Document? @relation(fields: [documentId], references: [id])
+  document   Document? @relation(fields: [documentId], references: [id], onDelete: Cascade)
 
   videoId String?
-  video   Video?  @relation(fields: [videoId], references: [id])
+  video   Video?  @relation(fields: [videoId], references: [id], onDelete: Cascade)
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
