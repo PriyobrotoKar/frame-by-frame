@@ -9,7 +9,7 @@ resource "aws_ecs_cluster" "ecs_cluster" {
 }
 
 resource "aws_iam_role" "ecs_task_execution_role" {
-  name = "ecsTaskExecutionRole"
+  name = "${var.app_name}-${var.env}-ecs-task-execution-role"
 
   assume_role_policy = jsonencode({
     Version = "2012-10-17",
@@ -24,7 +24,7 @@ resource "aws_iam_role" "ecs_task_execution_role" {
 }
 
 resource "aws_iam_policy" "ecs_task_execution_policy" {
-  name = "ecsTaskExecutionLoggingPolicy"
+  name = "${var.app_name}-${var.env}-ecs-task-execution-policy"
   policy = jsonencode({
     Version = "2012-10-17",
     Statement = [{
@@ -75,7 +75,7 @@ resource "aws_iam_policy_attachment" "ecs_task_execution_attach" {
 }
 
 resource "aws_iam_role" "ecs_task_role" {
-  name = "ecsTaskRole"
+  name = "${var.app_name}-${var.env}-ecs-task-role"
 
   assume_role_policy = jsonencode({
     Version = "2012-10-17",
@@ -90,7 +90,7 @@ resource "aws_iam_role" "ecs_task_role" {
 }
 
 resource "aws_iam_policy" "ecs_task_policy" {
-  name = "ecsTaskS3Policy"
+  name = "${var.app_name}-${var.env}-ecs-task-policy"
   policy = jsonencode({
     Version = "2012-10-17",
     Statement = [
