@@ -69,9 +69,10 @@ model User {
 model Course {
   id String @id @default(cuid())
 
-  versions  CourseVersion[]
-  orders    Order[]
-  analytics Analytics[]
+  versions         CourseVersion[]
+  orders           Order[]
+  monthlyAnalytics MonthlyAnalytics[]
+  dailyAnalytics   DailyAnalytics[]
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
@@ -247,11 +248,22 @@ model Payment {
   updatedAt DateTime @updatedAt
 }
 
-model Analytics {
-  id String @id @default(cuid())
-  totalSales Int @default(0)
-  monthlySales Int @default(0)
-  totalOrders Int @default(0)
+model MonthlyAnalytics {
+  id           String @id @default(cuid())
+  totalSales   Int    @default(0)
+  monthlySales Int    @default(0)
+  totalOrders  Int    @default(0)
+
+  course   Course @relation(fields: [courseId], references: [id])
+  courseId String
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model DailyAnalytics {
+  id         String @id @default(cuid())
+  totalSales Int    @default(0)
 
   course   Course @relation(fields: [courseId], references: [id])
   courseId String
