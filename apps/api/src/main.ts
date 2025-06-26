@@ -2,6 +2,7 @@ import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
 import cookieParser from 'cookie-parser';
 import { INestApplication, ValidationPipe } from '@nestjs/common';
+import { QueryTransformPipe } from './common/pipes/query.transform.pipe';
 
 export function configureApp(app: INestApplication) {
   app.use(cookieParser());
@@ -9,6 +10,7 @@ export function configureApp(app: INestApplication) {
     new ValidationPipe({
       transform: true,
     }),
+    new QueryTransformPipe(),
   );
   app.setGlobalPrefix('api');
   app.enableCors({

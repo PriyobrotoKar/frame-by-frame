@@ -9,21 +9,24 @@ import { getSession } from '@/lib/session';
 import Profile from './Profile';
 import SearchBox from './SearchBox';
 import CourseSelector from './CourseSelector';
+import { cn } from '@/lib/utils';
 
 interface HeaderProps {
   showLogo?: boolean;
   showNavbar?: boolean;
+  className?: string;
 }
 
 export async function Header({
   showLogo = true,
   showNavbar = true,
+  className,
 }: HeaderProps) {
   const session = await getSession();
 
   return (
     <div className="bg-background sticky top-0 z-20 border-b">
-      <header className="wrapper flex items-center gap-6 py-5">
+      <header className={cn('flex items-center gap-6 px-8 py-5', className)}>
         {showLogo && (
           <Image src={'/logo.svg'} alt="logo" width={90} height={33} />
         )}
@@ -43,7 +46,7 @@ export async function Header({
         {session ? <Profile session={session} /> : <Login />}
       </header>
 
-      {showNavbar && <Navbar />}
+      {showNavbar && <Navbar className={className} />}
     </div>
   );
 }

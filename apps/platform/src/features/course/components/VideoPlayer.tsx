@@ -8,18 +8,20 @@ import {
   DefaultVideoLayout,
 } from '@vidstack/react/player/layouts/default';
 import icons from './playerIcons';
+import { cn } from '@/lib/utils';
 
 interface VideoPlayerProps {
-  title: string;
-  subtitle?: string;
+  title?: string;
+  subtitle?: string | null;
   src?: string | null;
+  className?: string;
 }
 
-const VideoPlayer = ({ title, subtitle, src }: VideoPlayerProps) => {
+const VideoPlayer = ({ title, subtitle, src, className }: VideoPlayerProps) => {
   const defaultSrc =
     'https://demo.unified-streaming.com/k8s/features/stable/video/tears-of-steel/tears-of-steel.ism/.m3u8';
   return (
-    <div className="bg-card space-y-4 rounded-2xl border p-4">
+    <div className={cn('bg-card space-y-4 rounded-2xl border p-4', className)}>
       <MediaPlayer src={src || defaultSrc}>
         <MediaProvider />
         <DefaultVideoLayout
@@ -30,10 +32,14 @@ const VideoPlayer = ({ title, subtitle, src }: VideoPlayerProps) => {
         />
       </MediaPlayer>
 
-      <div className="space-y-2">
-        <p className="text-muted-foreground text-sm">{subtitle}</p>
-        <h2 className="text-lg">{title}</h2>
-      </div>
+      {(title || subtitle) && (
+        <div className="space-y-2">
+          {subtitle && (
+            <p className="text-muted-foreground text-sm">{subtitle}</p>
+          )}
+          {title && <h2 className="text-lg">{title}</h2>}
+        </div>
+      )}
     </div>
   );
 };

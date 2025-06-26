@@ -5,13 +5,15 @@ import Card from '../ui/card';
 import { Button } from '../ui/button';
 import { IconClock, IconShoppingCart, IconStack2 } from '@tabler/icons-react';
 import Image from 'next/image';
-import { formatPrice } from '@/lib/utils';
+import { formatPrice, mediaUrl } from '@/lib/utils';
 import Link from 'next/link';
 import Script from 'next/script';
 import { useMutation } from '@tanstack/react-query';
 import { createOrder } from '@/features/course/actions/createOrder';
 import { ApiError } from '@/lib/api-client';
 import { useLoginDialog } from '@/providers/LoginDialogProvider';
+import { toast } from 'sonner';
+import { CourseWithChapters } from '@/features/course/actions/getCourse';
 
 export interface Lesson {
   id: string;
@@ -27,22 +29,8 @@ export interface Module {
   lessons: Lesson[];
 }
 
-export interface Course {
-  id: string;
-  title: string;
-  subtitle: string;
-  slug: string;
-  price: number;
-  originalPrice: number;
-  currency: string;
-  duration: string;
-  lessons: number;
-  imageUrl: string;
-  modules: Module[];
-}
-
 interface CourseCardProps {
-  course: Course;
+  course: CourseWithChapters;
   showTitle?: boolean;
   className?: string;
 }
@@ -79,9 +67,13 @@ const CourseCard = ({
 }: CourseCardProps) => {
   const { setOpen } = useLoginDialog();
 
+  const lessonCount = course.chapters.reduce((acc, chapter) => {
+    return acc + chapter.lessons.length;
+  }, 0);
+
   const { mutate, isPending } = useMutation({
     mutationFn: async () => {
-      const order = await createOrder('cmbo23e680001l708k8fvn5jd');
+      const order = await createOrder(course.courseId);
 
       console.log('Order created:', order);
 
@@ -95,7 +87,11 @@ const CourseCard = ({
     onError: (error: ApiError) => {
       if (error.status === 401) {
         setOpen(true);
+        return;
       }
+      toast.error(
+        error.message || 'An error occurred while creating the order',
+      );
     },
   });
 
@@ -103,13 +99,15 @@ const CourseCard = ({
     <Link className="block" href={`/${course.slug}`}>
       <Card className={className}>
         <div>
-          <Image
-            src={course.imageUrl}
-            alt="Course Image"
-            width={277}
-            height={162}
-            className="w-full rounded-lg"
-          />
+          {course.image && (
+            <Image
+              src={mediaUrl(course.image)}
+              alt="Course Image"
+              width={277}
+              height={162}
+              className="w-full rounded-lg"
+            />
+          )}
         </div>
 
         <Card.Content>
@@ -125,23 +123,25 @@ const CourseCard = ({
             <div className="space-x-1">
               <span className="text-xl">
                 {formatPrice({
-                  amount: course.price,
+                  amount: course.price
+                    ? Number((course.price / 100).toFixed(2))
+                    : 0,
                   currency: course.currency,
                 })}
               </span>
-              <span className="text-muted-foreground text-sm line-through">
-                {formatPrice({
-                  amount: course.originalPrice,
-                  currency: course.currency,
-                })}
-              </span>
+              {/* <span className="text-muted-foreground text-sm line-through"> */}
+              {/*   {formatPrice({ */}
+              {/*     amount: course.originalPrice, */}
+              {/*     currency: course.currency, */}
+              {/*   })} */}
+              {/* </span> */}
             </div>
             <div className="space-x-6">
               <Card.Info>
-                <IconClock /> {course.duration}
+                <IconClock /> 10h
               </Card.Info>
               <Card.Info>
-                <IconStack2 /> {course.lessons} Lessons
+                <IconStack2 /> {lessonCount} Lessons
               </Card.Info>
             </div>
           </div>

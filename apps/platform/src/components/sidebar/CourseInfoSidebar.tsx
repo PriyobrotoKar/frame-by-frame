@@ -5,10 +5,11 @@ import {
   IconNotebook,
   IconPlayerPlay,
 } from '@tabler/icons-react';
-import CourseCard, { Course } from '../card/CourseCard';
+import CourseCard from '../card/CourseCard';
+import { CourseWithChapters } from '@/features/course/actions/getCourse';
 
 interface CourseInfoSidebarProps {
-  course: Course;
+  course: CourseWithChapters;
 }
 
 const courseFeatures = [

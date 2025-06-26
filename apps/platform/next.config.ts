@@ -7,11 +7,7 @@ const nextConfig: NextConfig = {
       //TODO: This host is only for mock data. Replace it with your actual host.
       {
         protocol: 'https',
-        hostname: 'futurevisioncomputers.com',
-      },
-      {
-        protocol: 'https',
-        hostname: 'img.freepik.com',
+        hostname: 'framebyframe-dev.s3.ap-south-1.amazonaws.com',
       },
     ],
   },

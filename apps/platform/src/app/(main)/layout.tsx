@@ -9,7 +9,7 @@ export default function MainLayout({
   return (
     <div className="space-y-10">
       <LoginDialogProvider>
-        <Header />
+        <Header className="wrapper" />
         <div className="wrapper">{children}</div>
       </LoginDialogProvider>
     </div>

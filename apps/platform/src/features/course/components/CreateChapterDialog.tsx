@@ -9,7 +9,7 @@ import {
 } from '@/components/ui/dialog';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
-import { useMutation } from '@tanstack/react-query';
+import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { useParams } from 'next/navigation';
 import { useState } from 'react';
 import { toast } from 'sonner';
@@ -21,6 +21,8 @@ const CreateChapterDialog = () => {
   const [open, setOpen] = useState(false);
   const { slug } = useParams<{ slug: string }>();
 
+  const queryClient = useQueryClient();
+
   const { mutate, isPending } = useMutation({
     mutationFn: async (name: string) => {
       return await createChapter(slug, {
@@ -30,7 +32,11 @@ const CreateChapterDialog = () => {
     onError: (error) => {
       toast.error(error.message);
     },
-    onSuccess: () => {
+    onSuccess: async () => {
+      await queryClient.invalidateQueries({
+        queryKey: ['course', slug, 'chapters'],
+      });
+      setName('');
       toast.success('New chapter created');
       setOpen(false);
     },

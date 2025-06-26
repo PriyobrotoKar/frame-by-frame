@@ -19,7 +19,7 @@ const CourseSelector = () => {
 
   const { data: courses, isLoading } = useQuery({
     queryKey: ['courses'],
-    queryFn: () => getCourses(),
+    queryFn: () => getCourses(true),
   });
 
   const activeCourse =

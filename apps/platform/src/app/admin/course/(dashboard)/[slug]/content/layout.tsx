@@ -11,7 +11,7 @@ export default function AdminContentLayout({
   return (
     <div className="flex flex-1">
       <AdminCourseSidebar params={params} />
-      <div className="flex-1 p-8">{children}</div>
+      <div className="wrapper flex-1 p-8">{children}</div>
     </div>
   );
 }

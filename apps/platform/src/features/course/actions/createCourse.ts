@@ -1,6 +1,11 @@
 import apiClient from '@/lib/api-client';
-import { Course } from '@frame-by-frame/db';
+import { Course, CourseVersion } from '@frame-by-frame/db';
 
-export const createCourse = async (data: { title: Course['title'] }) => {
-  return await apiClient.post<Course>('/courses', data);
+export type CourseWithVersion = Course &
+  CourseVersion & {
+    lessonCount: number;
+  };
+
+export const createCourse = async (data: { title: string }) => {
+  return await apiClient.post<CourseWithVersion>('/courses', data);
 };

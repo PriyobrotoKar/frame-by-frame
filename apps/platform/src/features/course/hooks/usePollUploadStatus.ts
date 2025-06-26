@@ -1,33 +1,24 @@
 import { Video, VideoStatus } from '@frame-by-frame/db';
 import { useQuery } from '@tanstack/react-query';
 import { useEffect } from 'react';
-import { getLessonBySlug } from '../actions/getLesson';
 
 interface PollUploadStatusProps {
-  courseSlug: string;
-  chapterSlug: string;
-  lessonSlug: string;
+  fn: () => Promise<unknown>;
   status: VideoStatus;
   setStatus: (status: VideoStatus) => void;
 }
 
 export default function usePollUploadStatus({
-  courseSlug,
-  chapterSlug,
-  lessonSlug,
+  fn,
   status,
   setStatus,
 }: PollUploadStatusProps): {
   data?: Video;
 } {
   const { data } = useQuery({
-    queryKey: ['pollUploadStatus', lessonSlug],
+    queryKey: ['pollUploadStatus'],
     queryFn: async () => {
-      return (await getLessonBySlug(
-        courseSlug,
-        chapterSlug,
-        lessonSlug,
-      )) as Video;
+      return (await fn()) as Video;
     },
     refetchInterval: () => {
       if (status === VideoStatus.NOT_STARTED || status === VideoStatus.READY)

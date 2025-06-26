@@ -29,6 +29,10 @@ const adminNavLinks = (slug: string) => [
     href: `/admin/course/${slug}/content`,
   },
   {
+    title: 'Settings',
+    href: `/admin/course/${slug}/settings/appearance`,
+  },
+  {
     title: 'Analytics',
     href: `/admin/course/${slug}/analytics`,
   },
@@ -42,7 +46,11 @@ const adminNavLinks = (slug: string) => [
   },
 ];
 
-const Navbar = () => {
+interface NavbarProps {
+  className?: string;
+}
+
+const Navbar = ({ className }: NavbarProps) => {
   const path = usePathname();
   const { slug } = useParams<{ slug: string }>();
 
@@ -50,7 +58,7 @@ const Navbar = () => {
   const links = isAdmin ? adminNavLinks(slug) : navLinks;
 
   return (
-    <div className="wrapper py-2">
+    <div className={cn('px-8 py-2', className)}>
       <nav>
         <ul className="space-x-4">
           {links.map((link, index) => {

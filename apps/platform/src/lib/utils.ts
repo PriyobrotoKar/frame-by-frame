@@ -19,16 +19,21 @@ export function formatPrice({
   locale = 'en-IN',
 }: {
   amount: number;
-  currency: string;
+  currency?: string | null;
   locale?: string;
 }) {
   return new Intl.NumberFormat(locale, {
     style: 'currency',
-    currency,
+    currency: currency || 'INR',
     minimumFractionDigits: 0,
     maximumFractionDigits: 3,
   }).format(amount);
 }
+
+export const mediaUrl = (key: string | null | undefined) => {
+  if (!key) return '';
+  return `https://framebyframe-dev.s3.ap-south-1.amazonaws.com/${key}`;
+};
 
 export const slugify = (text: string | undefined) => {
   if (!text) return '';

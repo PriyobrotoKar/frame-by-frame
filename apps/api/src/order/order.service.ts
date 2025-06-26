@@ -27,13 +27,21 @@ export class OrderService {
       where: {
         id: courseId,
       },
+      include: {
+        versions: true,
+      },
     });
 
     if (!course) {
       throw new NotFoundException('Course not found');
     }
 
-    if (!course.isPublished || !course.price) {
+    // check if course is published and has a price
+    const publisedVersion = course.versions.find(
+      (version) => version.isPublished && version.price > 0,
+    );
+
+    if (!publisedVersion) {
       throw new BadRequestException('Course is not published yet');
     }
 
@@ -52,7 +60,7 @@ export class OrderService {
     }
 
     const orderOptions = {
-      amount: course.price,
+      amount: publisedVersion.price,
       currency: 'INR',
     };
 
@@ -68,10 +76,9 @@ export class OrderService {
       },
       update: {
         orderId: id,
-        status: 'PENDING',
       },
       create: {
-        amount: course.price,
+        amount: publisedVersion.price,
         currency: 'INR',
         courseId: course.id,
         userId: user.id,
@@ -81,8 +88,51 @@ export class OrderService {
 
     return {
       orderId: id,
-      amount: course.price,
+      amount: publisedVersion.price,
       currency: 'INR',
+    };
+  }
+
+  async getOrders(courseId: string, page: number, limit: number) {
+    const orders = await db.order.findMany({
+      where: {
+        courseId: courseId,
+      },
+      skip: page * limit,
+      take: limit,
+      select: {
+        id: true,
+        amount: true,
+        currency: true,
+        orderId: true,
+        status: true,
+        createdAt: true,
+        user: {
+          select: {
+            name: true,
+            email: true,
+            phone: true,
+          },
+        },
+      },
+    });
+
+    const totalOrders = await db.order.count();
+
+    const structuredOrders = orders.map(({ user, ...order }) => {
+      return {
+        ...order,
+        customer_name: user.name,
+        customer_email: user.email,
+        customer_phone: user.phone,
+      };
+    });
+
+    return {
+      orders: structuredOrders,
+      totalOrders,
+      page,
+      limit,
     };
   }
 }

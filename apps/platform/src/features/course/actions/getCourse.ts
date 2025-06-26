@@ -1,11 +1,26 @@
 import apiClient from '@/lib/api-client';
-import { Course } from '@frame-by-frame/db';
+import { Prisma } from '@frame-by-frame/db';
+import { ChapterWithLessons } from './getChapters';
 
-export const getCourseBySlug = async (courseId: string) => {
-  return await apiClient.get<Course>(`/courses/${courseId}`);
+export type CourseWithChapters = Prisma.CourseVersionGetPayload<{
+  include: {
+    trailer: true;
+    learnings: true;
+    instructors: true;
+  };
+}> & {
+  chapters: ChapterWithLessons[];
 };
 
-export const getCourses = async () => {
+export const getCourseBySlug = async (slug: string, isAdmin = false) => {
+  return await apiClient.get<CourseWithChapters>(
+    `/courses/${slug}` + (isAdmin ? '/admin' : ''),
+  );
+};
+
+export const getCourses = async (isAdmin = false) => {
   console.log('Fetching courses');
-  return await apiClient.get<Course[]>('/courses');
+  return await apiClient.get<CourseWithChapters[]>(
+    '/courses' + (isAdmin ? '/admin' : ''),
+  );
 };

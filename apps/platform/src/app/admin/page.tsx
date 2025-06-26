@@ -2,7 +2,7 @@ import { getCourses } from '@/features/course/actions/getCourse';
 import { redirect } from 'next/navigation';
 
 export default async function page() {
-  const [course] = await getCourses();
+  const [course] = await getCourses(true);
 
   if (!course) {
     return redirect('/admin/course/create'); // Redirect to create a new course if none exist

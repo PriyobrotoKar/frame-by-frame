@@ -48,7 +48,7 @@ const ChapterLists = ({ chapters }: ChapterListsProps) => {
   }
 
   return (
-    <div className="pr-6">
+    <div className="px-6">
       <Accordion
         type="multiple"
         defaultValue={[chapterSlug ?? '']}

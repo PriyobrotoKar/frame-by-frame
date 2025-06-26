@@ -21,6 +21,13 @@ import { UpdateVideoDto } from './dto/update.video';
 import Public from '@/decorators/public.decorator';
 import { VideoStatus } from '@frame-by-frame/db';
 import { ApiKeyGuard } from '@/auth/guards/api-key.guard';
+import { UpdateCourseDto } from './dto/update.course';
+import { CreateLearningDto } from './dto/create.learning';
+import { UpdateLeaningDto } from './dto/update.learning';
+import { CreateInstructorDto } from './dto/create.instructor';
+import { UpdateInstructorDto } from './dto/update.instructor';
+import CurrentUser from '@/decorators/user.decorator';
+import { type JwtPayload } from '@/types/jwt.payload';
 
 @Controller('courses')
 export class CoursesController {
@@ -32,14 +39,55 @@ export class CoursesController {
     return this.coursesService.createCourse(body);
   }
 
+  @Admin()
+  @Get('/admin')
+  async getAllCourses() {
+    return this.coursesService.getCourses(true);
+  }
+
+  @Public()
   @Get(':slug')
   async getCourseBySlug(@Param('slug') slug: string) {
     return this.coursesService.getCourseBySlug(slug);
   }
 
+  @Admin()
+  @Get(':slug/admin')
+  async getCourseAdmin(@Param('slug') slug: string) {
+    return this.coursesService.getCourseBySlug(slug, true);
+  }
+
+  @Public()
   @Get()
   async getCourses() {
     return this.coursesService.getCourses();
+  }
+
+  @Admin()
+  @Patch(':slug')
+  async updateCourse(
+    @Param('slug') slug: string,
+    @Body() body: UpdateCourseDto,
+  ) {
+    return this.coursesService.updateCourse(slug, body);
+  }
+
+  @Admin()
+  @Post(':slug/trailer')
+  async addTrailer(@Param('slug') slug: string) {
+    return this.coursesService.addTrailer(slug);
+  }
+
+  @Admin()
+  @Get(':slug/trailer')
+  async getTrailer(@Param('slug') slug: string) {
+    return this.coursesService.getCourseTrailer(slug);
+  }
+
+  @Admin()
+  @Post(':slug/publish')
+  async publishCourse(@Param('slug') slug: string) {
+    return this.coursesService.publishCourse(slug);
   }
 
   @Admin()
@@ -62,8 +110,11 @@ export class CoursesController {
   }
 
   @Get(':slug/chapters')
-  async getChapters(@Param('slug') slug: string) {
-    return this.coursesService.getChapters(slug);
+  async getChapters(
+    @Param('slug') slug: string,
+    @CurrentUser() user: JwtPayload,
+  ) {
+    return this.coursesService.getChapters(slug, user);
   }
 
   @Admin()
@@ -106,8 +157,9 @@ export class CoursesController {
     @Param('slug') slug: string,
     @Param('chapterSlug') chapterSlug: string,
     @Param('lessonSlug') lessonSlug: string,
+    @CurrentUser() user: JwtPayload,
   ) {
-    return this.coursesService.getLesson(slug, chapterSlug, lessonSlug);
+    return this.coursesService.getLesson(slug, chapterSlug, lessonSlug, user);
   }
 
   @Admin()
@@ -174,5 +226,77 @@ export class CoursesController {
     @Query('key') key?: string,
   ) {
     return this.coursesService.updateVideoStatus(videoId, status, key);
+  }
+
+  @Admin()
+  @Post(':slug/learnings')
+  async createLearning(
+    @Param('slug') slug: string,
+    @Body() body: CreateLearningDto,
+  ) {
+    return this.coursesService.createLearning(slug, body);
+  }
+
+  @Get(':slug/learnings')
+  async getLearnings(
+    @Param('slug') slug: string,
+    @CurrentUser() user: JwtPayload,
+  ) {
+    return this.coursesService.getLearnings(slug, user);
+  }
+
+  @Admin()
+  @Patch(':slug/learnings/:learningId')
+  async editLearning(
+    @Param('slug') slug: string,
+    @Param('learningId') learningId: string,
+    @Body() body: UpdateLeaningDto,
+  ) {
+    return this.coursesService.updateLearning(slug, learningId, body);
+  }
+
+  @Admin()
+  @Delete(':slug/learnings/:learningId')
+  async deleteLearning(
+    @Param('slug') slug: string,
+    @Param('learningId') learningId: string,
+  ) {
+    return this.coursesService.deleteLearning(slug, learningId);
+  }
+
+  @Admin()
+  @Post(':slug/instructors')
+  async addInstructor(
+    @Param('slug') slug: string,
+    @Body() body: CreateInstructorDto,
+  ) {
+    return this.coursesService.createInstructor(slug, body);
+  }
+
+  @Get(':slug/instructors')
+  async getInstructors(
+    @Param('slug') slug: string,
+    @CurrentUser() user: JwtPayload,
+  ) {
+    return this.coursesService.getInstructors(slug, user);
+  }
+
+  @Admin()
+  @Patch(':slug/instructors/:instructorId')
+  async updateInstructor(
+    @Param('slug') slug: string,
+    @Param('instructorId') instructorId: string,
+    @Body() body: UpdateInstructorDto,
+  ) {
+    return this.coursesService.updateInstructor(slug, instructorId, body);
+  }
+
+  @Admin()
+  @Get(':slug/analytics/overview')
+  async getCourseOverview(
+    @Param('slug') slug: string,
+    @CurrentUser() user: JwtPayload,
+  ) {
+    return this.coursesService.getCourseOverview(slug, user);
   }
 }

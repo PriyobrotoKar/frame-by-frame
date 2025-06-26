@@ -8,6 +8,7 @@ import { updateVideoStatus } from '../actions/updateVideoStatus';
 import { Video, VideoStatus } from '@frame-by-frame/db';
 import usePollUploadStatus from '../hooks/usePollUploadStatus';
 import VideoPlayer from './VideoPlayer';
+import { mediaUrl } from '@/lib/utils';
 
 interface ModulePreviewProps {
   courseSlug: string;
@@ -108,9 +109,7 @@ const VideoPreview = ({
   const { progress, isUploading, isSuccess } = useMultipartUpload();
 
   const { data } = usePollUploadStatus({
-    courseSlug,
-    chapterSlug,
-    lessonSlug: video.slug,
+    fn: () => getLessonBySlug(courseSlug, chapterSlug, video.slug),
     status,
     setStatus,
   });
@@ -151,7 +150,7 @@ const VideoPreview = ({
       ) : (
         <VideoPlayer
           title={video.title}
-          src={`https://framebyframe-dev.s3.ap-south-1.amazonaws.com/${data?.url ?? video.url}`}
+          src={mediaUrl(data?.url ?? video.url)}
         />
       )}
 

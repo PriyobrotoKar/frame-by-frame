@@ -4,18 +4,22 @@ import {
   AccordionItem,
   AccordionTrigger,
 } from '@/components/ui/accordion';
-import { demoCourse } from '@/lib/mocks';
 import { IconCircleCaretRight } from '@tabler/icons-react';
 import React from 'react';
+import { ChapterWithLessons } from '../actions/getChapters';
 
-const CourseContent = () => {
+interface CourseContentProps {
+  chapters: ChapterWithLessons[];
+}
+
+const CourseContent = ({ chapters }: CourseContentProps) => {
   return (
     <section className="bg-card space-y-6 rounded-2xl border p-4">
       <h2 className="text-xl">Course Content</h2>
 
       <div>
         <Accordion type="multiple" className="space-y-2">
-          {demoCourse.modules.map((module) => (
+          {chapters.map((module) => (
             <AccordionItem key={module.id} value={module.id}>
               <AccordionTrigger>
                 {module.title}{' '}
@@ -34,7 +38,7 @@ const CourseContent = () => {
                     </div>
 
                     <span className="text-muted-foreground text-sm">
-                      {lesson.duration}
+                      10 mins
                     </span>
                   </div>
                 ))}
