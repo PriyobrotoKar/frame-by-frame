@@ -54,6 +54,7 @@ model User {
   name       String
   email      String  @unique
   profilePic String?
+  phone      String?
   role       Role    @default(USER)
 
   discordId String? @unique

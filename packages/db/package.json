@@ -11,12 +11,16 @@
     "studio": "pnpx dotenv-cli -e ../../.env -- prisma studio",
     "migrate-stage": "pnpx dotenv-cli -e ../../.env.staging -- prisma migrate deploy",
     "studio-stage": "pnpx dotenv-cli -e ../../.env.staging -- prisma studio",
+    "seed-sync": "pnpx dotenv-cli -e ../../.env -- pnpx @snaplet/seed sync",
+    "seed": "pnpx dotenv-cli -e ../../.env -- pnpx tsx ./prisma/seed.ts",
     "build": "pnpm generate && npx tsc"
   },
   "devDependencies": {
-    "@types/node": "^22.15.2",
-    "@frame-by-frame/typescript-config": "workspace:*",
     "@frame-by-frame/eslint-config": "workspace:*",
+    "@frame-by-frame/typescript-config": "workspace:*",
+    "@snaplet/copycat": "^6.0.0",
+    "@snaplet/seed": "^0.98.0",
+    "@types/node": "^22.15.2",
     "prisma": "6.6.0"
   },
   "keywords": [],
