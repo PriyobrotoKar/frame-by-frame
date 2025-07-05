@@ -21,7 +21,7 @@ Card.Header = function CardHeader({ children }: PropsWithChildren) {
 };
 
 Card.Title = function CardTitle({ children }: PropsWithChildren) {
-  return <h2 className="text-body-semibold">{children}</h2>;
+  return <h2 className="text-xl">{children}</h2>;
 };
 
 Card.Subtitle = function CardSubtitle({ children }: PropsWithChildren) {

@@ -1,6 +1,5 @@
 import { Header } from '@/components/header';
 import React, { ReactNode } from 'react';
-import MultipartUploadProvider from '@/providers/MultipartUploadProvider';
 import LoginDialogProvider from '@/providers/LoginDialogProvider';
 
 export default function DashboardLayout({ children }: { children: ReactNode }) {
@@ -8,9 +7,7 @@ export default function DashboardLayout({ children }: { children: ReactNode }) {
     <div className="flex min-h-svh flex-col">
       <LoginDialogProvider>
         <Header />
-        <div className="flex w-full flex-1">
-          <MultipartUploadProvider>{children}</MultipartUploadProvider>
-        </div>
+        <div className="flex w-full flex-1">{children}</div>
       </LoginDialogProvider>
     </div>
   );

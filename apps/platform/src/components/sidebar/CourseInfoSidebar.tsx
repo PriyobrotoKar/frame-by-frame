@@ -10,6 +10,7 @@ import { CourseWithChapters } from '@/features/course/actions/getCourse';
 
 interface CourseInfoSidebarProps {
   course: CourseWithChapters;
+  isEnrolled?: boolean;
 }
 
 const courseFeatures = [
@@ -35,10 +36,17 @@ const courseFeatures = [
   },
 ];
 
-export default function CourseInfoSidebar({ course }: CourseInfoSidebarProps) {
+export default function CourseInfoSidebar({
+  course,
+  isEnrolled = false,
+}: CourseInfoSidebarProps) {
   return (
-    <div className="bg-card sticky top-40 h-fit min-w-72 space-y-5 rounded-xl border p-4">
-      <CourseCard className="bg-background" showTitle={false} course={course} />
+    <div className="bg-card h-fit w-full space-y-5 rounded-xl border p-4 md:sticky md:top-40 md:max-w-80">
+      <CourseCard
+        className="bg-primary-foreground"
+        isEnrolled={isEnrolled}
+        course={course}
+      />
       <CourseIncludes />
     </div>
   );

@@ -258,7 +258,6 @@ const CourseTrailerUploader = ({
   courseSlug,
   trailer,
 }: CourseTrailerUploaderProps) => {
-  console.log('trailer', trailer);
   const [status, setStatus] = useState<VideoStatus>(
     trailer?.status ?? VideoStatus.NOT_STARTED,
   );
@@ -272,6 +271,7 @@ const CourseTrailerUploader = ({
     },
     status,
     setStatus,
+    slug: courseSlug,
   });
 
   const { mutate: createVideoMutation, isPending: isCreatingVideo } =
@@ -364,7 +364,7 @@ const CourseTrailerUploader = ({
         {status === VideoStatus.READY && (
           <VideoPlayer
             className="rounded-none p-2"
-            src={mediaUrl(data?.url ?? trailer!.url)}
+            src={data?.url ?? trailer!.url}
           />
         )}
 

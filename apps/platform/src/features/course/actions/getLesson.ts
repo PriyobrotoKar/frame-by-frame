@@ -1,17 +1,62 @@
 import apiClient from '@/lib/api-client';
-import { Attachment, Prisma, Video } from '@frame-by-frame/db';
+import { Prisma } from '@frame-by-frame/db';
 
 export type Lesson =
   | (Prisma.DocumentGetPayload<{
       include: {
         attachments: true;
+        lessonProgresses: {
+          select: {
+            progress: true;
+            completed: true;
+          };
+        };
+        chapter: {
+          select: {
+            id: true;
+            title: true;
+            slug: true;
+            courseVersion: {
+              select: {
+                id: true;
+                title: true;
+                slug: true;
+                courseId: true;
+              };
+            };
+          };
+        };
       };
     }> & {
       type: 'document';
     })
-  | (Video & {
+  | (Prisma.VideoGetPayload<{
+      include: {
+        attachments: true;
+        lessonProgresses: {
+          select: {
+            progress: true;
+            completed: true;
+          };
+        };
+        chapter: {
+          select: {
+            id: true;
+            title: true;
+            slug: true;
+            courseVersion: {
+              select: {
+                id: true;
+                title: true;
+                slug: true;
+                courseId: true;
+              };
+            };
+          };
+        };
+      };
+    }> & {
       type: 'video';
-      attachments: Attachment[];
     });
 
 export const getLessonBySlug = async (

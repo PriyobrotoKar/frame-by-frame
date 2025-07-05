@@ -8,6 +8,7 @@ interface OrdersProps {
   analytics: AnalyticsOverview;
 }
 
+// TODO: Replace with actual data from the API
 const Orders = ({ analytics: { totalOrders } }: OrdersProps) => {
   const chartConfig = {
     sales: {
@@ -50,8 +51,8 @@ const Orders = ({ analytics: { totalOrders } }: OrdersProps) => {
   return (
     <div className="space-y-4 rounded-lg border">
       <div className="space-y-1 p-5">
-        <h3 className="text-md">Monthly Sales</h3>
-        <h2 className="text-2xl">{totalOrders}</h2>
+        <h3 className="text-md">Monthly Orders</h3>
+        <h2 className="text-2xl">{totalOrders ?? 0}</h2>
       </div>
       <div>
         <ChartContainer config={chartConfig} className="h-[80px] w-full">

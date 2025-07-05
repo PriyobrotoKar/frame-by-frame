@@ -79,9 +79,6 @@ const EditAttachments = ({
       queryClient.setQueryData(
         ['lesson', module.slug],
         (oldData: Lesson | undefined) => {
-          console.log('New attachment added:', newData);
-          console.log('Old attachments:', oldData?.attachments);
-
           if (!oldData) return oldData;
 
           return {
@@ -142,7 +139,7 @@ const EditAttachments = ({
           return (
             <div
               key={attachment.id}
-              className="bg-muted flex max-w-40 items-center gap-2 rounded-lg border px-4 py-3"
+              className="bg-muted flex max-w-60 items-center gap-2 rounded-lg border px-4 py-3"
             >
               <div>{attachment.type === 'PDF' ? <IconPdf /> : <IconZip />}</div>
               <div className="flex flex-col">

@@ -109,8 +109,6 @@ const OrderTable = ({ initialData, totalCount, courseId }: OrderTableProps) => {
     initialData,
   });
 
-  console.log('Pagination state:', pagination, data);
-
   const table = useReactTable({
     data,
     columns,

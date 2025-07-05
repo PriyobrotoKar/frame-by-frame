@@ -33,7 +33,7 @@ const Instructor = ({ instructors }: InstructorProps) => {
                 />
               </div>
             )}
-            <div className="space-y-2">
+            <div className="md:text-body space-y-2 text-sm">
               <div className="flex items-center gap-2">
                 <IconCalendarUp size={16} />
                 <span>{instructor.experienceYears} years of experience</span>

@@ -1,5 +1,6 @@
 import AdminCourseSidebar from '@/components/sidebar/AdminCourseSidebar';
 import React, { ReactNode } from 'react';
+import MultipartUploadProvider from '@/providers/MultipartUploadProvider';
 
 export default function AdminContentLayout({
   children,
@@ -10,8 +11,10 @@ export default function AdminContentLayout({
 }) {
   return (
     <div className="flex flex-1">
-      <AdminCourseSidebar params={params} />
-      <div className="wrapper flex-1 p-8">{children}</div>
+      <MultipartUploadProvider>
+        <AdminCourseSidebar params={params} />
+        <div className="wrapper flex-1 p-8">{children}</div>
+      </MultipartUploadProvider>
     </div>
   );
 }

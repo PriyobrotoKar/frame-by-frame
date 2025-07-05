@@ -8,7 +8,7 @@ import { updateVideoStatus } from '../actions/updateVideoStatus';
 import { Video, VideoStatus } from '@frame-by-frame/db';
 import usePollUploadStatus from '../hooks/usePollUploadStatus';
 import VideoPlayer from './VideoPlayer';
-import { mediaUrl } from '@/lib/utils';
+import { useSession } from '@/providers/SessionProvider';
 
 interface ModulePreviewProps {
   courseSlug: string;
@@ -30,8 +30,6 @@ const ModulePreview = ({
     },
     initialData,
   });
-
-  console.log('ModulePreview data:', data);
 
   if (isLoading) {
     return <ModulePreviewSkeleton type="document" />;
@@ -85,7 +83,9 @@ const DocumentPreview = ({ title, content }: DocumentPreviewProps) => {
   return (
     <div className="flex-1 space-y-4 px-4 py-5">
       <h3 className="text-body-semibold">{title}</h3>
-      <p className="text-muted-foreground line-clamp-[10]">{content}</p>
+      <p className="text-muted-foreground line-clamp-[10] whitespace-pre-wrap">
+        {content}
+      </p>
     </div>
   );
 };
@@ -105,6 +105,8 @@ const VideoPreview = ({
   courseSlug,
   chapterSlug,
 }: VideoPreviewProps) => {
+  const { data: session } = useSession();
+
   const [status, setStatus] = useState<VideoStatus>(video.status);
   const { progress, isUploading, isSuccess } = useMultipartUpload();
 
@@ -112,6 +114,7 @@ const VideoPreview = ({
     fn: () => getLessonBySlug(courseSlug, chapterSlug, video.slug),
     status,
     setStatus,
+    slug: video.slug,
   });
 
   const queryClient = useQueryClient();
@@ -150,7 +153,8 @@ const VideoPreview = ({
       ) : (
         <VideoPlayer
           title={video.title}
-          src={mediaUrl(data?.url ?? video.url)}
+          src={`/courses/${courseSlug}/video/${data?.url ?? video.url}`}
+          token={session?.accessToken}
         />
       )}
 

@@ -1,4 +1,5 @@
 import AdminSettingsSidebar from '@/components/sidebar/AdminSettingsSidebar';
+import MultipartUploadProvider from '@/providers/MultipartUploadProvider';
 import React, { ReactNode } from 'react';
 
 export default async function AdminSettingsLayout({
@@ -13,7 +14,9 @@ export default async function AdminSettingsLayout({
   return (
     <div className="flex flex-1">
       <AdminSettingsSidebar slug={slug} />
-      <div className="flex-1 p-8">{children}</div>
+      <div className="flex-1 p-8">
+        <MultipartUploadProvider>{children}</MultipartUploadProvider>
+      </div>
     </div>
   );
 }

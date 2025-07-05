@@ -14,10 +14,6 @@ const navLinks = [
     href: '/library',
   },
   {
-    title: 'Free Courses',
-    href: '/free',
-  },
-  {
     title: 'Certificates',
     href: '/certificates',
   },
@@ -58,7 +54,7 @@ const Navbar = ({ className }: NavbarProps) => {
   const links = isAdmin ? adminNavLinks(slug) : navLinks;
 
   return (
-    <div className={cn('px-8 py-2', className)}>
+    <div className={cn('px-5 py-2 sm:px-8', className)}>
       <nav>
         <ul className="space-x-4">
           {links.map((link, index) => {

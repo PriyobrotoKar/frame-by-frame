@@ -1,6 +1,4 @@
 import React from 'react';
-import { IconBell, IconSettings } from '@tabler/icons-react';
-import { Button } from '../ui/button';
 import { Separator } from '../ui/separator';
 import Image from 'next/image';
 import Navbar from './Navbar';
@@ -10,6 +8,9 @@ import Profile from './Profile';
 import SearchBox from './SearchBox';
 import CourseSelector from './CourseSelector';
 import { cn } from '@/lib/utils';
+import { Role } from '@frame-by-frame/db';
+import AdminNotification from '@/features/notification/components/AdminNotification';
+import UserNotifications from '@/features/notification/components/UserNotifications';
 
 interface HeaderProps {
   showLogo?: boolean;
@@ -23,28 +24,42 @@ export async function Header({
   className,
 }: HeaderProps) {
   const session = await getSession();
-
   return (
     <div className="bg-background sticky top-0 z-20 border-b">
-      <header className={cn('flex items-center gap-6 px-8 py-5', className)}>
+      <header
+        className={cn(
+          'flex items-center justify-between gap-6 px-5 py-5 sm:px-8',
+          className,
+        )}
+      >
         {showLogo && (
           <Image src={'/logo.svg'} alt="logo" width={90} height={33} />
         )}
 
-        <CourseSelector />
-        <SearchBox />
-        <Button title="Settings" size={'icon'} variant={'secondary'}>
-          <IconSettings />
-        </Button>
-        <Button title="Notifications" size={'icon'} variant={'secondary'}>
-          <IconBell />
-        </Button>
-        <Separator
-          className="data-[orientation=vertical]:h-5"
-          orientation="vertical"
-        />
-        {session ? <Profile session={session} /> : <Login />}
+        {session?.user.role === Role.ADMIN && <CourseSelector />}
+
+        <div className="hidden flex-1 sm:block">
+          <SearchBox />
+        </div>
+
+        <div className="flex items-center gap-6">
+          {session &&
+            (session.user.role === Role.ADMIN ? (
+              <AdminNotification />
+            ) : (
+              <UserNotifications />
+            ))}
+          <Separator
+            className="data-[orientation=vertical]:h-5"
+            orientation="vertical"
+          />
+          {session ? <Profile session={session} /> : <Login />}
+        </div>
       </header>
+
+      <div className="px-5 sm:hidden sm:px-8">
+        <SearchBox />
+      </div>
 
       {showNavbar && <Navbar className={className} />}
     </div>

@@ -12,13 +12,13 @@ const CourseLearnings = ({ learnings }: CourseLearningsProps) => {
       <div className="flex items-center justify-between">
         <h2 className="text-xl">What you will learn</h2>
 
-        <div className="text-muted-foreground flex items-center gap-1.5 text-sm">
+        <div className="text-muted-foreground hidden items-center gap-1.5 text-sm md:flex">
           <IconInfoCircle className="size-4" />
           Beginner friendly
         </div>
       </div>
 
-      <div className="grid grid-cols-2 gap-x-11 gap-y-6">
+      <div className="grid gap-x-11 gap-y-6 sm:grid-cols-2 md:grid-cols-1 lg:grid-cols-2">
         {learnings.map((learning, index) => (
           <div key={index} className="text-sm-md space-y-2">
             <h3>

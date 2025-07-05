@@ -20,8 +20,6 @@ const EditChapter = ({ chapter, setChapter }: EditChapterProps) => {
 
   const queryClient = useQueryClient();
 
-  console.log(open, chapter);
-
   const { mutate, isPending } = useMutation({
     mutationFn: async (data: { name: string; chapterSlug: string }) => {
       return await updateChapter(slug, data.chapterSlug, {

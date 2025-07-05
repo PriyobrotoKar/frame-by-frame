@@ -34,13 +34,20 @@ const AddModule = ({ chapter, open, setOpen }: AddModuleProps) => {
 
   const { mutate: createVideoMutation, isPending: isCreatingVideo } =
     useMutation({
-      mutationFn: async (data: { title: string; videoFile: File }) => {
+      mutationFn: async (data: {
+        title: string;
+        videoFile: File;
+        duration: number;
+      }) => {
         if (!chapter) {
           return;
         }
 
+        console.log(data.duration);
+
         const video = await createVideo(courseSlug, chapter.slug, {
           title: data.title,
+          duration: Math.floor(data.duration),
         });
 
         // Key format: courseSlug-chapterSlug-videoName-videoId.fileExtension
@@ -144,10 +151,16 @@ const AddModule = ({ chapter, open, setOpen }: AddModuleProps) => {
                   const file = e.target.files?.[0];
                   if (!file) return;
 
-                  createVideoMutation({
-                    title: 'Untitled Video',
-                    videoFile: file,
-                  });
+                  const videoElem = document.createElement('video');
+                  videoElem.src = URL.createObjectURL(file);
+                  videoElem.onloadedmetadata = () => {
+                    const duration = videoElem.duration;
+                    createVideoMutation({
+                      title: file.name.split('.')[0] || 'Untitled Video',
+                      videoFile: file,
+                      duration: duration,
+                    });
+                  };
                 }}
                 disabled={isCreatingVideo}
                 type="file"

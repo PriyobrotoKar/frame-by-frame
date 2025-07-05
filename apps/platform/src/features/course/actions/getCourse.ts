@@ -19,7 +19,6 @@ export const getCourseBySlug = async (slug: string, isAdmin = false) => {
 };
 
 export const getCourses = async (isAdmin = false) => {
-  console.log('Fetching courses');
   return await apiClient.get<CourseWithChapters[]>(
     '/courses' + (isAdmin ? '/admin' : ''),
   );

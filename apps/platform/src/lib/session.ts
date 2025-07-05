@@ -1,12 +1,16 @@
 'use server';
 
+import { Role } from '@frame-by-frame/db';
 import { jwtVerify, SignJWT, type JWTPayload } from 'jose';
 import { cookies } from 'next/headers';
+import { redirect } from 'next/navigation';
+import { NextRequest } from 'next/server';
 
 interface User {
   id: string;
   name: string;
   email: string;
+  role: Role;
   image?: string;
 }
 
@@ -56,8 +60,10 @@ export const createSession = async (payload: Session): Promise<void> => {
   cookieStore.set('session', session, cookieOptions);
 };
 
-export const getSession = async (): Promise<Session | null> => {
-  const cookieStore = await cookies();
+export const getSession = async (
+  request?: NextRequest,
+): Promise<Session | null> => {
+  const cookieStore = request?.cookies || (await cookies());
   const token = cookieStore.get('session')?.value;
   if (!token) return null;
 
@@ -67,6 +73,7 @@ export const getSession = async (): Promise<Session | null> => {
 export const removeSession = async (): Promise<void> => {
   const cookieStore = await cookies();
   cookieStore.delete('session');
+  redirect('/');
 };
 
 //TODO: Add the logic for refreshing the session

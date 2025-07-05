@@ -7,6 +7,7 @@ import {
 import { IconCircleCaretRight } from '@tabler/icons-react';
 import React from 'react';
 import { ChapterWithLessons } from '../actions/getChapters';
+import { formatDuration } from '@/lib/utils';
 
 interface CourseContentProps {
   chapters: ChapterWithLessons[];
@@ -20,10 +21,14 @@ const CourseContent = ({ chapters }: CourseContentProps) => {
       <div>
         <Accordion type="multiple" className="space-y-2">
           {chapters.map((module) => (
-            <AccordionItem key={module.id} value={module.id}>
+            <AccordionItem
+              key={module.id}
+              className="data-[state=open]:bg-muted"
+              value={module.id}
+            >
               <AccordionTrigger>
                 {module.title}{' '}
-                <span className="text-muted-foreground text-sm">
+                <span className="text-muted-foreground shrink-0 text-sm">
                   {module.lessons.length} Lectures
                 </span>
               </AccordionTrigger>
@@ -31,14 +36,15 @@ const CourseContent = ({ chapters }: CourseContentProps) => {
                 {module.lessons.map((lesson) => (
                   <div
                     key={lesson.id}
-                    className="text-sm-md flex items-center justify-between space-y-2"
+                    className="text-sm-md flex justify-between gap-2 space-y-2"
                   >
-                    <div className="flex items-center gap-2">
-                      <IconCircleCaretRight className="size-6" /> {lesson.title}
+                    <div className="line-clamp-2 flex items-center gap-2">
+                      <IconCircleCaretRight className="size-6 shrink-0" />{' '}
+                      {lesson.title}
                     </div>
 
-                    <span className="text-muted-foreground text-sm">
-                      10 mins
+                    <span className="text-muted-foreground shrink-0 text-sm">
+                      {formatDuration(lesson.duration)}
                     </span>
                   </div>
                 ))}

@@ -2,10 +2,15 @@
 
 import React from 'react';
 import Card from '../ui/card';
-import { Button } from '../ui/button';
-import { IconClock, IconShoppingCart, IconStack2 } from '@tabler/icons-react';
+import { Button, buttonVariants } from '../ui/button';
+import {
+  IconClock,
+  IconPlayerPlay,
+  IconShoppingCart,
+  IconStack2,
+} from '@tabler/icons-react';
 import Image from 'next/image';
-import { formatPrice, mediaUrl } from '@/lib/utils';
+import { cn, formatDuration, formatPrice, mediaUrl } from '@/lib/utils';
 import Link from 'next/link';
 import Script from 'next/script';
 import { useMutation } from '@tanstack/react-query';
@@ -32,7 +37,9 @@ export interface Module {
 interface CourseCardProps {
   course: CourseWithChapters;
   showTitle?: boolean;
+  showFooter?: boolean;
   className?: string;
+  isEnrolled?: boolean;
 }
 
 interface RazorpayOptions {
@@ -64,18 +71,24 @@ const CourseCard = ({
   course,
   className,
   showTitle = true,
+  showFooter = true,
+  isEnrolled = false,
 }: CourseCardProps) => {
   const { setOpen } = useLoginDialog();
-
   const lessonCount = course.chapters.reduce((acc, chapter) => {
     return acc + chapter.lessons.length;
   }, 0);
 
+  const courseDuration = course.chapters
+    .map((chapter) => chapter.lessons)
+    .flat(1)
+    .reduce((acc, lesson) => {
+      return acc + lesson.duration;
+    }, 0);
+
   const { mutate, isPending } = useMutation({
     mutationFn: async () => {
       const order = await createOrder(course.courseId);
-
-      console.log('Order created:', order);
 
       displayRazorpay({
         amount: order.amount,
@@ -96,7 +109,7 @@ const CourseCard = ({
   });
 
   return (
-    <Link className="block" href={`/${course.slug}`}>
+    <>
       <Card className={className}>
         <div>
           {course.image && (
@@ -138,7 +151,7 @@ const CourseCard = ({
             </div>
             <div className="space-x-6">
               <Card.Info>
-                <IconClock /> 10h
+                <IconClock /> {formatDuration(courseDuration)}
               </Card.Info>
               <Card.Info>
                 <IconStack2 /> {lessonCount} Lessons
@@ -146,23 +159,35 @@ const CourseCard = ({
             </div>
           </div>
 
-          <Card.Footer>
-            <Button
-              disabled={isPending}
-              onClick={() => mutate()}
-              className="w-full"
-            >
-              <IconShoppingCart />
-              Buy Now
-            </Button>
-            <p className="text-muted-foreground text-center text-sm">
-              Earn certificate upon completion
-            </p>
-          </Card.Footer>
+          {showFooter && (
+            <Card.Footer>
+              {isEnrolled ? (
+                <Link
+                  href={`/learn/${course.slug}/${course.chapters[0]?.slug}/${course.chapters[0]?.lessons[0]?.slug}`}
+                  className={cn(buttonVariants(), 'w-full')}
+                >
+                  <IconPlayerPlay />
+                  Resume
+                </Link>
+              ) : (
+                <Button
+                  disabled={isPending}
+                  onClick={() => mutate()}
+                  className="w-full"
+                >
+                  <IconShoppingCart />
+                  Buy Now
+                </Button>
+              )}
+              <p className="text-muted-foreground text-center text-sm">
+                Secured Payment Gateway
+              </p>
+            </Card.Footer>
+          )}
         </Card.Content>
       </Card>
       <Script src="https://checkout.razorpay.com/v1/checkout.js" />
-    </Link>
+    </>
   );
 };
 

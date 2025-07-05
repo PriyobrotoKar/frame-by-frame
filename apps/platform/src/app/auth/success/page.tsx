@@ -1,12 +1,14 @@
 'use client';
 
-import { createSession } from '@/lib/session';
+import { createSession, Session } from '@/lib/session';
+import { useSession } from '@/providers/SessionProvider';
 import { User } from '@frame-by-frame/db';
 import { useSearchParams } from 'next/navigation';
 import { useRouter } from 'next/navigation';
 import { useEffect } from 'react';
 
 export default function AuthSucessPage() {
+  const { setData } = useSession();
   const params = useSearchParams();
   const router = useRouter();
   const data = params.get('data');
@@ -23,21 +25,27 @@ export default function AuthSucessPage() {
       email,
       name,
       profilePic,
+      role,
       access_token,
       refresh_token,
     }: User & { access_token: string; refresh_token: string } =
       JSON.parse(data);
 
-    createSession({
+    const session: Session = {
       user: {
         id,
         email,
         name,
+        role,
         image: profilePic ?? undefined,
       },
       accessToken: access_token,
       refreshToken: refresh_token,
-    }).then(() => {
+    };
+
+    createSession(session).then(() => {
+      setData(session);
+
       if (redirectUrl) {
         router.replace(redirectUrl);
       }
@@ -45,7 +53,7 @@ export default function AuthSucessPage() {
       // If no redirect is provided, redirect to the home page
       router.replace('/');
     });
-  }, [data, redirectUrl, router]);
+  }, [data, redirectUrl, setData, router]);
 
   return <div>Login successfull. Redirecting....</div>;
 }

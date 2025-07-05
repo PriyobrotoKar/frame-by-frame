@@ -8,13 +8,12 @@ interface LifetimeSalesProps {
   analytics: AnalyticsOverview;
 }
 
-const LifetimeSales = ({
-  analytics: { totalSales, analytics },
-}: LifetimeSalesProps) => {
-  const data = analytics.monthlyAnalytics.map((sale) => ({
-    month: sale.createdAt,
-    sales: sale.totalSales,
-  }));
+// TODO: Replace with actual data from the API
+const LifetimeSales = ({ analytics: { totalSales } }: LifetimeSalesProps) => {
+  // const data = analytics.monthlyAnalytics.map((sale) => ({
+  //   month: sale.createdAt,
+  //   sales: sale.totalSales,
+  // }));
 
   const chartConfig = {
     sales: {
@@ -26,8 +25,6 @@ const LifetimeSales = ({
       color: 'var(--color-chart-2)',
     },
   } satisfies ChartConfig;
-
-  console.log('LifetimeSales data:', [...data, ...data, ...data, ...data]);
 
   const _data = [
     {

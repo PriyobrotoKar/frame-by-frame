@@ -56,9 +56,12 @@ const EditModule = ({ module, chapterSlug, courseSlug }: EditModuleProps) => {
           description: data.description,
         });
       }
+      const wordsPerMinute = 200;
+      const duration = Math.floor(data.description.length / wordsPerMinute);
       return await updateDocument(courseSlug, chapterSlug, module.slug, {
         title: data.title,
         content: data.description,
+        duration,
       });
     },
     onError: (error) => {

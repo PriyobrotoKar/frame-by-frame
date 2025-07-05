@@ -54,7 +54,6 @@ interface EditInstructorProps {
 }
 
 const EditInstructor = ({ instructor, courseSlug }: EditInstructorProps) => {
-  console.log('EditInstructor rendered with:', instructor, courseSlug);
   const [isUploading, setIsUploading] = useState(false);
   const form = useForm({
     resolver: zodResolver(EditInstructorSchema),
@@ -121,7 +120,7 @@ const EditInstructor = ({ instructor, courseSlug }: EditInstructorProps) => {
                           width={800}
                           height={600}
                           alt="Course Thumbnail"
-                          className="h-full w-full object-cover"
+                          className="h-full w-full rounded-md object-cover"
                         />
                       )}
                       <div

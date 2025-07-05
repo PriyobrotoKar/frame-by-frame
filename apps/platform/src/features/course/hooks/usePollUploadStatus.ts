@@ -6,17 +6,19 @@ interface PollUploadStatusProps {
   fn: () => Promise<unknown>;
   status: VideoStatus;
   setStatus: (status: VideoStatus) => void;
+  slug: string;
 }
 
 export default function usePollUploadStatus({
   fn,
   status,
   setStatus,
+  slug,
 }: PollUploadStatusProps): {
   data?: Video;
 } {
   const { data } = useQuery({
-    queryKey: ['pollUploadStatus'],
+    queryKey: ['pollUploadStatus', slug],
     queryFn: async () => {
       return (await fn()) as Video;
     },

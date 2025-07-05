@@ -17,17 +17,77 @@ import {
 import { OAUTH_PATH } from '@/lib/constants';
 import { Button } from '../ui/button';
 import { useLoginDialog } from '@/providers/LoginDialogProvider';
+import useMediaQuery from '@/hooks/useMediaQuery';
+import {
+  Drawer,
+  DrawerContent,
+  DrawerDescription,
+  DrawerFooter,
+  DrawerHeader,
+  DrawerTitle,
+  DrawerTrigger,
+} from '../ui/drawer';
 
 const Login = () => {
   const { open, setOpen } = useLoginDialog();
+  const isDesktop = useMediaQuery('(min-width: 640px)');
   const [selectedMethod, setSelectedMethod] = useState<AuthProvider | null>(
     null,
   );
 
-  const handleOAuthLogin = () => {
-    if (!selectedMethod) return;
-    window.location.href = OAUTH_PATH[selectedMethod];
+  const handleOAuthLogin = (method: AuthProvider) => {
+    setSelectedMethod(method);
+    window.location.href = OAUTH_PATH[method];
   };
+
+  if (!isDesktop) {
+    return (
+      <Drawer>
+        <DrawerTrigger asChild>
+          <Button variant={'outline'}>Login</Button>
+        </DrawerTrigger>
+        <DrawerContent>
+          <div className="space-y-8 py-4">
+            <DrawerHeader className="gap-3">
+              <DrawerTitle className="text-xl">
+                Create an account or login to an existing one
+              </DrawerTitle>
+              <DrawerDescription>
+                View library and personalized content
+              </DrawerDescription>
+            </DrawerHeader>
+
+            <div className="flex flex-col gap-4 px-10">
+              <Button
+                variant={
+                  selectedMethod === AuthProvider.GOOGLE
+                    ? 'outline'
+                    : 'secondary'
+                }
+                onClick={() => handleOAuthLogin(AuthProvider.GOOGLE)}
+              >
+                <IconBrandGoogleFilled /> Login with Google
+              </Button>
+              <Button
+                variant={
+                  selectedMethod === AuthProvider.DISCORD
+                    ? 'outline'
+                    : 'secondary'
+                }
+                onClick={() => handleOAuthLogin(AuthProvider.DISCORD)}
+              >
+                <IconBrandDiscordFilled /> Login with Discord
+              </Button>
+            </div>
+
+            <DrawerFooter className="text-center text-sm">
+              <p>By signing in you agree to the Terms & Conditions</p>
+            </DrawerFooter>
+          </div>
+        </DrawerContent>
+      </Drawer>
+    );
+  }
 
   return (
     <Dialog open={open} onOpenChange={setOpen}>
@@ -49,7 +109,7 @@ const Login = () => {
             variant={
               selectedMethod === AuthProvider.GOOGLE ? 'outline' : 'secondary'
             }
-            onClick={() => setSelectedMethod(AuthProvider.GOOGLE)}
+            onClick={() => handleOAuthLogin(AuthProvider.GOOGLE)}
           >
             <IconBrandGoogleFilled /> Login with Google
           </Button>
@@ -57,20 +117,13 @@ const Login = () => {
             variant={
               selectedMethod === AuthProvider.DISCORD ? 'outline' : 'secondary'
             }
-            onClick={() => setSelectedMethod(AuthProvider.DISCORD)}
+            onClick={() => handleOAuthLogin(AuthProvider.DISCORD)}
           >
             <IconBrandDiscordFilled /> Login with Discord
           </Button>
         </div>
 
         <DialogFooter className="sm:flex-col sm:items-center">
-          <Button
-            onClick={handleOAuthLogin}
-            disabled={!selectedMethod}
-            className="w-full"
-          >
-            Continue
-          </Button>
           <p className="text-sm">
             By signing in you agree to the terms and conditions
           </p>

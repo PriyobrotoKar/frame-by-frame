@@ -61,7 +61,7 @@ const DailySales = ({ analytics: { analytics } }: DailySalesProps) => {
 
             <Area
               dataKey={'totalSales'}
-              type="natural"
+              type="monotone"
               fill="url(#fillDesktop)"
               stroke="var(--color-primary)"
               fillOpacity={0.5}
