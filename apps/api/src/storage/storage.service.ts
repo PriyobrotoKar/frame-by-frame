@@ -1,6 +1,7 @@
 import {
   CompleteMultipartUploadCommand,
   CreateMultipartUploadCommand,
+  GetObjectCommand,
   PutObjectCommand,
   PutObjectCommandInput,
   S3,
@@ -122,5 +123,37 @@ export class StorageService {
     return {
       message: 'Multipart upload completed successfully',
     };
+  }
+
+  async getSignedUrl(
+    key: string,
+    expiresIn: number = 3600, // Default to 1 hour
+  ) {
+    const params = {
+      Bucket: this.bucketName,
+      Key: key,
+    };
+
+    const command = new GetObjectCommand(params);
+    const url = await getSignedUrl(this.s3, command, {
+      expiresIn,
+    });
+
+    return {
+      url,
+      key,
+    };
+  }
+
+  async getObject(key: string) {
+    const params = {
+      Bucket: this.bucketName,
+      Key: key,
+    };
+
+    const command = new GetObjectCommand(params);
+    const object = await this.s3.send(command);
+
+    return object;
   }
 }

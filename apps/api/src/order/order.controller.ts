@@ -17,12 +17,20 @@ export class OrderController {
   }
 
   @Admin()
-  @Get(':courseId')
+  @Get(':courseId/all')
   async getOrders(
     @Param('courseSlug') courseId: string,
     @Query('page') page: number = 0,
     @Query('limit') limit: number = 10,
   ) {
     return this.orderService.getOrders(courseId, page, limit);
+  }
+
+  @Get(':courseId')
+  async getOrderByCourse(
+    @Param('courseId') courseId: string,
+    @CurrentUser() user: JwtPayload,
+  ) {
+    return this.orderService.getOrderByCourse(courseId, user);
   }
 }

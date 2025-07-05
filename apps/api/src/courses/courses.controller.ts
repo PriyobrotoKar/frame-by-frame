@@ -7,6 +7,7 @@ import {
   Patch,
   Post,
   Query,
+  Res,
   UseGuards,
 } from '@nestjs/common';
 import { CoursesService } from './courses.service';
@@ -28,6 +29,7 @@ import { CreateInstructorDto } from './dto/create.instructor';
 import { UpdateInstructorDto } from './dto/update.instructor';
 import CurrentUser from '@/decorators/user.decorator';
 import { type JwtPayload } from '@/types/jwt.payload';
+import { type Response } from 'express';
 
 @Controller('courses')
 export class CoursesController {
@@ -43,6 +45,11 @@ export class CoursesController {
   @Get('/admin')
   async getAllCourses() {
     return this.coursesService.getCourses(true);
+  }
+
+  @Get('activity')
+  async getActivity(@CurrentUser() user: JwtPayload) {
+    return this.coursesService.getUserActivity(user);
   }
 
   @Public()
@@ -160,6 +167,19 @@ export class CoursesController {
     @CurrentUser() user: JwtPayload,
   ) {
     return this.coursesService.getLesson(slug, chapterSlug, lessonSlug, user);
+  }
+
+  @Get(':slug/video/hls/*path')
+  async getHlsStream(
+    @Param('slug') slug: string,
+    @Param('path') paths: string[],
+    @CurrentUser() user: JwtPayload,
+    @Res({ passthrough: true }) res: Response,
+  ) {
+    console.log(paths);
+    const playlist = await this.coursesService.getHlsStream(slug, paths, user);
+    res.setHeader('Content-Type', 'application/vnd.apple.mpegurl');
+    res.send(playlist);
   }
 
   @Admin()
@@ -298,5 +318,88 @@ export class CoursesController {
     @CurrentUser() user: JwtPayload,
   ) {
     return this.coursesService.getCourseOverview(slug, user);
+  }
+
+  @Post(':slug/chapters/:chapterSlug/lessons/videos/:videoSlug/progress')
+  async updateVideoProgress(
+    @Param('slug') slug: string,
+    @Param('chapterSlug') chapterSlug: string,
+    @Param('videoSlug') videoSlug: string,
+    @Body() body: { progress: number },
+    @CurrentUser() user: JwtPayload,
+  ) {
+    return this.coursesService.updateVideoProgress(
+      slug,
+      chapterSlug,
+      videoSlug,
+      body.progress,
+      user,
+    );
+  }
+
+  @Post(':slug/chapters/:chapterSlug/lessons/documents/:documentSlug/progress')
+  async updateDocumentProgress(
+    @Param('slug') slug: string,
+    @Param('chapterSlug') chapterSlug: string,
+    @Param('documentSlug') documentSlug: string,
+    @Body() body: { progress: number },
+    @CurrentUser() user: JwtPayload,
+  ) {
+    return this.coursesService.updateDocumentProgress(
+      slug,
+      chapterSlug,
+      documentSlug,
+      body.progress,
+      user,
+    );
+  }
+
+  @Get(':slug/chapters/:chapterSlug/lessons/:lessonSlug/progress')
+  async getLessonProgress(
+    @Param('slug') slug: string,
+    @Param('chapterSlug') chapterSlug: string,
+    @Param('lessonSlug') lessonSlug: string,
+    @CurrentUser() user: JwtPayload,
+  ) {
+    return this.coursesService.getLessonProgress(
+      slug,
+      chapterSlug,
+      lessonSlug,
+      user,
+    );
+  }
+
+  @Get(':slug/chapters/:chapterSlug/progress')
+  async getChapterProgress(
+    @Param('slug') slug: string,
+    @Param('chapterSlug') chapterSlug: string,
+    @CurrentUser() user: JwtPayload,
+  ) {
+    return this.coursesService.getChapterProgress(slug, chapterSlug, user);
+  }
+
+  @Get(':slug/progress')
+  async getCourseProgress(
+    @Param('slug') slug: string,
+    @CurrentUser() user: JwtPayload,
+  ) {
+    return this.coursesService.getCourseProgress(slug, user);
+  }
+
+  @Post('activity/:slug/chapters/:chapterId/lessons/:lessonId')
+  async updateUserActivity(
+    @Param('slug') slug: string,
+    @Param('chapterId') chapterId: string,
+    @Param('lessonId') lessonId: string,
+    @Body() body: { type: 'video' | 'document' },
+    @CurrentUser() user: JwtPayload,
+  ) {
+    return this.coursesService.updateUserActivity(
+      slug,
+      chapterId,
+      lessonId,
+      body.type,
+      user,
+    );
   }
 }

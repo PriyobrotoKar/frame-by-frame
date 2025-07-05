@@ -135,4 +135,21 @@ export class OrderService {
       limit,
     };
   }
+
+  async getOrderByCourse(courseId: string, user: JwtPayload) {
+    const order = await db.order.findUnique({
+      where: {
+        userId_courseId: {
+          userId: user.id,
+          courseId,
+        },
+      },
+    });
+
+    if (!order) {
+      throw new NotFoundException('Order not found');
+    }
+
+    return order;
+  }
 }

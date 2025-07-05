@@ -10,6 +10,7 @@ import { AdminGuard } from './auth/guards/admin.guard';
 import { StorageModule } from './storage/storage.module';
 import { OrderModule } from './order/order.module';
 import { PaymentModule } from './payment/payment.module';
+import { NotificationModule } from './notification/notification.module';
 
 @Module({
   imports: [
@@ -23,6 +24,7 @@ import { PaymentModule } from './payment/payment.module';
     StorageModule,
     OrderModule,
     PaymentModule,
+    NotificationModule,
   ],
   controllers: [AppController],
   providers: [

@@ -1,6 +1,10 @@
-import { BadRequestException, Injectable } from '@nestjs/common';
+import {
+  BadRequestException,
+  Injectable,
+  NotFoundException,
+} from '@nestjs/common';
 import { CreateCourseDto } from './dto/create.course';
-import { slugify } from '@/common/utils';
+import { isInPreviousWeek, slugify } from '@/common/utils';
 import {
   DailyAnalytics,
   db,
@@ -25,10 +29,11 @@ import {
   max,
   subMonths,
 } from 'date-fns';
+import { StorageService } from '@/storage/storage.service';
 
 @Injectable()
 export class CoursesService {
-  constructor() {}
+  constructor(private storageService: StorageService) {}
 
   async createCourse(dto: CreateCourseDto) {
     const slug = slugify(dto.title);
@@ -82,6 +87,7 @@ export class CoursesService {
                     id: true,
                     title: true,
                     order: true,
+                    duration: true,
                   },
                 },
                 documents: {
@@ -89,6 +95,7 @@ export class CoursesService {
                     id: true,
                     title: true,
                     order: true,
+                    duration: true,
                   },
                 },
               },
@@ -174,6 +181,8 @@ export class CoursesService {
                 id: true,
                 title: true,
                 order: true,
+                slug: true,
+                duration: true,
               },
             },
             documents: {
@@ -181,6 +190,8 @@ export class CoursesService {
                 id: true,
                 title: true,
                 order: true,
+                slug: true,
+                duration: true,
               },
             },
           },
@@ -311,6 +322,13 @@ export class CoursesService {
       );
     }
 
+    // check if trailer is set
+    if (!course.trailer) {
+      throw new BadRequestException(
+        'Course must have a trailer before publishing',
+      );
+    }
+
     // check if there is already a published version of the course
     const existingPublishedCourse = await db.courseVersion.findFirst({
       where: {
@@ -368,6 +386,7 @@ export class CoursesService {
                   order: video.order,
                   url: video.url,
                   status: video.status,
+                  duration: video.duration,
                   attachments: {
                     create: video.attachments.map((attachment) => ({
                       name: attachment.name,
@@ -381,8 +400,10 @@ export class CoursesService {
               documents: {
                 create: chapter.documents.map((document) => ({
                   title: document.title,
+                  content: document.content,
                   slug: document.slug,
                   order: document.order,
+                  duration: document.duration,
                   attachments: {
                     create: document.attachments.map((attachment) => ({
                       name: attachment.name,
@@ -451,6 +472,7 @@ export class CoursesService {
                   order: video.order,
                   url: video.url,
                   status: video.status,
+                  duration: video.duration,
                   attachments: {
                     create: video.attachments.map((attachment) => ({
                       name: attachment.name,
@@ -464,8 +486,10 @@ export class CoursesService {
               documents: {
                 create: chapter.documents.map((document) => ({
                   title: document.title,
+                  content: document.content,
                   slug: document.slug,
                   order: document.order,
+                  duration: document.duration,
                   attachments: {
                     create: document.attachments.map((attachment) => ({
                       name: attachment.name,
@@ -566,6 +590,16 @@ export class CoursesService {
             title: true,
             slug: true,
             order: true,
+            duration: true,
+            lessonProgresses: {
+              where: {
+                userId: user.id,
+              },
+              select: {
+                progress: true,
+                completed: true,
+              },
+            },
           },
         },
         videos: {
@@ -574,6 +608,16 @@ export class CoursesService {
             title: true,
             slug: true,
             order: true,
+            duration: true,
+            lessonProgresses: {
+              where: {
+                userId: user.id,
+              },
+              select: {
+                progress: true,
+                completed: true,
+              },
+            },
           },
         },
       },
@@ -583,13 +627,18 @@ export class CoursesService {
     });
 
     return chapters.map((chapter) => {
-      return {
+      const structuredChapter = {
         ...chapter,
         lessons: [
           ...chapter.documents.map((doc) => ({ ...doc, type: 'document' })),
           ...chapter.videos.map((video) => ({ ...video, type: 'video' })),
         ].sort((a, b) => a.order - b.order),
       };
+
+      delete structuredChapter.videos;
+      delete structuredChapter.documents;
+
+      return structuredChapter;
     });
   }
 
@@ -647,7 +696,7 @@ export class CoursesService {
   }
 
   async deleteChapter(courseSlug: string, chapterSlug: string) {
-    const course = await this.findCourseBySlug(courseSlug);
+    const course = await this.findCourseBySlug(courseSlug, true);
 
     if (!course) {
       throw new BadRequestException('Course not found');
@@ -729,6 +778,7 @@ export class CoursesService {
         title: dto.title,
         slug: documentSlug,
         order: chapter._count.documents + chapter._count.videos + 1,
+        duration: dto.duration,
         chapterId: chapter.id,
       },
     });
@@ -844,6 +894,21 @@ export class CoursesService {
         },
         include: {
           attachments: true,
+          chapter: {
+            select: {
+              id: true,
+              title: true,
+              slug: true,
+              courseVersion: {
+                select: {
+                  id: true,
+                  title: true,
+                  slug: true,
+                  courseId: true,
+                },
+              },
+            },
+          },
         },
       }),
       db.video.findUnique({
@@ -855,6 +920,21 @@ export class CoursesService {
         },
         include: {
           attachments: true,
+          chapter: {
+            select: {
+              id: true,
+              title: true,
+              slug: true,
+              courseVersion: {
+                select: {
+                  id: true,
+                  title: true,
+                  slug: true,
+                  courseId: true,
+                },
+              },
+            },
+          },
         },
       }),
     ];
@@ -884,7 +964,7 @@ export class CoursesService {
     documentSlug: string,
     dto: CreateAttachmentDto,
   ) {
-    const course = await this.findCourseBySlug(courseSlug);
+    const course = await this.findCourseBySlug(courseSlug, true);
 
     if (!course) {
       throw new BadRequestException('Course not found');
@@ -932,7 +1012,7 @@ export class CoursesService {
     videoSlug: string,
     dto: CreateAttachmentDto,
   ) {
-    const course = await this.findCourseBySlug(courseSlug);
+    const course = await this.findCourseBySlug(courseSlug, true);
 
     if (!course) {
       throw new BadRequestException('Course not found');
@@ -1025,6 +1105,7 @@ export class CoursesService {
         title: dto.title,
         slug: videoSlug,
         order: chapter._count.documents + chapter._count.videos + 1,
+        duration: dto.duration,
         chapterId: chapter.id,
       },
     });
@@ -1224,7 +1305,7 @@ export class CoursesService {
   }
 
   async deleteLearning(courseSlug: string, learningId: string) {
-    const course = await this.findCourseBySlug(courseSlug);
+    const course = await this.findCourseBySlug(courseSlug, true);
 
     if (!course) {
       throw new BadRequestException('Course not found');
@@ -1335,6 +1416,77 @@ export class CoursesService {
     return course.trailer;
   }
 
+  async getHlsStream(courseSlug: string, paths: string[], user: JwtPayload) {
+    const playlistPath = paths.join('/');
+    const rootFolder = paths[0];
+    const videoId = rootFolder.split('.')[0].split('-').slice(-1)[0];
+
+    console.log(
+      'Fetching HLS stream for course:',
+      courseSlug,
+      'path:',
+      playlistPath,
+    );
+    // check if the course exists
+    const course = await this.findCourseBySlug(
+      courseSlug,
+      user.role === 'ADMIN',
+    );
+    if (!course) {
+      throw new NotFoundException('Course not found');
+    }
+
+    // check if the course is bought by the user if they are not an admin
+    if (user.role !== 'ADMIN') {
+      const order = await db.order.findFirst({
+        where: {
+          userId: user.id,
+          courseId: course.courseId,
+        },
+      });
+
+      if (!order) {
+        throw new BadRequestException('You have not bought this course');
+      }
+    }
+
+    // check if the video exists in the course
+    const video = await db.video.findUnique({
+      where: {
+        id: videoId,
+      },
+    });
+
+    if (!video) {
+      throw new BadRequestException('Video not found');
+    }
+
+    // create a signed URL for the HLS stream
+    const key = `hls/${playlistPath}`;
+
+    const playlist = await this.storageService.getObject(key);
+    const rawText = await playlist.Body?.transformToString('utf-8');
+    const expiry = video.duration * 2 + 3600; // 2x video duration + 1 hour buffer
+
+    // Rewrite .ts segment URLs
+    const lines = rawText.split('\n');
+    const signedLines = await Promise.all(
+      lines.map(async (line) => {
+        if (line.endsWith('.ts')) {
+          const segmentKey = `hls/${rootFolder}/${line}`;
+          const signedUrl = await this.storageService.getSignedUrl(
+            segmentKey,
+            expiry,
+          );
+          return signedUrl.url;
+        }
+        return line;
+      }),
+    );
+
+    return signedLines.join('\n');
+  }
+
   async getCourseOverview(courseSlug: string, user: JwtPayload) {
     const course = await this.findCourseBySlug(
       courseSlug,
@@ -1405,6 +1557,554 @@ export class CoursesService {
         ),
       },
     };
+  }
+
+  async updateVideoProgress(
+    courseSlug: string,
+    chapterSlug: string,
+    videoSlug: string,
+    progress: number,
+    user: JwtPayload,
+  ) {
+    const course = await this.findCourseBySlug(courseSlug);
+
+    if (!course) {
+      throw new BadRequestException('Course not found');
+    }
+
+    const chapter = await db.chapter.findUnique({
+      where: {
+        courseVersionId_slug: {
+          courseVersionId: course.id,
+          slug: chapterSlug,
+        },
+      },
+    });
+
+    if (!chapter) {
+      throw new BadRequestException('Chapter not found');
+    }
+
+    const video = await db.video.findUnique({
+      where: {
+        chapterId_slug: {
+          chapterId: chapter.id,
+          slug: videoSlug,
+        },
+      },
+    });
+
+    if (!video) {
+      throw new BadRequestException('Video not found');
+    }
+
+    const existingProgress = await db.userLessonProgress.findUnique({
+      where: {
+        userId_videoId: {
+          userId: user.id,
+          videoId: video.id,
+        },
+      },
+    });
+
+    const progressPercent = progress / video.duration;
+    const isCompleted = Math.round(progressPercent * 100) >= 80;
+
+    // if isCompleted is true, then update the course progress
+    if (!existingProgress?.completed && isCompleted) {
+      const completedLessons = await db.userLessonProgress.count({
+        where: {
+          userId: user.id,
+        },
+      });
+
+      const totalLessons = course.chapters.reduce((acc, chap) => {
+        return acc + chap.videos.length + chap.documents.length;
+      }, 0);
+
+      const courseProgressPrecent =
+        Math.round(completedLessons / totalLessons) * 100;
+
+      await db.userCourseProgress.update({
+        where: {
+          userId_courseId: {
+            userId: user.id,
+            courseId: course.courseId,
+          },
+        },
+        data: {
+          progress: courseProgressPrecent,
+        },
+      });
+    }
+
+    // if there is an existing progress, we need to update it
+    if (existingProgress) {
+      const updatedProgress = await db.userLessonProgress.update({
+        where: {
+          userId_videoId: {
+            userId: user.id,
+            videoId: video.id,
+          },
+        },
+        data: {
+          progress,
+          completed: existingProgress.completed || isCompleted,
+        },
+      });
+
+      return updatedProgress;
+    }
+
+    // if there is no existing progress, we need to create a new record
+    const newProgress = await db.userLessonProgress.create({
+      data: {
+        user: {
+          connect: {
+            id: user.id,
+          },
+        },
+        progress,
+        video: {
+          connect: {
+            id: video.id,
+          },
+        },
+        chapterProgress: {
+          connectOrCreate: {
+            where: {
+              userId_chapterId: {
+                userId: user.id,
+                chapterId: chapter.id,
+              },
+            },
+            create: {
+              user: {
+                connect: {
+                  id: user.id,
+                },
+              },
+              chapter: {
+                connect: {
+                  id: chapter.id,
+                },
+              },
+              courseProgress: {
+                connectOrCreate: {
+                  where: {
+                    userId_courseId: {
+                      userId: user.id,
+                      courseId: course.courseId,
+                    },
+                  },
+                  create: {
+                    userId: user.id,
+                    courseId: course.courseId,
+                  },
+                },
+              },
+            },
+          },
+        },
+      },
+    });
+
+    return newProgress;
+  }
+
+  async updateDocumentProgress(
+    courseSlug: string,
+    chapterSlug: string,
+    documentSlug: string,
+    progress: number,
+    user: JwtPayload,
+  ) {
+    const course = await this.findCourseBySlug(courseSlug);
+
+    if (!course) {
+      throw new BadRequestException('Course not found');
+    }
+
+    const chapter = await db.chapter.findUnique({
+      where: {
+        courseVersionId_slug: {
+          courseVersionId: course.id,
+          slug: chapterSlug,
+        },
+      },
+    });
+
+    if (!chapter) {
+      throw new BadRequestException('Chapter not found');
+    }
+
+    const document = await db.document.findUnique({
+      where: {
+        chapterId_slug: {
+          chapterId: chapter.id,
+          slug: documentSlug,
+        },
+      },
+    });
+
+    if (!document) {
+      throw new BadRequestException('Document not found');
+    }
+
+    const progressPercent = progress / document.duration;
+    const isCompleted = Math.round(progressPercent * 100) >= 80;
+
+    // if isCompleted is true, then update the course progress
+    if (isCompleted) {
+      const completedLessons = await db.userLessonProgress.count({
+        where: {
+          userId: user.id,
+          completed: true,
+        },
+      });
+
+      const totalLessons = course.chapters.reduce((acc, chap) => {
+        return acc + chap.videos.length + chap.documents.length;
+      }, 0);
+
+      const courseProgressPrecent = Math.floor(
+        (completedLessons / totalLessons) * 100,
+      );
+
+      await db.userCourseProgress.update({
+        where: {
+          userId_courseId: {
+            userId: user.id,
+            courseId: course.courseId,
+          },
+        },
+        data: {
+          progress: courseProgressPrecent,
+        },
+      });
+    }
+
+    // Update the user's progress for this document
+    const progressRecord = await db.userLessonProgress.upsert({
+      where: {
+        userId_documentId: {
+          userId: user.id,
+          documentId: document.id,
+        },
+      },
+      update: {
+        progress,
+        completed: isCompleted,
+      },
+      create: {
+        user: {
+          connect: {
+            id: user.id,
+          },
+        },
+        document: {
+          connect: {
+            id: document.id,
+          },
+        },
+        progress,
+        chapterProgress: {
+          connectOrCreate: {
+            where: {
+              userId_chapterId: {
+                userId: user.id,
+                chapterId: chapter.id,
+              },
+            },
+            create: {
+              user: {
+                connect: {
+                  id: user.id,
+                },
+              },
+              chapter: {
+                connect: {
+                  id: chapter.id,
+                },
+              },
+              courseProgress: {
+                connectOrCreate: {
+                  where: {
+                    userId_courseId: {
+                      userId: user.id,
+                      courseId: course.courseId,
+                    },
+                  },
+                  create: {
+                    userId: user.id,
+                    courseId: course.courseId,
+                  },
+                },
+              },
+            },
+          },
+        },
+      },
+    });
+
+    return progressRecord;
+  }
+
+  async getLessonProgress(
+    courseSlug: string,
+    chapterSlug: string,
+    lessonSlug: string,
+    user: JwtPayload,
+  ) {
+    const course = await this.findCourseBySlug(
+      courseSlug,
+      user.role === 'ADMIN',
+    );
+
+    if (!course) {
+      throw new BadRequestException('Course not found');
+    }
+
+    const chapter = await db.chapter.findUnique({
+      where: {
+        courseVersionId_slug: {
+          courseVersionId: course.id,
+          slug: chapterSlug,
+        },
+      },
+    });
+
+    if (!chapter) {
+      throw new BadRequestException('Chapter not found');
+    }
+
+    const queries = [
+      db.document.findUnique({
+        where: {
+          chapterId_slug: {
+            chapterId: chapter.id,
+            slug: lessonSlug,
+          },
+        },
+      }),
+      db.video.findUnique({
+        where: {
+          chapterId_slug: {
+            chapterId: chapter.id,
+            slug: lessonSlug,
+          },
+        },
+      }),
+    ];
+
+    const [document, video] = await Promise.all(queries);
+
+    if (!document && !video) {
+      throw new BadRequestException('Lesson not found');
+    }
+
+    if (document) {
+      return db.userLessonProgress.findUnique({
+        where: {
+          userId_documentId: {
+            userId: user.id,
+            documentId: document.id,
+          },
+        },
+      });
+    }
+
+    return db.userLessonProgress.findUnique({
+      where: {
+        userId_videoId: {
+          userId: user.id,
+          videoId: video.id,
+        },
+      },
+    });
+  }
+
+  async getChapterProgress(
+    courseSlug: string,
+    chapterSlug: string,
+    user: JwtPayload,
+  ) {
+    const course = await this.findCourseBySlug(
+      courseSlug,
+      user.role === 'ADMIN',
+    );
+
+    if (!course) {
+      throw new BadRequestException('Course not found');
+    }
+
+    const chapter = await db.chapter.findUnique({
+      where: {
+        courseVersionId_slug: {
+          courseVersionId: course.id,
+          slug: chapterSlug,
+        },
+      },
+    });
+
+    if (!chapter) {
+      throw new BadRequestException('Chapter not found');
+    }
+
+    const chapterProgress = db.userChapterProgress.findUnique({
+      where: {
+        userId_chapterId: {
+          userId: user.id,
+          chapterId: chapter.id,
+        },
+      },
+      include: {
+        lessonProgresses: {
+          where: {
+            userId: user.id,
+          },
+        },
+      },
+    });
+
+    return chapterProgress;
+  }
+
+  async getCourseProgress(courseSlug: string, user: JwtPayload) {
+    const course = await this.findCourseBySlug(
+      courseSlug,
+      user.role === 'ADMIN',
+    );
+
+    if (!course) {
+      throw new BadRequestException('Course not found');
+    }
+
+    const courseProgress = await db.userCourseProgress.findUnique({
+      where: {
+        userId_courseId: {
+          userId: user.id,
+          courseId: course.courseId,
+        },
+      },
+    });
+
+    if (!courseProgress) {
+      throw new BadRequestException('Course progress not found');
+    }
+
+    return courseProgress;
+  }
+
+  async updateUserActivity(
+    courseSlug: string,
+    chapterId: string,
+    lessonId: string,
+    lessonType: 'video' | 'document',
+    user: JwtPayload,
+  ) {
+    const course = await this.findCourseBySlug(courseSlug, true);
+
+    if (!course) {
+      throw new BadRequestException('Course not found');
+    }
+
+    const currentDay = new Date().getDay();
+
+    // Get user activity
+    const existingActivity = await db.userActivity.findUnique({
+      where: {
+        userId: user.id,
+      },
+    });
+
+    if (!existingActivity) {
+      // Create a new user activity if it doesn't exist
+      return await db.userActivity.create({
+        data: {
+          userId: user.id,
+          courseId: course.courseId,
+          activeDaysOfWeek: [currentDay],
+          chapterId: chapterId,
+          ...(lessonType === 'video'
+            ? {
+                videoId: lessonId,
+              }
+            : {
+                documentId: lessonId,
+              }),
+        },
+      });
+    }
+
+    // If the activity exists, update it
+    const activeDays = isInPreviousWeek(existingActivity.updatedAt)
+      ? [currentDay]
+      : existingActivity.activeDaysOfWeek.includes(currentDay)
+        ? existingActivity.activeDaysOfWeek
+        : [...existingActivity.activeDaysOfWeek, currentDay];
+
+    return await db.userActivity.update({
+      where: {
+        userId: user.id,
+      },
+      data: {
+        courseId: course.courseId,
+        chapterId: chapterId,
+        activeDaysOfWeek: activeDays,
+        ...(lessonType === 'video'
+          ? {
+              videoId: lessonId,
+              documentId: null,
+            }
+          : {
+              documentId: lessonId,
+              videoId: null,
+            }),
+      },
+    });
+  }
+
+  async getUserActivity(user: JwtPayload) {
+    const userActivity = await db.userActivity.findUnique({
+      where: {
+        userId: user.id,
+      },
+      include: {
+        course: {
+          select: {
+            userProgresses: {
+              where: {
+                userId: user.id,
+              },
+            },
+            versions: {
+              where: {
+                isPublished: true,
+              },
+            },
+          },
+        },
+        chapter: true,
+        video: true,
+        document: true,
+      },
+    });
+
+    const activity = {
+      ...userActivity,
+      progress: userActivity.course.userProgresses[0].progress || 0,
+      course: userActivity.course?.versions[0] || null,
+      lesson: userActivity.video || userActivity.document,
+      activeDaysOfWeek: isInPreviousWeek(userActivity.updatedAt)
+        ? []
+        : userActivity.activeDaysOfWeek,
+    };
+
+    delete activity.document;
+    delete activity.video;
+
+    return activity;
   }
 
   private generateDailyAnalytics(

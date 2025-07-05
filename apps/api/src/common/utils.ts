@@ -1,3 +1,4 @@
+import { endOfWeek, isWithinInterval, startOfWeek, subWeeks } from 'date-fns';
 import { Request, Response } from 'express';
 
 export const jwtExtractor = (
@@ -72,4 +73,21 @@ export const slugify = (text: string) => {
   }
 
   return result;
+};
+
+export const isInPreviousWeek = (date: Date): boolean => {
+  const inputDate = new Date(date);
+  const today = new Date();
+
+  const previousWeekStart = startOfWeek(subWeeks(today, 1), {
+    weekStartsOn: 1,
+  });
+  const previousWeekEnd = endOfWeek(subWeeks(today, 1), {
+    weekStartsOn: 1,
+  });
+
+  return isWithinInterval(inputDate, {
+    start: previousWeekStart,
+    end: previousWeekEnd,
+  });
 };
