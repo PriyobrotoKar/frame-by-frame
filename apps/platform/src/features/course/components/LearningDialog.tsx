@@ -22,7 +22,7 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { useMutation } from '@tanstack/react-query';
 import React, { ReactNode, useState } from 'react';
 import { useForm } from 'react-hook-form';
-import { z, ZodSchema } from 'zod';
+import { z } from 'zod';
 import { createLearning } from '../actions/createLearning';
 import { toast } from 'sonner';
 import { useRouter } from 'next/navigation';
@@ -39,15 +39,22 @@ interface LearningDialogProps {
   };
 }
 
-const schemas: Record<LearningDialogProps['type'], ZodSchema> = {
-  create: z.object({
-    title: z.string().min(1, 'Title is required'),
-    description: z.string().min(1, 'Description is required'),
-  }),
-  edit: z.object({
-    title: z.string().optional(),
-    description: z.string().optional(),
-  }),
+const createSchema = z.object({
+  title: z.string().min(1, 'Title is required'),
+  description: z.string().min(1, 'Description is required'),
+});
+
+const editSchema = z.object({
+  title: z.string().optional(),
+  description: z.string().optional(),
+});
+
+const schemas: Record<
+  LearningDialogProps['type'],
+  typeof createSchema | typeof editSchema
+> = {
+  create: createSchema,
+  edit: editSchema,
 };
 
 const LearningDialog = ({
@@ -62,15 +69,16 @@ const LearningDialog = ({
 
   const form = useForm({
     resolver: zodResolver(schemas[type]),
-    defaultValues: defaultValues || {
-      title: '',
-      description: '',
+    defaultValues: {
+      title: defaultValues?.title || '',
+      description: defaultValues?.description || '',
     },
   });
 
   const { mutate, isPending } = useMutation({
     mutationFn: async (data: z.infer<(typeof schemas)[typeof type]>) => {
       if (type === 'create') {
+        // @ts-expect-error - TypeScript doesn't infer the type correctly here
         return await createLearning(courseSlug, data);
       } else if (type === 'edit' && learningId) {
         return await editLearning(courseSlug, learningId, data);

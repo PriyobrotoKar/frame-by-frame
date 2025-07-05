@@ -1,25 +1,39 @@
 import React from 'react';
 import Card from '../ui/card';
 import Image from 'next/image';
-import { Course } from './CourseCard';
 import { IconClock, IconPlayerPlay, IconStack2 } from '@tabler/icons-react';
 import { Button } from '../ui/button';
+import { CourseWithChapters } from '@/features/course/actions/getCourse';
+import { mediaUrl } from '@/lib/utils';
 
 interface CourseCardProps {
-  course: Course;
+  course: CourseWithChapters;
 }
 
 const LibraryCard = ({ course }: CourseCardProps) => {
+  const courseDuration = course.chapters
+    .map((chapter) => chapter.lessons)
+    .flat(1)
+    .reduce((acc, lesson) => {
+      return acc + lesson.duration;
+    }, 0);
+
+  const lessonCount = course.chapters.reduce((acc, chapter) => {
+    return acc + chapter.lessons.length;
+  }, 0);
+
   return (
     <Card>
       <div>
-        <Image
-          src={course.imageUrl}
-          alt="Course Image"
-          width={277}
-          height={162}
-          className="w-full rounded-lg"
-        />
+        {course.image && (
+          <Image
+            src={mediaUrl(course.image)}
+            alt="Course Image"
+            width={277}
+            height={162}
+            className="w-full rounded-lg"
+          />
+        )}
       </div>
 
       <Card.Content>
@@ -30,10 +44,10 @@ const LibraryCard = ({ course }: CourseCardProps) => {
 
         <div className="space-x-6">
           <Card.Info>
-            <IconClock /> {course.duration}
+            <IconClock /> {courseDuration}
           </Card.Info>
           <Card.Info>
-            <IconStack2 /> {course.lessons} Lessons
+            <IconStack2 /> {lessonCount} Lessons
           </Card.Info>
         </div>
 

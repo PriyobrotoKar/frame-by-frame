@@ -75,6 +75,7 @@ const CourseCard = ({
   isEnrolled = false,
 }: CourseCardProps) => {
   const { setOpen } = useLoginDialog();
+
   const lessonCount = course.chapters.reduce((acc, chapter) => {
     return acc + chapter.lessons.length;
   }, 0);
