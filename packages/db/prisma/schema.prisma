@@ -65,9 +65,14 @@ model User {
   discordId String? @unique
   googleId  String? @unique
 
-  authProvider  AuthProvider
-  orders        Order[]
-  notifications Notification[]
+  authProvider      AuthProvider
+  orders            Order[]
+  notifications     Notification[]
+  courseProgresses  UserCourseProgress[]
+  chapterProgresses UserChapterProgress[]
+  lessonProgresses  UserLessonProgress[]
+
+  activity UserActivity?
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
@@ -80,6 +85,8 @@ model Course {
   orders           Order[]
   monthlyAnalytics MonthlyAnalytics[]
   dailyAnalytics   DailyAnalytics[]
+  userProgresses   UserCourseProgress[]
+  userActivity     UserActivity[]
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
@@ -147,8 +154,10 @@ model Chapter {
   slug  String
   order Int
 
-  documents Document[]
-  videos    Video[]
+  documents         Document[]
+  videos            Video[]
+  chapterProgresses UserChapterProgress[]
+  userActivity      UserActivity[]
 
   courseVersion   CourseVersion? @relation(fields: [courseVersionId], references: [id])
   courseVersionId String?
@@ -160,16 +169,19 @@ model Chapter {
 }
 
 model Document {
-  id      String  @id @default(cuid())
-  title   String
-  content String?
-  order   Int
-  slug    String
+  id       String  @id @default(cuid())
+  title    String
+  content  String?
+  order    Int
+  slug     String
+  duration Int     @default(0)
 
   chapterId String
   chapter   Chapter @relation(fields: [chapterId], references: [id], onDelete: Cascade)
 
-  attachments Attachment[]
+  attachments      Attachment[]
+  lessonProgresses UserLessonProgress[]
+  userActivity     UserActivity[]
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
@@ -185,13 +197,16 @@ model Video {
   url         String?
   order       Int
   status      VideoStatus @default(NOT_STARTED)
+  duration    Int         @default(0)
 
   course CourseVersion?
 
   chapter   Chapter? @relation(fields: [chapterId], references: [id], onDelete: Cascade)
   chapterId String?
 
-  attachments Attachment[]
+  attachments      Attachment[]
+  lessonProgresses UserLessonProgress[]
+  userActivity     UserActivity[]
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
@@ -285,6 +300,92 @@ model Notification {
   type    NotificationType
 
   readBy User[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model UserCourseProgress {
+  id String @id @default(cuid())
+
+  userId String
+  user   User   @relation(fields: [userId], references: [id])
+
+  courseId String
+  course   Course @relation(fields: [courseId], references: [id])
+
+  chapterProgresses UserChapterProgress[]
+
+  progress Int @default(0) // Progress in percentage
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@unique([userId, courseId]) // Ensure unique progress per user and course version
+}
+
+model UserChapterProgress {
+  id String @id @default(cuid())
+
+  userId String
+  user   User   @relation(fields: [userId], references: [id])
+
+  chapterId String
+  chapter   Chapter @relation(fields: [chapterId], references: [id])
+
+  courseProgressId String
+  courseProgress   UserCourseProgress   @relation(fields: [courseProgressId], references: [id], onDelete: Cascade)
+  lessonProgresses UserLessonProgress[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@unique([userId, chapterId]) // Ensure unique progress per user and chapter
+}
+
+model UserLessonProgress {
+  id String @id @default(cuid())
+
+  userId String
+  user   User   @relation(fields: [userId], references: [id])
+
+  videoId String?
+  video   Video?  @relation(fields: [videoId], references: [id])
+
+  documentId String?
+  document   Document? @relation(fields: [documentId], references: [id])
+
+  chapterProgressId String
+  chapterProgress   UserChapterProgress @relation(fields: [chapterProgressId], references: [id], onDelete: Cascade)
+
+  progress  Int     @default(0) // Progress in percentage
+  completed Boolean @default(false)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@unique([userId, videoId]) // Ensure unique progress per user and video
+  @@unique([userId, documentId]) // Ensure unique progress per user and video
+}
+
+model UserActivity {
+  id               String @id @default(cuid())
+  activeDaysOfWeek Int[]
+
+  courseId String
+  course   Course @relation(fields: [courseId], references: [id], onDelete: Cascade)
+
+  chapterId String
+  chapter   Chapter @relation(fields: [chapterId], references: [id], onDelete: Cascade)
+
+  videoId String?
+  video   Video?  @relation(fields: [videoId], references: [id], onDelete: Cascade)
+
+  documentId String?
+  document   Document? @relation(fields: [documentId], references: [id], onDelete: Cascade)
+
+  user   User   @relation(fields: [userId], references: [id])
+  userId String @unique
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
