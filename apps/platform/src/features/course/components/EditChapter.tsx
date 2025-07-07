@@ -5,7 +5,7 @@ import { Label } from '@/components/ui/label';
 import { Button } from '@/components/ui/button';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { updateChapter } from '../actions/updateChapter';
-import { useParams } from 'next/navigation';
+import { useParams, usePathname, useRouter } from 'next/navigation';
 import { toast } from 'sonner';
 
 interface EditChapterProps {
@@ -19,6 +19,8 @@ const EditChapter = ({ chapter, setChapter }: EditChapterProps) => {
   const { slug } = useParams<{ slug: string }>();
 
   const queryClient = useQueryClient();
+  const path = usePathname();
+  const router = useRouter();
 
   const { mutate, isPending } = useMutation({
     mutationFn: async (data: { name: string; chapterSlug: string }) => {
@@ -29,11 +31,13 @@ const EditChapter = ({ chapter, setChapter }: EditChapterProps) => {
     onError: (error) => {
       toast.error(error.message);
     },
-    onSuccess: () => {
+    onSuccess: (data) => {
       queryClient.invalidateQueries({
         queryKey: ['course', slug, 'chapters'],
       });
       toast.success('Chapter updated');
+      const newPath = path.replace(chapter!.slug, data.slug);
+      router.replace(newPath);
       setOpen(false);
       setChapter(undefined);
     },

@@ -17,7 +17,8 @@ export default async function CoursePage({
   const course = await getCourseBySlug(slug);
   const isEnrolled =
     session &&
-    (await getOrderByCourse(course.courseId))?.status === 'COMPLETED';
+    (session.user.role === 'ADMIN' ||
+      (await getOrderByCourse(course.courseId))?.status === 'COMPLETED');
 
   return (
     <div className="flex flex-col-reverse gap-8 md:flex-row">

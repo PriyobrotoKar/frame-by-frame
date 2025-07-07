@@ -42,7 +42,7 @@ const DeleteChapter = ({ chapter, setChapter }: DeleteChapterProps) => {
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
-    if (!value || !chapter || value !== chapter.name) {
+    if (!value || !chapter || value !== 'confirm') {
       return;
     }
 
@@ -60,7 +60,9 @@ const DeleteChapter = ({ chapter, setChapter }: DeleteChapterProps) => {
 
         <form onSubmit={handleSubmit} className="space-y-4">
           <div className="space-y-2">
-            <Label>Chapter Name</Label>
+            <Label>
+              Type<strong>confirm</strong>below to delete the chapter
+            </Label>
             <Input value={value} onChange={(e) => setValue(e.target.value)} />
           </div>
 
@@ -71,7 +73,7 @@ const DeleteChapter = ({ chapter, setChapter }: DeleteChapterProps) => {
 
           <Button
             className="w-full"
-            disabled={isPending || value !== chapter?.name}
+            disabled={isPending || value !== 'confirm'}
           >
             Continue
           </Button>
