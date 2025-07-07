@@ -229,3 +229,119 @@ resource "aws_lambda_event_source_mapping" "video_transcoding_consumer_event_sou
   event_source_arn = var.video_transcoding_queue_arn
   function_name    = aws_lambda_function.video_transcoding_consumer.arn
 }
+
+resource "aws_iam_role" "file_destroyer_role" {
+  name = "${var.env}-${var.app_name}-file-destroyer-role"
+
+  assume_role_policy = jsonencode({
+    Version = "2012-10-17"
+    Statement = [
+      {
+        Action = "sts:AssumeRole"
+        Effect = "Allow"
+        Principal = {
+          Service = "lambda.amazonaws.com"
+        }
+      }
+    ]
+  })
+
+  tags = {
+    Environment = var.env
+    Application = var.app_name
+  }
+}
+
+resource "aws_iam_policy" "file_destroyer_policy" {
+  name        = "${var.env}-${var.app_name}-file-destroyer-policy"
+  description = "IAM policy for file destroyer Lambda function"
+
+  policy = jsonencode({
+    Version = "2012-10-17"
+    Statement = [
+      {
+        Action = [
+          "sqs:ReceiveMessage",
+          "sqs:DeleteMessage",
+          "sqs:GetQueueAttributes"
+        ]
+        Effect   = "Allow"
+        Resource = var.file_destroyer_queue_arn
+      },
+      {
+        Effect = "Allow",
+        Action = [
+          "s3:GetObject",
+          "s3:PutObject",
+          "s3:ListBucket"
+        ],
+        Resource = [
+          var.primary_bucket.arn,
+          var.temp_bucket.arn
+        ]
+      },
+      {
+        Action = [
+          "logs:CreateLogGroup",
+          "logs:CreateLogStream",
+          "logs:PutLogEvents"
+        ]
+        Effect   = "Allow"
+        Resource = "${aws_cloudwatch_log_group.file_destroyer_logs.arn}:*"
+      },
+      {
+        Effect = "Allow",
+        Action = [
+          "s3:DeleteObject"
+        ],
+        Resource = "${var.primary_bucket.arn}/*"
+      }
+    ]
+  })
+}
+
+resource "aws_iam_role_policy_attachment" "file_destroyer_policy_attachment" {
+  role       = aws_iam_role.file_destroyer_role.name
+  policy_arn = aws_iam_policy.file_destroyer_policy.arn
+}
+
+data "archive_file" "file_destroyer_zip" {
+  type        = "zip"
+  source_dir  = "../../../apps/file-destroyer/dist"
+  output_path = "../../../apps/file-destroyer/file-destroyer.zip"
+}
+
+resource "aws_lambda_function" "file_destroyer" {
+  function_name = "${var.env}-${var.app_name}-file-destroyer"
+  role          = aws_iam_role.file_destroyer_role.arn
+  handler       = "index.handler"
+  runtime       = "nodejs20.x"
+  timeout       = 30
+  memory_size   = 128
+
+  filename         = data.archive_file.file_destroyer_zip.output_path
+  source_code_hash = data.archive_file.file_destroyer_zip.output_base64sha256
+
+  environment {
+    variables = merge({
+      BUCKET = var.primary_bucket.name
+      REGION = var.aws_region
+    }, var.env_vars)
+  }
+
+  tags = {
+    Environment = var.env
+    Application = var.app_name
+  }
+}
+
+resource "aws_cloudwatch_log_group" "file_destroyer_logs" {
+  name              = "/aws/lambda/${var.env}-${var.app_name}-file-destroyer"
+  retention_in_days = var.log_retention_days
+}
+
+resource "aws_lambda_event_source_mapping" "file_destroyer_event_source" {
+  event_source_arn = var.file_destroyer_queue_arn
+  function_name    = aws_lambda_function.file_destroyer.arn
+}
+

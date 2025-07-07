@@ -8,7 +8,6 @@ variable "aws_region" {
   type        = string
   default     = "ap-south-1"
 }
-
 variable "ecr_repo" {
   description = "The ECR repository name."
   type        = string
@@ -48,6 +47,11 @@ variable "api_gateway_execution_arn" {
 }
 
 variable "video_transcoding_queue_arn" {
+  description = "The ARN of the SQS queue for video transcoding."
+  type        = string
+}
+
+variable "file_destroyer_queue_arn" {
   description = "The ARN of the SQS queue for video transcoding."
   type        = string
 }

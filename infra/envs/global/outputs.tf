@@ -3,6 +3,11 @@ output "video_transcoding_queue_arn" {
   description = "ARN of the video transcoding SQS queue"
 }
 
+output "file_destroyer_queue_arn" {
+  value       = module.sqs.file_destroyer_queue_arn
+  description = "ARN of the file destroyer SQS queue"
+}
+
 output "temp_dev_bucket" {
   value       = module.s3.temp_dev_bucket
   description = "The temporary S3 bucket used for video uploads"
