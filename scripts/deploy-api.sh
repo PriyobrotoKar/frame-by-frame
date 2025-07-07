@@ -102,6 +102,14 @@ pnpm build
 
 cd ../..
 
+# Build the File Destroyer app
+cd apps/file-destroyer
+echo "🔨 Building File Destroyer app..."
+pnpm install
+pnpm build
+
+cd ../..
+
 # Run terraform apply with the digest as a variable
 cd $DIR
 echo "🔄 Running terraform apply with image digest..."
