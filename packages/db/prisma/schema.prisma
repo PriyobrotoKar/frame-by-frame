@@ -110,9 +110,11 @@ model CourseVersion {
   courseId String
   course   Course @relation(fields: [courseId], references: [id])
 
-  chapters    Chapter[]
-  learnings   CourseLearnings[]
-  instructors Instructor[]
+  chapters        Chapter[]
+  learnings       CourseLearnings[]
+  instructors     Instructor[]
+  videoTrash      VideoTrash[]
+  attachmentTrash AttachmentTrash[]
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
@@ -331,7 +333,7 @@ model UserChapterProgress {
   user   User   @relation(fields: [userId], references: [id])
 
   chapterId String
-  chapter   Chapter @relation(fields: [chapterId], references: [id])
+  chapter   Chapter @relation(fields: [chapterId], references: [id], onDelete: Cascade)
 
   courseProgressId String
   courseProgress   UserCourseProgress   @relation(fields: [courseProgressId], references: [id], onDelete: Cascade)
@@ -386,6 +388,39 @@ model UserActivity {
 
   user   User   @relation(fields: [userId], references: [id])
   userId String @unique
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model VideoTrash {
+  id          String      @id @default(cuid())
+  title       String
+  slug        String
+  description String?
+  url         String?
+  order       Int
+  status      VideoStatus @default(NOT_STARTED)
+  duration    Int         @default(0)
+
+  courseVersion   CourseVersion @relation(fields: [courseVersionId], references: [id])
+  courseVersionId String
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@unique([courseVersionId, slug]) // Ensure unique slug per chapter
+}
+
+model AttachmentTrash {
+  id   String         @id @default(cuid())
+  name String
+  url  String
+  type AttachmentType
+  size Int
+
+  courseVersion   CourseVersion @relation(fields: [courseVersionId], references: [id])
+  courseVersionId String
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt

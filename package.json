@@ -4,6 +4,7 @@
   "private": true,
   "scripts": {
     "dev": "turbo dev",
+    "build": "turbo build",
     "prepare": "husky",
     "lint": "turbo lint",
     "lint:api": "turbo lint --filter=api",
