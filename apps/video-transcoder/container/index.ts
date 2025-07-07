@@ -4,9 +4,7 @@ import { Readable } from 'stream';
 import {
   DeleteObjectCommand,
   DeleteObjectCommandInput,
-  DeleteObjectsCommand,
   GetObjectCommand,
-  ListObjectsV2Command,
   PutObjectCommand,
   S3Client,
 } from '@aws-sdk/client-s3';
@@ -87,12 +85,14 @@ async function main() {
       .run();
   });
 
-  const masterPlaylist = resolutions
+  const streamInfos = resolutions
     .map(
       ({ size, bitrate }) =>
-        `#EXTM3U\n#EXT-X-STREAM-INF:BANDWIDTH=${parseInt(bitrate) * 1000},RESOLUTION=${size}\nversion_${size}.m3u8`,
+        `#EXT-X-STREAM-INF:BANDWIDTH=${parseInt(bitrate) * 1000},RESOLUTION=${size}\nversion_${size}.m3u8`,
     )
     .join('\n');
+
+  const masterPlaylist = `#EXTM3U\n#EXT-X-VERSION:3\n#EXT-X-PLAYLIST-TYPE:VOD\n${streamInfos}`;
 
   await fs.writeFile(path.join(outputDir, 'index.m3u8'), masterPlaylist);
 
