@@ -104,6 +104,8 @@ const VideoPlayer = ({
   return (
     <div className={cn('bg-card space-y-4 rounded-2xl border p-4', className)}>
       <MediaPlayer
+        playsInline
+        crossOrigin
         currentTime={progress}
         ref={ref}
         onProviderChange={onProviderChange}

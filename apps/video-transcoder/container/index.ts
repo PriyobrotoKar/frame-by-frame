@@ -44,6 +44,10 @@ async function main() {
       .videoCodec('libx264')
       .audioCodec('aac')
       .addOption('-preset', 'superfast')
+      .addOption('-profile:v', 'main') // or 'main' for older devices
+      .addOption('-level', '3.1') // widely supported level
+      .addOption('-pix_fmt', 'yuv420p')
+      .addOption('-hls_segment_type', 'mpegts') // Explicitly define segment format
       .addOption('-g', '50')
       .addOption('-sc_threshold', '0')
       .size(size)
