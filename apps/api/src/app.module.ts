@@ -11,6 +11,7 @@ import { StorageModule } from './storage/storage.module';
 import { OrderModule } from './order/order.module';
 import { PaymentModule } from './payment/payment.module';
 import { NotificationModule } from './notification/notification.module';
+import { QueueModule } from './queue/queue.module';
 
 @Module({
   imports: [
@@ -25,6 +26,7 @@ import { NotificationModule } from './notification/notification.module';
     OrderModule,
     PaymentModule,
     NotificationModule,
+    QueueModule,
   ],
   controllers: [AppController],
   providers: [

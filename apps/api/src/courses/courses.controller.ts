@@ -249,6 +249,16 @@ export class CoursesController {
   }
 
   @Admin()
+  @Delete(':slug/chapters/:chapterSlug/lessons/videos/:videoSlug')
+  async deleteVideo(
+    @Param('slug') slug: string,
+    @Param('chapterSlug') chapterSlug: string,
+    @Param('videoSlug') videoSlug: string,
+  ) {
+    return this.coursesService.deleteVideo(slug, chapterSlug, videoSlug);
+  }
+
+  @Admin()
   @Post(':slug/learnings')
   async createLearning(
     @Param('slug') slug: string,

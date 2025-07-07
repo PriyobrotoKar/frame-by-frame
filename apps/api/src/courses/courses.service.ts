@@ -30,10 +30,17 @@ import {
   subMonths,
 } from 'date-fns';
 import { StorageService } from '@/storage/storage.service';
+import { QueueService } from '@/queue/queue.service';
+import { BatchJob } from '@/types/queue.job';
+import { ConfigService } from '@nestjs/config';
 
 @Injectable()
 export class CoursesService {
-  constructor(private storageService: StorageService) {}
+  constructor(
+    private storageService: StorageService,
+    private queueService: QueueService,
+    private configService: ConfigService,
+  ) {}
 
   async createCourse(dto: CreateCourseDto) {
     const slug = slugify(dto.title);
@@ -340,6 +347,56 @@ export class CoursesService {
     delete course.id;
     delete course._count;
 
+    // Get all the trash items related to the course and send events to sqs to delete them
+    const [videos, attachments] = await Promise.all([
+      db.videoTrash.findMany(),
+      db.attachmentTrash.findMany(),
+    ]);
+
+    //hls/the-desktop-video-editing-masterclass-essential-editing-techniques-deepfake-video-of-volodymyr-zelensky-surrendering-surfaces-on-social-media-cmcop78500001l508kxzz5hgo.mp4/index.m3u8
+    const deletedVideos = videos.map((video) => ({
+      id: video.id,
+      prefix: video.url.split('/').slice(0, -1).join('/'),
+    }));
+
+    const deletedAttachments = attachments.map((attachment) => ({
+      id: attachment.id,
+      key: attachment.url,
+    }));
+
+    const deleteItemsJob: BatchJob = {
+      type: 'DELETE_FILE',
+      body: [deletedVideos, deletedAttachments].flat().map((item) => {
+        if ('key' in item) {
+          return {
+            id: item.id,
+            payload: {
+              key: item.key,
+              bucket: this.configService.get<string>('AWS_BUCKET'),
+            },
+          };
+        }
+
+        return {
+          id: item.id,
+          payload: {
+            prefix: item.prefix,
+            bucket: this.configService.get<string>('AWS_BUCKET'),
+          },
+        };
+      }),
+    };
+
+    if (deleteItemsJob.body.length) {
+      await this.queueService.addBatchToQueue(deleteItemsJob);
+    }
+
+    // Delete all the trash items related to the course
+    await Promise.all([
+      db.videoTrash.deleteMany(),
+      db.attachmentTrash.deleteMany(),
+    ]);
+
     // if there is, we need to update it or create a new version
     let publisedCourse;
 
@@ -359,6 +416,12 @@ export class CoursesService {
       await db.instructor.deleteMany({
         where: {
           courseVersionId: existingPublishedCourse.id,
+        },
+      });
+
+      await db.video.delete({
+        where: {
+          id: existingPublishedCourse.trailerId,
         },
       });
 
@@ -647,7 +710,7 @@ export class CoursesService {
     chapterSlug: string,
     dto: UpdateChapterDto,
   ) {
-    const course = await this.findCourseBySlug(courseSlug);
+    const course = await this.findCourseBySlug(courseSlug, true);
     const newSlug = slugify(dto.title);
 
     if (!course) {
@@ -714,6 +777,51 @@ export class CoursesService {
     if (!chapter) {
       throw new BadRequestException('Chapter not found');
     }
+
+    // Get all the videos in the chapter and move them to trash
+    const videos = await db.video.findMany({
+      where: {
+        chapterId: chapter.id,
+      },
+      include: {
+        attachments: true,
+      },
+    });
+
+    await db.videoTrash.createMany({
+      data: videos.map((video) => {
+        const videoDetails = video;
+        delete videoDetails.id;
+        delete videoDetails.chapterId;
+        delete videoDetails.attachments;
+
+        return {
+          ...videoDetails,
+          courseVersionId: course.id,
+        };
+      }),
+    });
+
+    // Move all the attachments of the videos to trash
+    const attachments = videos.flatMap((video) => {
+      if (!video.attachments || video.attachments.length === 0) {
+        return [];
+      }
+      return video.attachments;
+    });
+
+    await db.attachmentTrash.createMany({
+      data: attachments.map((attachment) => {
+        delete attachment.id;
+        delete attachment.videoId;
+        delete attachment.documentId;
+
+        return {
+          ...attachment,
+          courseVersionId: course.id,
+        };
+      }),
+    });
 
     await db.chapter.delete({
       where: {
@@ -1232,6 +1340,83 @@ export class CoursesService {
     });
 
     return updatedVideo;
+  }
+
+  async deleteVideo(
+    courseSlug: string,
+    chapterSlug: string,
+    videoSlug: string,
+  ) {
+    const course = await this.findCourseBySlug(courseSlug, true);
+
+    if (!course) {
+      throw new BadRequestException('Course not found');
+    }
+
+    const chapter = await db.chapter.findUnique({
+      where: {
+        courseVersionId_slug: {
+          courseVersionId: course.id,
+          slug: chapterSlug,
+        },
+      },
+    });
+
+    if (!chapter) {
+      throw new BadRequestException('Chapter not found');
+    }
+
+    const video = await db.video.findUnique({
+      where: {
+        chapterId_slug: {
+          chapterId: chapter.id,
+          slug: videoSlug,
+        },
+      },
+      include: {
+        attachments: true,
+      },
+    });
+
+    if (!video) {
+      throw new BadRequestException('Video not found');
+    }
+
+    const { attachments, ...videoDetails } = video;
+    delete videoDetails.id;
+    delete videoDetails.chapterId;
+
+    // Move video to trash
+    await db.videoTrash.create({
+      data: {
+        ...videoDetails,
+        courseVersionId: course.id,
+      },
+    });
+
+    // Move attachments to trash
+    await db.attachmentTrash.createMany({
+      data: attachments.map((attachment) => {
+        delete attachment.id;
+        delete attachment.videoId;
+        delete attachment.documentId;
+
+        return {
+          ...attachment,
+          courseVersionId: course.id,
+        };
+      }),
+    });
+
+    await db.video.delete({
+      where: {
+        id: video.id,
+      },
+    });
+
+    return {
+      message: 'Video deleted successfully',
+    };
   }
 
   async createLearning(courseSlug: string, dto: CreateLearningDto) {
