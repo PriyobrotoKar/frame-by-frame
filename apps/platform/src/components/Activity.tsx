@@ -91,7 +91,7 @@ const WeekActivity = ({ activeDays }: WeekActivityProps) => {
       <h3 className="text-lg">Activity</h3>
       <div className="flex justify-between gap-2 sm:gap-4">
         {weekdays.map((day, index) => {
-          const isActive = activeDays.includes(index);
+          const isActive = activeDays.includes(index + 1);
 
           return (
             <div

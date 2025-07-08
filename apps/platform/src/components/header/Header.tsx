@@ -1,6 +1,5 @@
 import React from 'react';
 import { Separator } from '../ui/separator';
-import Image from 'next/image';
 import Navbar from './Navbar';
 import Login from './Login';
 import { getSession } from '@/lib/session';
@@ -11,6 +10,7 @@ import { cn } from '@/lib/utils';
 import { Role } from '@frame-by-frame/db';
 import AdminNotification from '@/features/notification/components/AdminNotification';
 import UserNotifications from '@/features/notification/components/UserNotifications';
+import Logo from '../Logo';
 
 interface HeaderProps {
   showLogo?: boolean;
@@ -32,9 +32,7 @@ export async function Header({
           className,
         )}
       >
-        {showLogo && (
-          <Image src={'/logo.svg'} alt="logo" width={90} height={33} />
-        )}
+        {showLogo && <Logo />}
 
         {session?.user.role === Role.ADMIN && <CourseSelector />}
 

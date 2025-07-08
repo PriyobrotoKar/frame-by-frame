@@ -146,6 +146,67 @@ export class CoursesService {
     return courseDetails.filter((course) => course !== null);
   }
 
+  async getLibraryCourses(user: JwtPayload) {
+    const courses = await db.courseVersion.findMany({
+      where: {
+        isPublished: true,
+        course: {
+          orders: {
+            some: {
+              userId: user.id,
+              status: 'COMPLETED',
+            },
+          },
+        },
+      },
+      include: {
+        trailer: true,
+        instructors: true,
+        learnings: true,
+        chapters: {
+          include: {
+            videos: {
+              select: {
+                id: true,
+                title: true,
+                order: true,
+                slug: true,
+                duration: true,
+              },
+            },
+            documents: {
+              select: {
+                id: true,
+                title: true,
+                order: true,
+                slug: true,
+                duration: true,
+              },
+            },
+          },
+        },
+      },
+    });
+
+    return courses.map((course) => ({
+      ...course,
+      chapters: course.chapters.map((chapter) => {
+        const chapterWithLesson = {
+          ...chapter,
+          lessons: [
+            ...chapter.documents.map((doc) => ({ ...doc, type: 'document' })),
+            ...chapter.videos.map((video) => ({ ...video, type: 'video' })),
+          ].sort((a, b) => a.order - b.order),
+        };
+
+        delete chapterWithLesson.videos;
+        delete chapterWithLesson.documents;
+
+        return chapterWithLesson;
+      }),
+    }));
+  }
+
   async getCourseBySlug(slug: string, isAdmin = false) {
     const course = await this.findCourseBySlug(slug, isAdmin);
 

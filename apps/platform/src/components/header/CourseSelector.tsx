@@ -10,7 +10,10 @@ import {
 import { IconChevronDown } from '@tabler/icons-react';
 import { useQuery } from '@tanstack/react-query';
 import { getCourses } from '@/features/course/actions/getCourse';
-import { Button } from '../ui/button';
+import { buttonVariants } from '../ui/button';
+import { Separator } from '../ui/separator';
+import Link from 'next/link';
+import { cn } from '@/lib/utils';
 
 const CourseSelector = () => {
   const path = usePathname();
@@ -52,6 +55,7 @@ const CourseSelector = () => {
           style={{
             width: 'var(--radix-dropdown-menu-trigger-width)',
           }}
+          className="space-y-2 p-2"
         >
           {courses?.map((course) => (
             <DropdownMenuItem
@@ -64,9 +68,13 @@ const CourseSelector = () => {
               {course.title}
             </DropdownMenuItem>
           ))}
-          <Button variant={'secondary'} className="w-full">
+          <Separator />
+          <Link
+            href={'/admin/course/create'}
+            className={cn(buttonVariants({ variant: 'secondary' }), 'w-full')}
+          >
             Create Course
-          </Button>
+          </Link>
         </DropdownMenuContent>
       </DropdownMenu>
     </div>

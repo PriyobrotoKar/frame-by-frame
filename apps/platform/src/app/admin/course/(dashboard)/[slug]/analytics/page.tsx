@@ -16,7 +16,7 @@ export default async function AnalyticsPage({
   }>;
 }) {
   const { slug } = await params;
-  const course = await getCourseBySlug(slug);
+  const course = await getCourseBySlug(slug, true);
   const analytics = await getCourseAnalyticsOverview(slug);
   const { orders, totalOrders } = await getCourseOrders(course.courseId);
 

@@ -19,7 +19,7 @@ export class OrderController {
   @Admin()
   @Get(':courseId/all')
   async getOrders(
-    @Param('courseSlug') courseId: string,
+    @Param('courseId') courseId: string,
     @Query('page') page: number = 0,
     @Query('limit') limit: number = 10,
   ) {

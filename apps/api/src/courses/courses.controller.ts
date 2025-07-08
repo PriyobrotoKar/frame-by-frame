@@ -47,6 +47,11 @@ export class CoursesController {
     return this.coursesService.getCourses(true);
   }
 
+  @Get('library')
+  async getLibraryCourses(@CurrentUser() user: JwtPayload) {
+    return this.coursesService.getLibraryCourses(user);
+  }
+
   @Get('activity')
   async getActivity(@CurrentUser() user: JwtPayload) {
     return this.coursesService.getUserActivity(user);

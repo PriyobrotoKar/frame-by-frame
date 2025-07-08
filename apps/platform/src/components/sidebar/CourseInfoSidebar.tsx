@@ -41,7 +41,7 @@ export default function CourseInfoSidebar({
   isEnrolled = false,
 }: CourseInfoSidebarProps) {
   return (
-    <div className="bg-card h-fit w-full space-y-5 rounded-xl border p-4 md:sticky md:top-40 md:max-w-80">
+    <div className="h-fit w-full space-y-5 md:sticky md:top-40 md:max-w-80">
       <CourseCard
         className="bg-primary-foreground"
         isEnrolled={isEnrolled}

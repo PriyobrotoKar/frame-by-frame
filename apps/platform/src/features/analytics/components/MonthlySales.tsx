@@ -52,7 +52,7 @@ const MonthlySales = ({ analytics: { monthlySales } }: MonthlySalesProps) => {
     <div className="space-y-4 rounded-lg border">
       <div className="space-y-1 p-5">
         <h3 className="text-md">Monthly Sales</h3>
-        <h2 className="text-2xl">₹{(monthlySales ?? 0 / 100).toFixed(2)}</h2>
+        <h2 className="text-2xl">₹{((monthlySales ?? 0) / 100).toFixed(2)}</h2>
       </div>
       <div>
         <ChartContainer config={chartConfig} className="h-[80px] w-full">

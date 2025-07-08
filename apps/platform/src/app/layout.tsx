@@ -2,6 +2,7 @@ import type { Metadata } from 'next';
 import { Inter } from 'next/font/google';
 import './globals.css';
 import { Toaster } from '@/components/ui/sonner';
+import NextTopLoader from 'nextjs-toploader';
 import ReactQueryProvider from '@/providers/ReactQueryProvider';
 import { SessionProvider } from '@/providers/SessionProvider';
 
@@ -22,6 +23,7 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className={`${inter.className} antialiased`}>
+        <NextTopLoader color="var(--primary)" showSpinner={false} />
         <Toaster richColors />
         <ReactQueryProvider>
           <SessionProvider>{children}</SessionProvider>
