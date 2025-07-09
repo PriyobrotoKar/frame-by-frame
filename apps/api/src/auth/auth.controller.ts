@@ -17,11 +17,35 @@ import { Profile as DiscordProfile } from 'passport-discord';
 import { clearCookies, setCookies } from '@/common/utils';
 import { DiscordAuth } from './guards/discord.guard';
 import Public from '@/decorators/public.decorator';
+import CurrentUser from '@/decorators/user.decorator';
+import { type JwtPayload } from '@/types/jwt.payload';
+import { RefreshAuthGuard } from './guards/refresh-auth.guard';
 
 @Controller('auth')
 export class AuthController {
   private readonly logger = new Logger(AuthController.name);
   constructor(private readonly authService: AuthService) {}
+
+  @Public()
+  @UseGuards(RefreshAuthGuard)
+  @Post('refresh-token')
+  async refreshToken(
+    @Res({
+      passthrough: true,
+    })
+    res: Response,
+    @CurrentUser() user: JwtPayload,
+  ) {
+    const { access_token, refresh_token } =
+      await this.authService.refreshToken(user);
+
+    setCookies(res, { access_token, refresh_token });
+
+    return {
+      access_token,
+      refresh_token,
+    };
+  }
 
   @Public()
   @Get('google')
@@ -109,12 +133,15 @@ export class AuthController {
   }
 
   @Post('logout')
-  logout(
+  async logout(
     @Res({
       passthrough: true,
     })
     res: Response,
+    @CurrentUser() user: JwtPayload,
   ) {
+    await this.authService.logout(user);
+
     clearCookies(res);
     return {
       message: 'Logout successful',

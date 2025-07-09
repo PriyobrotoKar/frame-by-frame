@@ -1,9 +1,10 @@
 import { PassportStrategy } from '@nestjs/passport';
 import { Strategy } from 'passport-discord';
 import discordConfig from '../config/discord.config';
-import { Inject } from '@nestjs/common';
+import { Inject, Injectable } from '@nestjs/common';
 import { type ConfigType } from '@nestjs/config';
 
+@Injectable()
 export class DiscordStrategy extends PassportStrategy(Strategy) {
   constructor(
     @Inject(discordConfig.KEY)

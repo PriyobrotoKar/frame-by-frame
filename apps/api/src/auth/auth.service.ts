@@ -1,10 +1,17 @@
-import { BadRequestException, Inject, Injectable } from '@nestjs/common';
+import {
+  BadRequestException,
+  Inject,
+  Injectable,
+  UnauthorizedException,
+} from '@nestjs/common';
 import { AuthProvider, db, Prisma, Role } from '@frame-by-frame/db';
 import { JwtService } from '@nestjs/jwt';
 import { ConfigService, type ConfigType } from '@nestjs/config';
 import refreshJwtConfig from './config/refresh-jwt.config';
 import { Profile as GoogleProfile } from 'passport-google-oauth20';
 import { Profile as DiscordProfile } from 'passport-discord';
+import { JwtPayload } from '@/types/jwt.payload';
+import { hash, verify } from 'argon2';
 
 @Injectable()
 export class AuthService {
@@ -16,6 +23,50 @@ export class AuthService {
       typeof refreshJwtConfig
     >,
   ) {}
+
+  async validateRefreshToken(refreshToken: string, payload: JwtPayload) {
+    // check if any user exists
+    const user = await db.user.findUnique({
+      where: {
+        id: payload.id,
+        email: payload.email,
+      },
+    });
+
+    if (!user || !user.refreshToken) {
+      throw new UnauthorizedException('Invalid refresh token');
+    }
+
+    // check if the refresh tokens match
+    const isMatch = await verify(user.refreshToken, refreshToken);
+
+    if (!isMatch) {
+      throw new UnauthorizedException('Invalid refresh token');
+    }
+
+    // if valid, return the user
+    return {
+      id: user.id,
+      email: user.email,
+      role: user.role,
+    };
+  }
+
+  async refreshToken(user: JwtPayload) {
+    // Generate new JWT tokens for the user
+    const tokens = await this.generateTokens(user.email, user.id, user.role);
+
+    // Update the user's refresh token in the database
+    const hashedRefreshToken = await hash(tokens.refresh_token);
+    await db.user.update({
+      where: { id: user.id },
+      data: {
+        refreshToken: hashedRefreshToken,
+      },
+    });
+
+    return tokens;
+  }
 
   async handleGoogleLogin(profile: GoogleProfile) {
     let user = await this.getUserByOAuthId(profile.id, AuthProvider.GOOGLE);
@@ -70,6 +121,15 @@ export class AuthService {
       user.role,
     );
 
+    // Update the user's refresh token in the database
+    const hashedRefreshToken = await hash(tokens.refresh_token);
+    await db.user.update({
+      where: { id: user.id },
+      data: {
+        refreshToken: hashedRefreshToken,
+      },
+    });
+
     return {
       ...tokens,
       user,
@@ -123,10 +183,31 @@ export class AuthService {
     // Generate JWT tokens for the user
     const tokens = await this.generateTokens(profile.email, user.id, user.role);
 
+    // Update the user's refresh token in the database
+    const hashedRefreshToken = await hash(tokens.refresh_token);
+    await db.user.update({
+      where: { id: user.id },
+      data: {
+        refreshToken: hashedRefreshToken,
+      },
+    });
+
     return {
       ...tokens,
       user,
     };
+  }
+
+  async logout(user: JwtPayload) {
+    // Invalidate the user's refresh token by setting it to null
+    await db.user.update({
+      where: { id: user.id },
+      data: {
+        refreshToken: null,
+      },
+    });
+
+    return { message: 'Logged out successfully' };
   }
 
   private async getUserByEmail(email: string) {

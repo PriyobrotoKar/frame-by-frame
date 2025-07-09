@@ -10,6 +10,7 @@ import jwtConfig from './config/jwt.config';
 import discordConfig from './config/discord.config';
 import { DiscordStrategy } from './strategies/discord.strategy';
 import { JwtStrategy } from './strategies/jwt.strategy';
+import { RefreshJwtStrategy } from './strategies/refresh-jwt.srategy';
 
 @Module({
   imports: [
@@ -20,6 +21,12 @@ import { JwtStrategy } from './strategies/jwt.strategy';
     ConfigModule.forFeature(discordConfig),
   ],
   controllers: [AuthController],
-  providers: [AuthService, GoogleStrategy, DiscordStrategy, JwtStrategy],
+  providers: [
+    AuthService,
+    GoogleStrategy,
+    DiscordStrategy,
+    JwtStrategy,
+    RefreshJwtStrategy,
+  ],
 })
 export class AuthModule {}
