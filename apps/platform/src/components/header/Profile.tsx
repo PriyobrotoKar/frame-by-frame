@@ -36,8 +36,8 @@ const Profile = ({ session }: { session: Session }) => {
   const isDesktop = useMediaQuery('(min-width: 640px)');
 
   const handleLogout = async () => {
-    await removeSession();
     await logout();
+    await removeSession();
   };
 
   if (!isDesktop) {

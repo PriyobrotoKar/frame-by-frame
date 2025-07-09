@@ -1,4 +1,4 @@
-import { getSession } from '@/lib/session';
+import { getSession, updateSession } from '@/lib/session';
 
 export class ApiError extends Error {
   status: number;
@@ -30,6 +30,11 @@ class ApiClient {
     });
 
     if (!response.ok) {
+      if (response.status === 401) {
+        console.log('Session expired, updating session (API CLIENT)...');
+        await updateSession();
+      }
+
       const message = ((await response.json()) as { message: string }).message;
       throw new ApiError(message, response.status);
     }

@@ -1,3 +1,4 @@
+import Footer from '@/components/Footer';
 import { getOrderByCourse } from '@/features/analytics/actions/getCourseOrders';
 import { getAllChapters } from '@/features/course/actions/getChapters';
 import { getLessonBySlug } from '@/features/course/actions/getLesson';
@@ -77,6 +78,8 @@ export default async function LessonPage({
           lessonProgress={lessonProgress}
         />
       )}
+
+      <Footer />
     </div>
   );
 }

@@ -1,9 +1,16 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { getSession } from './lib/session';
+import { getSession, updateSession } from './lib/session';
 
 const protectedRoutes = ['/admin', '/learn'];
 
 export async function middleware(request: NextRequest) {
+  console.log('Middleware triggered for:', request.nextUrl.pathname);
+  const res = await updateSession(request);
+
+  if (res) {
+    return res;
+  }
+
   const session = await getSession(request);
   // check if an unauthenticated user trying to access a protected route
   if (

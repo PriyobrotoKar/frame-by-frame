@@ -44,6 +44,7 @@ const VideoPlayer = ({
     : 'https://framebyframe-dev.s3.ap-south-1.amazonaws.com/';
 
   const ref = useRef<MediaPlayerInstance>(null);
+  const currentProgress = useRef(progress || 0);
   const queryClient = useQueryClient();
   const { playing, currentTime } = useStore(MediaPlayerInstance, ref);
 
@@ -106,7 +107,7 @@ const VideoPlayer = ({
       <MediaPlayer
         playsInline
         crossOrigin
-        currentTime={progress}
+        currentTime={currentProgress.current}
         ref={ref}
         onProviderChange={onProviderChange}
         src={baseUrl + src}
