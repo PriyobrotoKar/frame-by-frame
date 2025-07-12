@@ -25,6 +25,7 @@ module "lambda" {
   ecs_task_definition_arn     = module.ecs.ecs_task_definition_arn
   ecs_task_role_arn           = module.ecs.ecs_task_role_arn
   ecs_execution_role_arn      = module.ecs.ecs_execution_role_arn
+  private_bucket              = data.terraform_remote_state.global.outputs.private_bucket
   primary_bucket              = data.terraform_remote_state.global.outputs.primary_dev_bucket
   temp_bucket                 = data.terraform_remote_state.global.outputs.temp_dev_bucket
 }

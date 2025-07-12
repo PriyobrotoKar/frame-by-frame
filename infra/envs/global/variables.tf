@@ -22,3 +22,15 @@ variable "allowed_origins" {
   default     = ["http://localhost:3000", "https://frame-by-frame-course-dev.vercel.app"]
 }
 
+variable "cloudflare_api_token" {
+  description = "Cloudflare API token"
+  type        = string
+  sensitive   = true
+}
+
+variable "cloudflare_account_id" {
+  description = "Cloudflare account ID"
+  type        = string
+  sensitive   = true
+}
+

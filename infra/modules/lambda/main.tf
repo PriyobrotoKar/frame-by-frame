@@ -81,6 +81,7 @@ resource "aws_lambda_function" "api_lambda" {
   environment {
     variables = merge({
       BACKEND_URL = var.backend_api_url
+      R2_BUCKET   = var.private_bucket.name
       },
       var.env_vars
     )
@@ -203,7 +204,8 @@ resource "aws_lambda_function" "video_transcoding_consumer" {
   environment {
     variables = merge({
       BACKEND_URL         = var.backend_api_url
-      BUCKET              = var.primary_bucket.name
+      PUBLIC_BUCKET       = var.primary_bucket.name
+      PRIVATE_BUCKET      = var.private_bucket.name
       ECS_CLUSTER         = var.ecs_cluster_arn
       ECS_TASK_DEFINITION = var.ecs_task_definition_arn
       ECS_CONTAINER_NAME  = "${var.app_name}-${var.env}-video-transcoder",

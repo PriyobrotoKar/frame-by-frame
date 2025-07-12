@@ -76,6 +76,13 @@ variable "ecs_execution_role_arn" {
   type        = string
 }
 
+variable "private_bucket" {
+  description = "The private R2 bucket used for storage."
+  type = object({
+    name = string
+  })
+}
+
 variable "primary_bucket" {
   description = "The primary S3 bucket used for storage."
   type = object({

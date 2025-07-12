@@ -6,6 +6,14 @@ module "s3" {
   video_transcoding_queue_arn = module.sqs.video_transcoding_queue_arn
 }
 
+module "r2" {
+  source = "../../modules/r2"
+
+  app_name              = var.app_name
+  allowed_origins       = var.allowed_origins
+  cloudflare_account_id = var.cloudflare_account_id
+}
+
 data "aws_s3_bucket" "temp_dev_bucket" {
   bucket = "${var.app_name}-dev-temp"
 }

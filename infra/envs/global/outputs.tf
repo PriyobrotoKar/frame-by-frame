@@ -17,3 +17,8 @@ output "primary_dev_bucket" {
   value       = module.s3.primary_dev_bucket
   description = "The primary S3 bucket used for storage"
 }
+
+output "private_bucket" {
+  value       = module.r2.private_bucket
+  description = "The private R2 bucket used for storage"
+}
