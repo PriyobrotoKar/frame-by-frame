@@ -13,12 +13,22 @@ import { Injectable } from '@nestjs/common';
 @Injectable()
 export class StorageService {
   private readonly s3: S3;
-  private readonly bucketName = process.env.AWS_BUCKET;
+  private readonly r2: S3;
+  private readonly privateBucket = process.env.R2_BUCKET;
+  private readonly publicBucket = process.env.AWS_BUCKET;
   private readonly tempBucketName = process.env.AWS_TEMP_BUCKET;
 
   constructor() {
     this.s3 = new S3({
       region: 'ap-south-1',
+    });
+    this.r2 = new S3({
+      endpoint: process.env.R2_ENDPOINT,
+      region: 'apac',
+      credentials: {
+        accessKeyId: process.env.R2_ACCESS_KEY_ID,
+        secretAccessKey: process.env.R2_SECRET_ACCESS_KEY,
+      },
     });
   }
 
@@ -34,7 +44,7 @@ export class StorageService {
     const key = `uploads/${directory}/${Date.now()}.${fileType}`;
 
     const params: PutObjectCommandInput = {
-      Bucket: this.bucketName,
+      Bucket: this.publicBucket,
       Key: key,
     };
 
@@ -130,12 +140,12 @@ export class StorageService {
     expiresIn: number = 3600, // Default to 1 hour
   ) {
     const params = {
-      Bucket: this.bucketName,
+      Bucket: this.privateBucket,
       Key: key,
     };
 
     const command = new GetObjectCommand(params);
-    const url = await getSignedUrl(this.s3, command, {
+    const url = await getSignedUrl(this.r2, command, {
       expiresIn,
     });
 
@@ -145,14 +155,17 @@ export class StorageService {
     };
   }
 
-  async getObject(key: string) {
+  async getObject(key: string, type: 'private' | 'public' = 'public') {
     const params = {
-      Bucket: this.bucketName,
+      Bucket: type === 'private' ? this.privateBucket : this.publicBucket,
       Key: key,
     };
 
     const command = new GetObjectCommand(params);
-    const object = await this.s3.send(command);
+    const object =
+      type === 'private'
+        ? await this.r2.send(command)
+        : await this.s3.send(command);
 
     return object;
   }

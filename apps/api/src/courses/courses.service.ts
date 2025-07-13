@@ -414,7 +414,6 @@ export class CoursesService {
       db.attachmentTrash.findMany(),
     ]);
 
-    //hls/the-desktop-video-editing-masterclass-essential-editing-techniques-deepfake-video-of-volodymyr-zelensky-surrendering-surfaces-on-social-media-cmcop78500001l508kxzz5hgo.mp4/index.m3u8
     const deletedVideos = videos.map((video) => ({
       id: video.id,
       prefix: video.url.split('/').slice(0, -1).join('/'),
@@ -1710,7 +1709,7 @@ export class CoursesService {
     // create a signed URL for the HLS stream
     const key = `hls/${playlistPath}`;
 
-    const playlist = await this.storageService.getObject(key);
+    const playlist = await this.storageService.getObject(key, 'private');
     const rawText = await playlist.Body?.transformToString('utf-8');
     const expiry = video.duration * 2 + 3600; // 2x video duration + 1 hour buffer
 
@@ -2242,6 +2241,61 @@ export class CoursesService {
     return courseProgress;
   }
 
+  async searchCourses(query: string) {
+    const courses = await db.courseVersion.findMany({
+      where: {
+        isPublished: true,
+        OR: [
+          { title: { contains: query, mode: 'insensitive' } },
+          { subtitle: { contains: query, mode: 'insensitive' } },
+        ],
+      },
+      orderBy: {
+        createdAt: 'desc',
+      },
+      include: {
+        chapters: {
+          include: {
+            videos: {
+              select: {
+                duration: true,
+                order: true,
+              },
+            },
+            documents: {
+              select: {
+                duration: true,
+                order: true,
+              },
+            },
+          },
+        },
+      },
+    });
+
+    // Map through courses to ensure the structure is consistent
+    const courseDetails = courses.map((course) => {
+      course.chapters = course.chapters.map((chapter) => {
+        const chapterWithLesson = {
+          ...chapter,
+          lessons: [
+            ...chapter.documents.map((doc) => ({ ...doc, type: 'document' })),
+            ...chapter.videos.map((video) => ({ ...video, type: 'video' })),
+          ].sort((a, b) => a.order - b.order),
+        };
+
+        delete chapterWithLesson.videos;
+        delete chapterWithLesson.documents;
+
+        return chapterWithLesson;
+      });
+
+      return course;
+    });
+
+    return courseDetails;
+  }
+
   async updateUserActivity(
     courseSlug: string,
     chapterId: string,
@@ -2379,7 +2433,7 @@ export class CoursesService {
     coursePublishedAt: Date,
   ) {
     const today = new Date();
-    const startDate = max([subMonths(today, 3), coursePublishedAt]);
+    const startDate = max([subMonths(today, 6), coursePublishedAt]);
     const endDate = today;
 
     const allDates = eachMonthOfInterval({ start: startDate, end: endDate });

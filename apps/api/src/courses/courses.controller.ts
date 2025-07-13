@@ -58,6 +58,12 @@ export class CoursesController {
   }
 
   @Public()
+  @Get('search')
+  async searchCourses(@Query('query') query: string) {
+    return this.coursesService.searchCourses(query);
+  }
+
+  @Public()
   @Get(':slug')
   async getCourseBySlug(@Param('slug') slug: string) {
     return this.coursesService.getCourseBySlug(slug);
