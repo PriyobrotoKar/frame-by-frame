@@ -48,7 +48,7 @@ const LastWatched = ({ activity }: LastWatchedProps) => {
           </h4>
           <h3 className="text-lg">{activity.course.title}</h3>
         </div>
-        <div className="space-y-3">
+        <div className="flex-1 space-y-3">
           <div className="text-muted-foreground text-sm">
             {activity.progress}% Progress
           </div>
@@ -62,7 +62,7 @@ const LastWatched = ({ activity }: LastWatchedProps) => {
           </div>
         </div>
       </div>
-      <div className="bg-muted flex w-full items-center justify-between gap-4 rounded-lg px-7 py-4 lg:w-fit">
+      <div className="bg-muted flex w-full flex-1 items-center justify-between gap-4 rounded-lg px-7 py-4 lg:w-fit">
         <div className="space-y-1">
           <h3 className="text-md">{activity.chapter.title}</h3>
           <p className="text-sm">{activity.lesson.title}</p>
@@ -91,7 +91,7 @@ const WeekActivity = ({ activeDays }: WeekActivityProps) => {
       <h3 className="text-lg">Activity</h3>
       <div className="flex justify-between gap-2 sm:gap-4">
         {weekdays.map((day, index) => {
-          const isActive = activeDays.includes(index + 1);
+          const isActive = activeDays.includes((index + 1) % 7);
 
           return (
             <div

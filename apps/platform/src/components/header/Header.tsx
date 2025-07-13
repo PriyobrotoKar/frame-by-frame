@@ -36,11 +36,10 @@ export async function Header({
 
         {session?.user.role === Role.ADMIN && <CourseSelector />}
 
-        <div className="hidden flex-1 sm:block">
-          <SearchBox />
-        </div>
-
-        <div className="flex items-center gap-6">
+        <div className="flex flex-1 items-center justify-end gap-6">
+          <div className="hidden sm:block">
+            <SearchBox />
+          </div>
           {session &&
             (session.user.role === Role.ADMIN ? (
               <AdminNotification />

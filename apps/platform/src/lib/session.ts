@@ -83,7 +83,6 @@ export const updateSession = async (
   request?: NextRequest,
   user?: Partial<User>,
 ): Promise<NextResponse | undefined> => {
-  console.log('Updating session...', !!request);
   try {
     const session = request
       ? request.cookies.get('session')?.value
@@ -115,7 +114,6 @@ const handleExiredSession = async (
   request?: NextRequest,
 ): Promise<NextResponse | undefined> => {
   try {
-    console.log('Session expired, refreshing token...');
     const refreshTokenRes = await refreshToken(expiredSession.refreshToken);
     const newSessionPayload: Session = {
       ...expiredSession,
@@ -123,20 +121,16 @@ const handleExiredSession = async (
       refreshToken: refreshTokenRes.refresh_token,
     };
 
-    console.log('New session payload:', newSessionPayload);
-
     const newSession = await encodeSession(newSessionPayload);
 
     if (request) {
-      console.log('Redirecting with new session...');
       const res = NextResponse.next();
       res.cookies.set('session', newSession, cookieOptions);
       return res;
     }
 
     (await cookies()).set('session', newSession, cookieOptions);
-  } catch (error) {
-    console.error('Error refreshing session:', error);
+  } catch {
     const res = NextResponse.next();
     res.cookies.delete('session');
   }

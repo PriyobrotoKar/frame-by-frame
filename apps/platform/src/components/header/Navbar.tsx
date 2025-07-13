@@ -13,10 +13,6 @@ const navLinks = [
     title: 'Library',
     href: '/library',
   },
-  {
-    title: 'Certificates',
-    href: '/certificates',
-  },
 ];
 
 const adminNavLinks = (slug: string) => [
@@ -25,20 +21,12 @@ const adminNavLinks = (slug: string) => [
     href: `/admin/course/${slug}/content`,
   },
   {
-    title: 'Settings',
-    href: `/admin/course/${slug}/settings/appearance`,
-  },
-  {
     title: 'Analytics',
     href: `/admin/course/${slug}/analytics`,
   },
   {
-    title: 'Sales',
-    href: `/admin/course/${slug}/sales`,
-  },
-  {
-    title: 'Certificates',
-    href: `/admin/course/${slug}/certificates`,
+    title: 'Settings',
+    href: `/admin/course/${slug}/settings/appearance`,
   },
 ];
 

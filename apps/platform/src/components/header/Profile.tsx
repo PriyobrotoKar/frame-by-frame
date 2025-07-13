@@ -23,6 +23,7 @@ import {
 } from '../ui/dropdown-menu';
 import { logout } from '@/features/auth/actions/logout';
 import useMediaQuery from '@/hooks/useMediaQuery';
+import { useRouter } from 'nextjs-toploader/app';
 import {
   Drawer,
   DrawerContent,
@@ -34,10 +35,12 @@ import Link from 'next/link';
 
 const Profile = ({ session }: { session: Session }) => {
   const isDesktop = useMediaQuery('(min-width: 640px)');
+  const router = useRouter();
 
   const handleLogout = async () => {
     await logout();
     await removeSession();
+    router.push('/');
   };
 
   if (!isDesktop) {

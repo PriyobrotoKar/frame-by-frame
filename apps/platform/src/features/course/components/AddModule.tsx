@@ -50,7 +50,6 @@ const AddModule = ({ chapter, open, setOpen }: AddModuleProps) => {
           duration: Math.floor(data.duration),
         });
 
-        // Key format: courseSlug-chapterSlug-videoName-videoId.fileExtension
         uploadFile({
           file: data.videoFile,
           key: `${courseSlug}-${chapter.slug}-${slugify(data.videoFile.name.split('.')[0])}-${video.id}.${data.videoFile.name.split('.').pop()}`,
