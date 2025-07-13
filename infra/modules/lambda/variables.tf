@@ -51,9 +51,9 @@ variable "video_transcoding_queue_arn" {
   type        = string
 }
 
-variable "file_destroyer_queue_arn" {
+variable "file_destroyer_queue" {
   description = "The ARN of the SQS queue for video transcoding."
-  type        = string
+  type        = map(string)
 }
 
 variable "ecs_cluster_arn" {

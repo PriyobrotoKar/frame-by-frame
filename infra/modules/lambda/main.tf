@@ -39,6 +39,14 @@ resource "aws_iam_policy" "api_logging" {
     Statement = [
       {
         Action = [
+          "sqs:SendMessage",
+          "sqs:GetQueueAttributes"
+        ]
+        Effect   = "Allow"
+        Resource = var.file_destroyer_queue.arn
+      },
+      {
+        Action = [
           "logs:CreateLogGroup",
           "logs:CreateLogStream",
           "logs:PutLogEvents"
@@ -80,8 +88,9 @@ resource "aws_lambda_function" "api_lambda" {
 
   environment {
     variables = merge({
-      BACKEND_URL = var.backend_api_url
-      R2_BUCKET   = var.private_bucket.name
+      BACKEND_URL       = var.backend_api_url
+      R2_BUCKET         = var.private_bucket.name
+      QUEUE_DELETE_FILE = var.file_destroyer_queue.url
       },
       var.env_vars
     )
@@ -268,7 +277,7 @@ resource "aws_iam_policy" "file_destroyer_policy" {
           "sqs:GetQueueAttributes"
         ]
         Effect   = "Allow"
-        Resource = var.file_destroyer_queue_arn
+        Resource = var.file_destroyer_queue.arn
       },
       {
         Effect = "Allow",
@@ -343,7 +352,7 @@ resource "aws_cloudwatch_log_group" "file_destroyer_logs" {
 }
 
 resource "aws_lambda_event_source_mapping" "file_destroyer_event_source" {
-  event_source_arn = var.file_destroyer_queue_arn
+  event_source_arn = var.file_destroyer_queue.arn
   function_name    = aws_lambda_function.file_destroyer.arn
 }
 

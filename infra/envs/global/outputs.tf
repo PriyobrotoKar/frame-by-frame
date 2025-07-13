@@ -3,8 +3,8 @@ output "video_transcoding_queue_arn" {
   description = "ARN of the video transcoding SQS queue"
 }
 
-output "file_destroyer_queue_arn" {
-  value       = module.sqs.file_destroyer_queue_arn
+output "file_destroyer_queue" {
+  value       = module.sqs.file_destroyer_queue
   description = "ARN of the file destroyer SQS queue"
 }
 

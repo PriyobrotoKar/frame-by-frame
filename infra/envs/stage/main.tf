@@ -20,11 +20,12 @@ module "lambda" {
   backend_api_url             = "https://${module.api-gateway.rest_api_id}.execute-api.${var.aws_region}.amazonaws.com/stage"
   api_gateway_execution_arn   = module.api-gateway.api_gateway_execution_arn
   video_transcoding_queue_arn = data.terraform_remote_state.global.outputs.video_transcoding_queue_arn
-  file_destroyer_queue_arn    = data.terraform_remote_state.global.outputs.file_destroyer_queue_arn
+  file_destroyer_queue        = data.terraform_remote_state.global.outputs.file_destroyer_queue
   ecs_cluster_arn             = module.ecs.ecs_cluster_arn
   ecs_task_definition_arn     = module.ecs.ecs_task_definition_arn
   ecs_task_role_arn           = module.ecs.ecs_task_role_arn
   ecs_execution_role_arn      = module.ecs.ecs_execution_role_arn
+  private_bucket              = data.terraform_remote_state.global.outputs.private_bucket
   primary_bucket              = data.terraform_remote_state.global.outputs.primary_dev_bucket
   temp_bucket                 = data.terraform_remote_state.global.outputs.temp_dev_bucket
 }
