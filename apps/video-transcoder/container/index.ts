@@ -18,9 +18,19 @@ type Resolution = {
 
 const video = process.env.INPUT_VIDEO;
 const outputDir = path.join(__dirname, '..', 'output');
+const isPublic = video.includes('trailer');
 
 const s3 = new S3Client({
   region: 'ap-south-1',
+});
+
+const r2 = new S3Client({
+  region: 'apac',
+  endpoint: process.env.R2_ENDPOINT,
+  credentials: {
+    accessKeyId: process.env.R2_ACCESS_KEY_ID,
+    secretAccessKey: process.env.R2_SECRET_ACCESS_KEY,
+  },
 });
 
 async function main() {
@@ -104,6 +114,11 @@ async function main() {
 }
 
 async function uploadToS3(resolution: Resolution | 'master') {
+  const outputBucket = isPublic
+    ? process.env.PUBLIC_BUCKET
+    : process.env.PRIVATE_BUCKET;
+  const client = isPublic ? s3 : r2;
+
   if (resolution === 'master') {
     console.log(`Uploading master playlist to S3...`);
 
@@ -112,12 +127,12 @@ async function uploadToS3(resolution: Resolution | 'master') {
     );
 
     const s3PutCommand = new PutObjectCommand({
-      Bucket: process.env.BUCKET,
+      Bucket: outputBucket,
       Key: `hls/${video}/index.m3u8`,
       Body: masterPlaylist,
     });
 
-    await s3.send(s3PutCommand);
+    await client.send(s3PutCommand);
 
     return;
   }
@@ -137,12 +152,12 @@ async function uploadToS3(resolution: Resolution | 'master') {
     );
 
     const s3PutCommand = new PutObjectCommand({
-      Bucket: process.env.BUCKET,
+      Bucket: outputBucket,
       Key: `hls/${video}/version_${size}/${filename}`,
       Body: file,
     });
 
-    promises.push(s3.send(s3PutCommand));
+    promises.push(client.send(s3PutCommand));
   });
 
   const playlist = await fs.readFile(
@@ -150,12 +165,12 @@ async function uploadToS3(resolution: Resolution | 'master') {
   );
 
   const s3PutCommand = new PutObjectCommand({
-    Bucket: process.env.BUCKET,
+    Bucket: outputBucket,
     Key: `hls/${video}/version_${size}.m3u8`,
     Body: playlist,
   });
 
-  promises.push(s3.send(s3PutCommand));
+  promises.push(client.send(s3PutCommand));
 
   await Promise.all(promises);
 

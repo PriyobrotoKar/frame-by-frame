@@ -47,8 +47,12 @@ export const handler: SQSHandler = async (event) => {
                     value: temp_bucket,
                   },
                   {
-                    name: 'BUCKET',
-                    value: process.env.BUCKET,
+                    name: 'PUBLIC_BUCKET',
+                    value: process.env.PUBLIC_BUCKET,
+                  },
+                  {
+                    name: 'PRIVATE_BUCKET',
+                    value: process.env.PRIVATE_BUCKET,
                   },
                   {
                     name: 'BACKEND_URL',
@@ -57,6 +61,18 @@ export const handler: SQSHandler = async (event) => {
                   {
                     name: 'API_KEY',
                     value: process.env.API_KEY,
+                  },
+                  {
+                    name: 'R2_ENDPOINT',
+                    value: process.env.R2_ENDPOINT,
+                  },
+                  {
+                    name: 'R2_ACCESS_KEY_ID',
+                    value: process.env.R2_ACCESS_KEY_ID,
+                  },
+                  {
+                    name: 'R2_SECRET_ACCESS_KEY',
+                    value: process.env.R2_SECRET_ACCESS_KEY,
                   },
                 ],
               },
