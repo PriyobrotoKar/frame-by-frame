@@ -10,7 +10,16 @@ import {
 
 const s3 = new S3Client();
 
-const deleteFile = async (key: string, bucket: string) => {
+const r2 = new S3Client({
+  endpoint: process.env.R2_ENDPOINT,
+  region: 'apac',
+  credentials: {
+    accessKeyId: process.env.R2_ACCESS_KEY_ID!,
+    secretAccessKey: process.env.R2_SECRET_ACCESS_KEY!,
+  },
+});
+
+const deleteFile = async (key: string, bucket: string, client: S3Client) => {
   try {
     const params: DeleteObjectCommandInput = {
       Bucket: bucket,
@@ -18,14 +27,18 @@ const deleteFile = async (key: string, bucket: string) => {
     };
 
     const deleteCommand = new DeleteObjectCommand(params);
-    await s3.send(deleteCommand);
+    await client.send(deleteCommand);
   } catch (error) {
     console.error(`Failed to delete file ${key} from bucket ${bucket}:`, error);
     throw error;
   }
 };
 
-const deleteFolder = async (prefix: string, bucket: string) => {
+const deleteFolder = async (
+  prefix: string,
+  bucket: string,
+  client: S3Client,
+) => {
   async function recursiveDelete(marker?: string) {
     try {
       const params: ListObjectsCommandInput = {
@@ -35,7 +48,7 @@ const deleteFolder = async (prefix: string, bucket: string) => {
       };
 
       const listCommand = new ListObjectsCommand(params);
-      const list = await s3.send(listCommand);
+      const list = await client.send(listCommand);
 
       if (list.MaxKeys) {
         const deleteCommand = new DeleteObjectsCommand({
@@ -46,7 +59,7 @@ const deleteFolder = async (prefix: string, bucket: string) => {
           },
         });
 
-        const deleted = await s3.send(deleteCommand);
+        const deleted = await client.send(deleteCommand);
 
         if (deleted.Errors) {
           throw new Error();
@@ -77,12 +90,19 @@ export const handler: SQSHandler = async (event) => {
       continue;
     }
 
+    const isPublic = key.includes('trailer');
+    const client = isPublic ? s3 : r2;
+
     if (key) {
       console.log(`Deleting file: ${key} from bucket: ${bucket}`);
-      await deleteFile(key, bucket);
+      await deleteFile(key, bucket, client);
+      console.log(`File ${key} deleted successfully from bucket ${bucket}`);
     } else if (prefix) {
       console.log(`Deleting folder: ${prefix} from bucket: ${bucket}`);
-      await deleteFolder(prefix, bucket);
+      await deleteFolder(prefix, bucket, client);
+      console.log(
+        `Folder ${prefix} deleted successfully from bucket ${bucket}`,
+      );
     } else {
       console.error('No key or prefix provided for deletion');
     }
