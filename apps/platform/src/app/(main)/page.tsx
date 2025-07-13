@@ -15,7 +15,7 @@ export default async function CoursesPage() {
         <Activity />
       ) : (
         <Banner
-          title="From Basics to Advanced, Taught by Experts."
+          title="From Basics to Advanced,Taught by Experts."
           subtitle="Digital Courses"
           image="/illustrations/courses.svg"
           link={{ href: '/', label: 'Learn More' }}
