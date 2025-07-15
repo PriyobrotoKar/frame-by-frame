@@ -115,6 +115,7 @@ model CourseVersion {
   learnings       CourseLearnings[]
   instructors     Instructor[]
   videoTrash      VideoTrash[]
+  documentTrash   DocumentTrash[]
   attachmentTrash AttachmentTrash[]
 
   createdAt DateTime @default(now())
@@ -403,6 +404,23 @@ model VideoTrash {
   order       Int
   status      VideoStatus @default(NOT_STARTED)
   duration    Int         @default(0)
+
+  courseVersion   CourseVersion @relation(fields: [courseVersionId], references: [id])
+  courseVersionId String
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@unique([courseVersionId, slug]) // Ensure unique slug per chapter
+}
+
+model DocumentTrash {
+  id       String  @id @default(cuid())
+  title    String
+  content  String?
+  order    Int
+  slug     String
+  duration Int     @default(0)
 
   courseVersion   CourseVersion @relation(fields: [courseVersionId], references: [id])
   courseVersionId String
