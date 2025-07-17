@@ -57,7 +57,7 @@ const ModulePreview = ({
         {data.attachments?.map((attachment) => {
           return (
             <div key={attachment.id}>
-              <div className="bg-primary-foreground flex items-center gap-4 rounded-lg border p-4">
+              <div className="bg-primary-foreground flex items-center gap-4 rounded-2xl border p-4">
                 {attachment.type === 'PDF' ? <IconPdf /> : <IconZip />}
                 <div className="text-sm-md line-clamp-1 flex-1">
                   {attachment.name}

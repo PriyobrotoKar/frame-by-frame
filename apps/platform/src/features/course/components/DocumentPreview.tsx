@@ -60,7 +60,7 @@ const DocumentPreview = ({
           return (
             <div
               key={attachment.id}
-              className="bg-muted flex items-center gap-2 rounded-lg border px-4 py-3 md:max-w-60"
+              className="bg-muted flex items-center gap-2 rounded-2xl border px-4 py-3 md:max-w-60"
             >
               <div>{attachment.type === 'PDF' ? <IconPdf /> : <IconZip />}</div>
               <div className="flex flex-col">

@@ -11,7 +11,7 @@ export default function MainLayout({
     <div className="flex min-h-svh flex-col gap-10">
       <LoginDialogProvider>
         <Header className="wrapper" />
-        <div className="wrapper">{children}</div>
+        <div className="wrapper mb-20">{children}</div>
         <Footer />
       </LoginDialogProvider>
     </div>

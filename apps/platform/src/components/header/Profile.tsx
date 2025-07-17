@@ -5,7 +5,6 @@ import {
   IconBrandGoogleFilled,
   IconLogout,
   IconMail,
-  IconPencil,
   IconPhone,
   IconUser,
   IconUserShield,
@@ -32,6 +31,7 @@ import {
 } from '../ui/drawer';
 import { Label } from '../ui/label';
 import Link from 'next/link';
+import NameInput from '@/features/user/components/NameInput';
 
 const Profile = ({ session }: { session: Session }) => {
   const isDesktop = useMediaQuery('(min-width: 640px)');
@@ -75,10 +75,7 @@ const Profile = ({ session }: { session: Session }) => {
                   <IconUser />
                 </AvatarFallback>
               </Avatar>
-              <div className="relative">
-                <Input defaultValue={session.user.name} />
-                <IconPencil className="absolute right-3 top-1/2 size-3 -translate-y-1/2" />
-              </div>
+              <NameInput session={session} />
               <div className="relative">
                 <Input disabled value={session.user.email} />
                 <IconBrandGoogleFilled className="absolute right-3 top-1/2 size-3 -translate-y-1/2 opacity-50" />
@@ -142,10 +139,7 @@ const Profile = ({ session }: { session: Session }) => {
                 <IconUser />
               </AvatarFallback>
             </Avatar>
-            <div className="relative">
-              <Input defaultValue={session.user.name} />
-              <IconPencil className="absolute right-3 top-1/2 size-3 -translate-y-1/2" />
-            </div>
+            <NameInput session={session} />
             <div className="relative">
               <Input disabled value={session.user.email} />
               <IconBrandGoogleFilled className="absolute right-3 top-1/2 size-3 -translate-y-1/2 opacity-50" />

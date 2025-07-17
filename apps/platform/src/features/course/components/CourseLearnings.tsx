@@ -21,7 +21,7 @@ const CourseLearnings = ({ learnings }: CourseLearningsProps) => {
       <div className="grid gap-x-11 gap-y-6 sm:grid-cols-2 md:grid-cols-1 lg:grid-cols-2">
         {learnings.map((learning, index) => (
           <div key={index} className="text-sm-md space-y-2">
-            <h3>
+            <h3 className="text-md">
               {index + 1}. {learning.title}
             </h3>
             <p className="text-muted-foreground">{learning.description}</p>

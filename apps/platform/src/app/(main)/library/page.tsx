@@ -9,13 +9,25 @@ export default async function LibraryPage() {
     <div>
       <section className="space-y-4">
         <h2 className="text-lg">My Courses</h2>
-        <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-          {library?.map((course) => (
-            <Link key={course.id} href={`/${course.slug}`}>
-              <CourseCard course={course} isEnrolled />
-            </Link>
-          ))}
-        </div>
+        {library.length > 0 ? (
+          <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+            {library?.map((course) => (
+              <Link key={course.id} href={`/${course.slug}`}>
+                <CourseCard course={course} isEnrolled />
+              </Link>
+            ))}
+          </div>
+        ) : (
+          <div className="flex min-h-[20rem] items-center justify-center">
+            <p className="text-muted-foreground max-w-80 text-center">
+              You have not enrolled in any courses yet. Explore our
+              <Link href="/" className="text-primary mx-1">
+                courses
+              </Link>
+              to start learning.
+            </p>
+          </div>
+        )}
       </section>
     </div>
   );

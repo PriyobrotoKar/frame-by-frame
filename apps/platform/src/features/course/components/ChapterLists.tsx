@@ -62,7 +62,7 @@ const ChapterLists = ({ chapters }: ChapterListsProps) => {
               value={chapter.slug}
             >
               <AccordionTrigger asChild className="text-md items-center gap-1">
-                <div>
+                <div className="cursor-pointer">
                   {chapter.title}
                   <ChapterActionDropdown
                     chapter={chapter}

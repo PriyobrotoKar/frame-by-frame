@@ -13,6 +13,9 @@ import NotificationCount from './NotificationCount';
 
 const UserNotifications = async () => {
   const notifications = await getNotifications();
+  const isAllRead =
+    notifications.notifications.length === 0 ||
+    notifications.notifications.every((n) => n.isRead);
 
   return (
     <div>
@@ -31,7 +34,7 @@ const UserNotifications = async () => {
         <DropdownMenuContent className="min-w-96 space-y-5">
           <div className="flex items-center justify-between px-6 pt-6">
             <h2 className="text-lg">Notifications</h2>
-            <MarkAllAsReadButton />
+            <MarkAllAsReadButton isAllRead={isAllRead} />
           </div>
           <NotificationList
             className="p-6 pt-0"

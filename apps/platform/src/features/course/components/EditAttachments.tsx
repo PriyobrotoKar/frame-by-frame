@@ -115,7 +115,10 @@ const EditAttachments = ({
       <div className="flex flex-wrap gap-2">
         <div>
           <Label
-            className={cn(buttonVariants({ variant: 'outline' }), 'h-12 w-28')}
+            className={cn(
+              buttonVariants({ variant: 'outline' }),
+              'h-12 w-28 cursor-pointer rounded-2xl',
+            )}
             htmlFor="attachment"
           >
             {isUploading ? (
@@ -139,7 +142,7 @@ const EditAttachments = ({
           return (
             <div
               key={attachment.id}
-              className="bg-muted flex max-w-60 items-center gap-2 rounded-lg border px-4 py-3"
+              className="bg-muted flex max-w-60 items-center gap-2 rounded-2xl border px-4 py-3"
             >
               <div>{attachment.type === 'PDF' ? <IconPdf /> : <IconZip />}</div>
               <div className="flex flex-col">

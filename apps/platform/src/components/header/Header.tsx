@@ -34,7 +34,15 @@ export async function Header({
       >
         {showLogo && <Logo />}
 
-        {session?.user.role === Role.ADMIN && <CourseSelector />}
+        {session?.user.role === Role.ADMIN && (
+          <>
+            <Separator
+              orientation="vertical"
+              className="!h-auto self-stretch"
+            />
+            <CourseSelector />
+          </>
+        )}
 
         <div className="flex flex-1 items-center justify-end gap-6">
           <div className="hidden sm:block">

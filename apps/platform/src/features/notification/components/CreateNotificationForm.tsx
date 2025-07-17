@@ -94,7 +94,7 @@ const CreateNotificationForm = () => {
                             className="peer"
                           />
                         </FormControl>
-                        <FormLabel className="peer-data-[state=checked]:border-primary peer-data-[state=checked]:text-primary rounded-lg border border-transparent p-3">
+                        <FormLabel className="peer-data-[state=checked]:border-primary peer-data-[state=checked]:text-primary rounded-lg border p-3">
                           <IconBell />
                           Alert
                         </FormLabel>
@@ -107,7 +107,7 @@ const CreateNotificationForm = () => {
                             value={NotificationType.GIFT}
                           />
                         </FormControl>
-                        <FormLabel className="peer-data-[state=checked]:border-primary peer-data-[state=checked]:text-primary rounded-lg border border-transparent p-3">
+                        <FormLabel className="peer-data-[state=checked]:border-primary peer-data-[state=checked]:text-primary rounded-lg border p-3">
                           <IconGift />
                           Gift
                         </FormLabel>

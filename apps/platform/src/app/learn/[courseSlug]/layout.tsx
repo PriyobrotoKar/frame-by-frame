@@ -1,4 +1,3 @@
-import { Header } from '@/components/header';
 import CourseSidebar from '@/components/sidebar/CourseSidebar';
 import React from 'react';
 
@@ -15,12 +14,6 @@ export default async function CourseLayout({
     <div className="flex">
       <CourseSidebar courseSlug={courseSlug} details={details} />
       <div className="flex-1">
-        <div className="hidden lg:block">
-          <Header showLogo={false} showNavbar={false} />
-        </div>
-        <div className="lg:hidden">
-          <Header />
-        </div>
         <div className="wrapper py-3">{children}</div>
       </div>
     </div>

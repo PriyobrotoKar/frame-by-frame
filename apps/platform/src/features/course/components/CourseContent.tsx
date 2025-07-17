@@ -23,7 +23,7 @@ const CourseContent = ({ chapters }: CourseContentProps) => {
           {chapters.map((module) => (
             <AccordionItem
               key={module.id}
-              className="data-[state=open]:bg-muted"
+              className="data-[state=open]:bg-muted hover:bg-muted hover:rounded-lg data-[state=open]:rounded-xl"
               value={module.id}
             >
               <AccordionTrigger>

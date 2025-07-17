@@ -3,11 +3,16 @@
 import { Button } from '@/components/ui/button';
 import { IconChecks } from '@tabler/icons-react';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { markAllAsRead } from '../actions/markAsRead';
 import { toast } from 'sonner';
 
-const MarkAllAsReadButton = () => {
+interface MarkAllAsReadButtonProps {
+  isAllRead: boolean;
+}
+
+const MarkAllAsReadButton = ({ isAllRead }: MarkAllAsReadButtonProps) => {
+  const [isRead, setIsRead] = useState<boolean>(isAllRead);
   const queryClient = useQueryClient();
 
   const { mutate } = useMutation({
@@ -24,11 +29,21 @@ const MarkAllAsReadButton = () => {
       queryClient.invalidateQueries({
         queryKey: ['notifications'],
       });
+      setIsRead(true);
     },
   });
 
+  useEffect(() => {
+    setIsRead(isAllRead);
+  }, [isAllRead]);
+
   return (
-    <Button onClick={() => mutate()} size={'icon'} variant={'ghost'}>
+    <Button
+      onClick={() => mutate()}
+      size={'icon'}
+      variant={'ghost'}
+      className={isRead ? '[&_svg]:text-muted-foreground' : ''}
+    >
       <IconChecks />
     </Button>
   );

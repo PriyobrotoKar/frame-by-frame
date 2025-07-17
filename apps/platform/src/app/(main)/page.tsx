@@ -15,7 +15,7 @@ export default async function CoursesPage() {
         <Activity />
       ) : (
         <Banner
-          title="From Basics to Advanced,Taught by Experts."
+          title="From Basics to Advanced, Taught by Experts."
           subtitle="Digital Courses"
           image="/illustrations/courses.svg"
           link={{ href: '/', label: 'Learn More' }}
@@ -27,7 +27,11 @@ export default async function CoursesPage() {
         <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
           {courses?.map((course) => (
             <Link key={course.id} href={`/${course.slug}`}>
-              <CourseCard course={course} />
+              <CourseCard
+                className="hover:shadow-xl"
+                showFooter={false}
+                course={course}
+              />
             </Link>
           ))}
         </div>

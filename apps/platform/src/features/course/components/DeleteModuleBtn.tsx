@@ -7,6 +7,7 @@ import React from 'react';
 import { deleteVideo } from '../actions/deleteVideo';
 import { toast } from 'sonner';
 import { useRouter } from 'next/navigation';
+import { deleteDocument } from '../actions/deleteDocument';
 
 interface DeleteModuleBtnProps {
   type: 'video' | 'document';
@@ -28,6 +29,9 @@ const DeleteModuleBtn = ({
     mutationFn: async () => {
       if (type === 'video') {
         return await deleteVideo(courseSlug, chapterSlug, lessonSlug);
+      }
+      if (type === 'document') {
+        return await deleteDocument(courseSlug, chapterSlug, lessonSlug);
       }
     },
     onSuccess: async () => {

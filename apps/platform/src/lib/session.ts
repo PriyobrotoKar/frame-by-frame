@@ -8,7 +8,7 @@ import { cookies } from 'next/headers';
 import { redirect } from 'next/navigation';
 import { NextRequest, NextResponse } from 'next/server';
 
-interface User {
+export interface SessionUser {
   id: string;
   name: string;
   email: string;
@@ -17,7 +17,7 @@ interface User {
 }
 
 export interface Session extends JWTPayload {
-  user: User;
+  user: SessionUser;
   accessToken: string;
   refreshToken: string;
 }
@@ -81,7 +81,7 @@ export const removeSession = async (): Promise<void> => {
 //TODO: Add the logic for refreshing the session
 export const updateSession = async (
   request?: NextRequest,
-  user?: Partial<User>,
+  user?: Partial<SessionUser>,
 ): Promise<NextResponse | undefined> => {
   try {
     const session = request

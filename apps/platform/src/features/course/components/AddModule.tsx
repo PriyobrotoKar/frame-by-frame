@@ -77,7 +77,7 @@ const AddModule = ({ chapter, open, setOpen }: AddModuleProps) => {
 
   const { mutate: createDocumentMutation, isPending: isCreatingDocument } =
     useMutation({
-      mutationFn: async (data: { title: string }) => {
+      mutationFn: async (data: { title: string; duration: number }) => {
         if (chapter === undefined) {
           return;
         }
@@ -175,7 +175,12 @@ const AddModule = ({ chapter, open, setOpen }: AddModuleProps) => {
           <Button
             variant={'outline'}
             disabled={isCreatingDocument}
-            onClick={() => createDocumentMutation({ title: 'Untitled' })}
+            onClick={() =>
+              createDocumentMutation({
+                title: 'Untitled Document',
+                duration: 0,
+              })
+            }
           >
             <IconFileDescription /> Create a reading document
           </Button>
