@@ -65,7 +65,7 @@ export default async function LessonPage({
 
       {lesson.type === 'document' ? (
         <DocumentPreview
-          document={lesson}
+          documentLesson={lesson}
           courseSlug={courseSlug}
           chapterSlug={chapter}
         />

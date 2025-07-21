@@ -3,7 +3,6 @@ import { getCourseBySlug } from '@/features/course/actions/getCourse';
 import { getLearnings } from '@/features/course/actions/getLearnings';
 import LearningCard from '@/features/course/components/LearningCard';
 import LearningDialog from '@/features/course/components/LearningDialog';
-import PublishButton from '@/features/course/components/PublishButton';
 import { IconNewSection } from '@tabler/icons-react';
 import React from 'react';
 
@@ -31,7 +30,6 @@ export default async function LearningsSettings({
             courseSlug={course.slug}
             type="create"
           />
-          <PublishButton courseSlug={course.slug} />
         </div>
       </div>
       <div className="grid grid-cols-2 gap-6">

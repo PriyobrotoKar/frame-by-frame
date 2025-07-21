@@ -66,7 +66,7 @@ export async function Header({
         <SearchBox />
       </div>
 
-      {showNavbar && <Navbar className={className} />}
+      {showNavbar && <Navbar session={session} className={className} />}
     </div>
   );
 }

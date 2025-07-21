@@ -1,5 +1,8 @@
 'use client';
+import PublishButton from '@/features/course/components/PublishButton';
+import { Session } from '@/lib/session';
 import { cn } from '@/lib/utils';
+import { Role } from '@frame-by-frame/db';
 import Link from 'next/link';
 import { useParams, usePathname } from 'next/navigation';
 import React from 'react';
@@ -32,9 +35,10 @@ const adminNavLinks = (slug: string) => [
 
 interface NavbarProps {
   className?: string;
+  session: Session | null;
 }
 
-const Navbar = ({ className }: NavbarProps) => {
+const Navbar = ({ className, session }: NavbarProps) => {
   const path = usePathname();
   const { slug } = useParams<{ slug: string }>();
 
@@ -42,7 +46,7 @@ const Navbar = ({ className }: NavbarProps) => {
   const links = isAdmin ? adminNavLinks(slug) : navLinks;
 
   return (
-    <div className={cn('px-5 py-2 sm:px-8', className)}>
+    <div className={cn('flex justify-between px-5 py-2 sm:px-8', className)}>
       <nav>
         <ul className="space-x-4">
           {links.map((link, index) => {
@@ -62,6 +66,9 @@ const Navbar = ({ className }: NavbarProps) => {
           })}
         </ul>
       </nav>
+      {session?.user.role === Role.ADMIN && slug && (
+        <PublishButton courseSlug={slug} />
+      )}
     </div>
   );
 };

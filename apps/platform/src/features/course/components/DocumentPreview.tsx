@@ -9,7 +9,7 @@ import { updateLessonProgress } from '../actions/updateLessonProgress';
 interface DocumentPreviewProps {
   courseSlug: string;
   chapterSlug: string;
-  document: Prisma.DocumentGetPayload<{
+  documentLesson: Prisma.DocumentGetPayload<{
     include: {
       attachments: true;
     };
@@ -19,7 +19,7 @@ interface DocumentPreviewProps {
 const DocumentPreview = ({
   courseSlug,
   chapterSlug,
-  document,
+  documentLesson,
 }: DocumentPreviewProps) => {
   const queryClient = useQueryClient();
 
@@ -29,9 +29,9 @@ const DocumentPreview = ({
         courseSlug,
         chapterSlug,
         'document',
-        document.slug,
+        documentLesson.slug,
         {
-          progress: document.duration,
+          progress: documentLesson.duration,
         },
       );
     },
@@ -51,16 +51,23 @@ const DocumentPreview = ({
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
+  const downloadAttachment = (key: string) => {
+    const a = document.createElement('a');
+    a.href = `https://framebyframe-dev.s3.ap-south-1.amazonaws.com/${key}`;
+    a.click();
+  };
+
   return (
     <div className="space-y-6 py-6">
-      <h3 className="text-2xl">{document.title}</h3>
-      <p className="whitespace-pre-wrap">{document.content}</p>
+      <h3 className="text-2xl">{documentLesson.title}</h3>
+      <p className="whitespace-pre-wrap">{documentLesson.content}</p>
       <div>
-        {document.attachments.map((attachment) => {
+        {documentLesson.attachments.map((attachment) => {
           return (
             <div
+              onClick={() => downloadAttachment(attachment.url)}
               key={attachment.id}
-              className="bg-muted flex items-center gap-2 rounded-2xl border px-4 py-3 md:max-w-60"
+              className="bg-muted flex cursor-pointer items-center gap-2 rounded-2xl border px-4 py-3 md:max-w-60"
             >
               <div>{attachment.type === 'PDF' ? <IconPdf /> : <IconZip />}</div>
               <div className="flex flex-col">

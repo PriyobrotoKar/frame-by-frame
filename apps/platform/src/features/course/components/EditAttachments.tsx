@@ -5,13 +5,20 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { getUploadSignedUrl } from '@/features/storage/actions/getUploadSignedUrl';
 import { cn } from '@/lib/utils';
-import { IconLoader, IconPdf, IconPlus, IconZip } from '@tabler/icons-react';
+import {
+  IconLoader,
+  IconPdf,
+  IconPlus,
+  IconX,
+  IconZip,
+} from '@tabler/icons-react';
 import React, { useState } from 'react';
 import { createAttachment } from '../actions/createAttachment';
 import { getLessonBySlug, Lesson } from '../actions/getLesson';
 import { AttachmentType } from '@frame-by-frame/db';
 import { toast } from 'sonner';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
+import { deleteAttachment } from '../actions/deleteAttachment';
 
 interface EditAttachmentsProps {
   courseSlug: string;
@@ -36,7 +43,7 @@ const EditAttachments = ({
     initialData: module,
   });
 
-  const { mutate } = useMutation({
+  const { mutate: createAttachmentMutation } = useMutation({
     mutationFn: async (file: File) => {
       setIsUploading(true);
       const type = file.type.split('/')[1]!;
@@ -90,6 +97,22 @@ const EditAttachments = ({
     },
   });
 
+  const { mutate: deleteAttachmentMutation } = useMutation({
+    mutationFn: async (attachmentId: string) => {
+      return await deleteAttachment(courseSlug, attachmentId);
+    },
+    onSuccess: async () => {
+      await queryClient.invalidateQueries({
+        queryKey: ['lesson', module.slug],
+      });
+      toast.success('Attachment deleted successfully');
+    },
+    onError: (error) => {
+      console.error('Error deleting attachment:', error);
+      toast.error((error as Error).message);
+    },
+  });
+
   const handleFileInput = async (
     event: React.ChangeEvent<HTMLInputElement>,
   ) => {
@@ -98,7 +121,11 @@ const EditAttachments = ({
     const file = event.target.files[0];
     if (!file) return;
 
-    mutate(file);
+    createAttachmentMutation(file);
+  };
+
+  const handleDeleteAttachment = (attachmentId: string) => {
+    deleteAttachmentMutation(attachmentId);
   };
 
   if (isLoading) {
@@ -142,8 +169,14 @@ const EditAttachments = ({
           return (
             <div
               key={attachment.id}
-              className="bg-muted flex max-w-60 items-center gap-2 rounded-2xl border px-4 py-3"
+              className="bg-muted relative flex max-w-60 items-center gap-2 rounded-2xl border px-4 py-3"
             >
+              <span
+                onClick={() => handleDeleteAttachment(attachment.id)}
+                className="text-destructive hover:bg-destructive/20 bg-background absolute -right-2 -top-2 flex size-5 cursor-pointer items-center justify-center rounded-full border"
+              >
+                <IconX className="size-3" />
+              </span>
               <div>{attachment.type === 'PDF' ? <IconPdf /> : <IconZip />}</div>
               <div className="flex flex-col">
                 <span className="text-sm-md line-clamp-1 break-all">
