@@ -270,6 +270,25 @@ export class CoursesController {
   }
 
   @Admin()
+  @Delete(':slug/chapters/:chapterSlug/lessons/documents/:documentSlug')
+  async deleteDocument(
+    @Param('slug') slug: string,
+    @Param('chapterSlug') chapterSlug: string,
+    @Param('documentSlug') documentSlug: string,
+  ) {
+    return this.coursesService.deleteDocument(slug, chapterSlug, documentSlug);
+  }
+
+  @Admin()
+  @Delete(':slug/attachments/:attachmentId')
+  async deleteAttachment(
+    @Param('slug') slug: string,
+    @Param('attachmentId') attachmentId: string,
+  ) {
+    return this.coursesService.deleteAttachment(slug, attachmentId);
+  }
+
+  @Admin()
   @Post(':slug/learnings')
   async createLearning(
     @Param('slug') slug: string,

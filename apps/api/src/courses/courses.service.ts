@@ -412,6 +412,7 @@ export class CoursesService {
     const [videos, attachments] = await Promise.all([
       db.videoTrash.findMany(),
       db.attachmentTrash.findMany(),
+      db.documentTrash.findMany(),
     ]);
 
     const deletedVideos = videos.map((video) => ({
@@ -454,6 +455,7 @@ export class CoursesService {
     // Delete all the trash items related to the course
     await Promise.all([
       db.videoTrash.deleteMany(),
+      db.documentTrash.deleteMany(),
       db.attachmentTrash.deleteMany(),
     ]);
 
@@ -1476,6 +1478,122 @@ export class CoursesService {
 
     return {
       message: 'Video deleted successfully',
+    };
+  }
+
+  async deleteDocument(
+    courseSlug: string,
+    chapterSlug: string,
+    documentSlug: string,
+  ) {
+    const course = await this.findCourseBySlug(courseSlug, true);
+
+    if (!course) {
+      throw new BadRequestException('Course not found');
+    }
+
+    const chapter = await db.chapter.findUnique({
+      where: {
+        courseVersionId_slug: {
+          courseVersionId: course.id,
+          slug: chapterSlug,
+        },
+      },
+    });
+
+    if (!chapter) {
+      throw new BadRequestException('Chapter not found');
+    }
+
+    const document = await db.document.findUnique({
+      where: {
+        chapterId_slug: {
+          chapterId: chapter.id,
+          slug: documentSlug,
+        },
+      },
+      include: {
+        attachments: true,
+      },
+    });
+
+    if (!document) {
+      throw new BadRequestException('Document not found');
+    }
+
+    const { attachments, ...documentDetails } = document;
+    delete documentDetails.id;
+    delete documentDetails.chapterId;
+
+    // Move document to trash
+    await db.documentTrash.create({
+      data: {
+        ...documentDetails,
+        courseVersionId: course.id,
+      },
+    });
+
+    // Move attachments to trash
+    await db.attachmentTrash.createMany({
+      data: attachments.map((attachment) => {
+        delete attachment.id;
+        delete attachment.videoId;
+        delete attachment.documentId;
+
+        return {
+          ...attachment,
+          courseVersionId: course.id,
+        };
+      }),
+    });
+
+    await db.document.delete({
+      where: {
+        id: document.id,
+      },
+    });
+
+    return {
+      message: 'Document deleted successfully',
+    };
+  }
+
+  async deleteAttachment(slug: string, attachmentId: string) {
+    const course = await this.findCourseBySlug(slug, true);
+
+    if (!course) {
+      throw new BadRequestException('Course not found');
+    }
+
+    const attachment = await db.attachment.findUnique({
+      where: {
+        id: attachmentId,
+      },
+    });
+
+    if (!attachment) {
+      throw new BadRequestException('Attachment not found');
+    }
+
+    delete attachment.id;
+    delete attachment.videoId;
+    delete attachment.documentId;
+
+    await db.attachmentTrash.create({
+      data: {
+        ...attachment,
+        courseVersionId: course.id,
+      },
+    });
+
+    await db.attachment.delete({
+      where: {
+        id: attachmentId,
+      },
+    });
+
+    return {
+      message: 'Attachment deleted successfully',
     };
   }
 
