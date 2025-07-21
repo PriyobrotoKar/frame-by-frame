@@ -52,6 +52,10 @@ const Navbar = ({ className, session }: NavbarProps) => {
           {links.map((link, index) => {
             const isActive = path === link.href;
 
+            if (link.title === 'Library' && !session) {
+              return null;
+            }
+
             return (
               <li
                 key={index}

@@ -1,8 +1,16 @@
 import CourseCard from '@/components/card/CourseCard';
 import { getLibraryCourses } from '@/features/course/actions/GetLibraryCourses';
+import { getSession } from '@/lib/session';
 import Link from 'next/link';
+import { redirect } from 'next/navigation';
 
 export default async function LibraryPage() {
+  const session = await getSession();
+
+  if (!session) {
+    redirect('/');
+  }
+
   const library = await getLibraryCourses();
 
   return (
