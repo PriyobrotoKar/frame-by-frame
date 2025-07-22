@@ -70,7 +70,7 @@ const Navbar = ({ className, session }: NavbarProps) => {
           })}
         </ul>
       </nav>
-      {session?.user.role === Role.ADMIN && slug && (
+      {isAdmin && session?.user.role === Role.ADMIN && slug && (
         <PublishButton courseSlug={slug} />
       )}
     </div>
