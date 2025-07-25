@@ -5,38 +5,38 @@ import { Button } from './ui/button';
 
 export default function Stats() {
   return (
-    <section className="space-y-10 px-6 lg:px-0 py-16 md:py-32 relative overflow-hidden">
+    <section className="relative space-y-10 overflow-hidden px-6 py-16 md:py-32 lg:px-0">
       <SectionTitle
-        title={'Our Students are revolutionizing digital growth'}
+        title={'Revolutionizing digital growth.'}
         subtitle={'150+ GLOBAL STUDENTS'}
         className="mt-32"
       />
-      <Animate className="text-center space-y-12" delay={0.4}>
-        <p className="max-w-72 md:max-w-screen-sm mx-auto text-center">
+      <Animate className="space-y-12 text-center" delay={0.4}>
+        <p className="mx-auto max-w-72 text-center md:max-w-screen-sm">
           Learn the industry-standard editing workflow that makes you
           indispensable and puts you in control of your income.
         </p>
-        <a href="https://discord.gg/devgotmoney">
+        <a href="https://discord.gg/devgotmoney" className="md:hidden">
           <Button variant={'outline'} size={'sm'}>
             Join Discord
           </Button>
         </a>
       </Animate>
 
-      <div className="bg-gradient-to-t -z-10 from-background  w-full h-1/2 absolute bottom-0 "></div>
+      <div className="from-background absolute bottom-0 -z-10 h-1/2 w-full bg-gradient-to-t"></div>
       <Animate
         duration={2}
         hidden={{
           opacity: 0,
           rotate: 40,
         }}
-        className="absolute top-1/2 -translate-y-1/2 sm:-translate-y-[20%] md:-translate-y-1/4  max-w-screen-2xl mx-auto left-0 right-0 aspect-square -z-20"
+        className="absolute left-0 right-0 top-1/2 -z-20 mx-auto aspect-square max-w-screen-2xl -translate-y-1/2 sm:-translate-y-[20%] md:-translate-y-1/4"
       >
         <div>
-          <div className="bg-background blur-3xl rounded-full translate-y-1/3 md:translate-y-[20%] w-full scale-[1.8] md:scale-125 h-[60vh] md:h-[200vh] absolute inset-0"></div>
+          <div className="bg-background absolute inset-0 h-[60vh] w-full translate-y-1/3 scale-[1.8] rounded-full blur-3xl md:h-[200vh] md:translate-y-[20%] md:scale-125"></div>
           <Image
             src={'/earth.png'}
-            className="w-full opacity-40 h-full object-cover scale-[1.6] md:scale-125 -z-10 relative"
+            className="relative -z-10 h-full w-full scale-[1.6] object-cover opacity-40 md:scale-125"
             alt="Earth"
             width={1980}
             height={1980}

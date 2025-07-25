@@ -1,7 +1,7 @@
 import type { Metadata } from 'next';
 import './globals.css';
 import Header from '@/components/Header';
-import { DMSans } from '@/fonts';
+import { Inter } from '@/fonts';
 import { Toaster } from '@/components/ui/sonner';
 
 export const metadata: Metadata = {
@@ -17,7 +17,7 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body
-        className={` ${DMSans.className} text-xs md:text-body md:font-normal antialiased`}
+        className={` ${Inter.className} md:text-body text-xs antialiased md:font-normal`}
       >
         <Header />
         {children}

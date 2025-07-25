@@ -7,41 +7,44 @@ import WaitlistDialogContent from './WaitlistDialogConent';
 
 export default function HeroSection() {
   return (
-    <section className="max-w-screen-md mx-auto text-center  px-6 lg:px-0">
-      <div className="absolute inset-0 w-full overflow-hidden -z-20 h-[150vh] md:h-[150rem] flex justify-between">
-        <div className="bg-accent w-[40rem] h-[30rem] md:h-[65rem] -translate-x-3/4 rounded-[50%] blur-3xl md:blur-4xl"></div>
-        <div className="bg-accent translate-y-full md:translate-y-1/2 w-[40rem] h-[30rem] md:h-[65rem] right-0 relative translate-x-1/2 rounded-[50%] blur-3xl md:blur-4xl"></div>
+    <section className="mx-auto max-w-screen-md px-6 text-center lg:px-0">
+      <div className="absolute inset-0 -z-20 flex h-[150vh] w-full justify-between overflow-hidden md:h-[150rem]">
+        <div className="bg-accent md:blur-4xl h-[30rem] w-[40rem] -translate-x-3/4 rounded-[50%] blur-3xl md:h-[65rem]"></div>
+        <div className="bg-accent md:blur-4xl relative right-0 h-[30rem] w-[40rem] translate-x-1/2 translate-y-full rounded-[50%] blur-3xl md:h-[65rem] md:translate-y-1/2"></div>
       </div>
 
       <Animate className="pt-16 md:pt-0">
-        <h1 className="text-primary text-h1 md:text-display max-w-md mx-auto md:max-w-none">
-          Become More Profitable as a Video Editor
+        <h1 className="text-h1 md:text-display mx-auto max-w-md md:max-w-none">
+          Grow on socials & print money on{' '}
+          <span className="from-primary via-primary/70 to-primary bg-gradient-to-r via-20% bg-clip-text text-transparent">
+            autopilot.
+          </span>
         </h1>
-        <p className="max-w-80 mt-10 text-md mx-auto md:max-w-lg font-normal">
-          Pay <span className="font-bold">50% less</span> & learn the editing
-          workflow that keeps viewers hooked and clients paying
+        <p className="text-muted-foreground mx-auto mt-10 max-w-80 text-lg md:max-w-xl">
+          Master the exact systems elite creators use to scale fast and monetize
+          their brands without chasing trends.
         </p>
-        <div className="block md:hidden mt-12">
+        <div className="mt-12 block md:hidden">
           <YoutubePlayer />
         </div>
         <Dialog>
           <DialogTrigger asChild className="mt-12">
-            <Button>Join Waitlist</Button>
+            <Button>Take Action</Button>
           </DialogTrigger>
 
           <WaitlistDialogContent />
         </Dialog>
-        <div className="flex gap-4 justify-center mt-12">
+        <div className="mt-12 flex justify-center gap-4">
           <div className="flex">
             {new Array(4).fill(0).map((_, i) => (
               <div
-                className="size-6 overflow-hidden rounded-full -ml-2 "
+                className="-ml-2 size-6 overflow-hidden rounded-full"
                 key={i}
               >
                 <Image
                   src={`/people${i + 1}.jpg`}
                   alt="Profile Picture"
-                  className="object-cover w-full h-full"
+                  className="h-full w-full object-cover"
                   width={24}
                   height={24}
                 />
@@ -53,7 +56,7 @@ export default function HeroSection() {
             global joins
           </div>
         </div>
-        <div className="hidden md:block pt-20">
+        <div className="hidden pt-20 md:block">
           <YoutubePlayer />
         </div>
       </Animate>
