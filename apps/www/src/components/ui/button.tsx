@@ -10,11 +10,11 @@ const buttonVariants = cva(
     variants: {
       variant: {
         default:
-          'bg-[linear-gradient(75deg,var(--tw-gradient-stops))] from-primary via-primary/80 to-primary bg-[length:200%_100%] text-primary-foreground   hover:bg-right',
+          'bg-[linear-gradient(75deg,var(--tw-gradient-stops))] from-primary via-secondary to-primary bg-[length:200%_100%] text-primary-foreground   hover:bg-right',
         destructive:
           'bg-destructive text-destructive-foreground  hover:bg-destructive/90',
         outline:
-          'border border-foreground hover:text-primary-foreground before:absolute before:w-full secondary-btn-animation ',
+          'border border-primary text-primary  before:absolute before:w-full secondary-btn-animation',
         secondary:
           'bg-secondary text-secondary-foreground  hover:bg-secondary/80',
         ghost: ' hover:text-primary',

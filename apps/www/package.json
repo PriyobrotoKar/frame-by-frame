@@ -22,18 +22,18 @@
     "next-themes": "^0.4.4",
     "react": "^19.0.0",
     "react-dom": "^19.0.0",
-    "react-player": "^2.16.0",
+    "react-player": "^3.3.1",
     "sonner": "^1.7.4",
     "tailwind-merge": "^3.0.1",
     "tailwindcss-animate": "^1.0.7",
     "zod": "^3.24.1"
   },
   "devDependencies": {
+    "@frame-by-frame/eslint-config": "workspace:*",
+    "@frame-by-frame/typescript-config": "workspace:*",
     "@types/node": "^20",
     "@types/react": "^19",
     "@types/react-dom": "^19",
-    "@frame-by-frame/eslint-config": "workspace:*",
-    "@frame-by-frame/typescript-config": "workspace:*",
     "postcss": "^8",
     "tailwindcss": "^3.4.1"
   }

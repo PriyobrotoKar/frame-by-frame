@@ -1,3 +1,4 @@
+import Cta from '@/components/Cta';
 import Footer from '@/components/Footer';
 import HeroSection from '@/components/Herosection';
 import Program from '@/components/Program';
@@ -6,11 +7,12 @@ import Testimonial from '@/components/Testimonial';
 
 export default function Home() {
   return (
-    <div className=" md:mt-28 mb-16  space-y-40 md:space-y-40">
+    <div className="mb-16 space-y-40 md:mt-28 md:space-y-40">
       <HeroSection />
       <Stats />
       <Program />
       <Testimonial />
+      <Cta />
       <Footer />
     </div>
   );

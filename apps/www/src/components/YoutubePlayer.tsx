@@ -1,23 +1,29 @@
 'use client';
-import React, { useEffect, useState } from 'react';
+import { useScroll, useTransform, motion } from 'motion/react';
+import React, { useRef } from 'react';
 import ReactPlayer from 'react-player';
 
 export default function YoutubePlayer() {
-  const [isClient, setIsClient] = useState(false);
+  const playerRef = useRef(null);
 
-  useEffect(() => {
-    setIsClient(true);
-  }, []);
+  const { scrollYProgress } = useScroll({
+    target: playerRef,
+    offset: ['start end', 'start 0.2'],
+  });
 
-  if (!isClient) return null;
+  const scale = useTransform(scrollYProgress, [0, 1], [0.8, 1]);
 
   return (
-    <div className="aspect-video rounded-lg overflow-hidden ">
+    <motion.div
+      style={{ scale }}
+      className="aspect-video overflow-hidden rounded-lg"
+      ref={playerRef}
+    >
       <ReactPlayer
         width={'100%'}
         height={'100%'}
-        url={'https://youtu.be/Bfh3WL4dRA4?si=rQ2y8YPTE-yqbwFS'}
+        src={'https://youtu.be/Bfh3WL4dRA4?si=rQ2y8YPTE-yqbwFS'}
       />
-    </div>
+    </motion.div>
   );
 }

@@ -67,28 +67,37 @@ const testimonials: Testimonial[] = [
 ];
 export default function Testimonial() {
   return (
-    <section className="max-w-screen-md  mx-auto relative pb-32  space-y-28 overflow-hidden">
-      <SectionTitle
-        className="px-6"
-        title="Students Who Chose Greatness"
-        subtitle="DEFYING LIMITS"
-      />
-
-      <div className="bg-accent/50 w-[30rem] h-[20rem] absolute -translate-x-1/2 bottom-28 left-1/2 rounded-[50%] blur-3xl"></div>
-
-      <div className="relative space-y-4">
-        <div className="absolute z-10 left-0  bottom-0 h-full w-40 bg-gradient-to-r from-background  " />
-        <div className="absolute z-10 right-0  bottom-0 h-full w-40 bg-gradient-to-l from-background  " />
-
-        <TestimonailMarquee
-          testimonials={testimonials.slice(0, testimonials.length / 2)}
-          duration={50}
-        />
-        <TestimonailMarquee
-          testimonials={testimonials.slice(testimonials.length / 2)}
-          duration={35}
-        />
+    <section className="relative space-y-28 pb-32">
+      <div className="absolute inset-0 -z-10 flex h-[60vh] w-full -translate-y-1/4 justify-between overflow-x-hidden md:h-[150rem]">
+        <div className="bg-accent md:blur-4xl h-[30rem] w-[40rem] -translate-x-full translate-y-1/3 rounded-[50%] blur-3xl md:h-[65rem]"></div>
+        <div className="bg-accent md:blur-4xl relative right-0 h-[30rem] w-[40rem] translate-x-full translate-y-full rounded-[50%] blur-3xl md:h-[65rem] md:translate-y-1/2"></div>
       </div>
+
+      <main className="mx-auto max-w-screen-md space-y-20 overflow-hidden">
+        <SectionTitle
+          className="px-6"
+          title="Students Who Chose Greatness"
+          subtitle="DEFYING LIMITS"
+        />
+
+        <div className="bg-accent/50 absolute bottom-28 left-1/2 h-[20rem] w-[30rem] -translate-x-1/2 rounded-[50%] blur-3xl"></div>
+
+        <div
+          style={{
+            mask: 'linear-gradient(90deg,transparent,white 40%,white 60%, transparent)',
+          }}
+          className="relative space-y-4"
+        >
+          <TestimonailMarquee
+            testimonials={testimonials.slice(0, testimonials.length / 2)}
+            duration={50}
+          />
+          <TestimonailMarquee
+            testimonials={testimonials.slice(testimonials.length / 2)}
+            duration={35}
+          />
+        </div>
+      </main>
     </section>
   );
 }
@@ -103,11 +112,11 @@ function TestimonailMarquee({
   return (
     <div
       style={{ ['--duration' as string]: `${duration}s` }}
-      className="flex w-max  animate-marque will-change-transform"
+      className="animate-marque flex w-max will-change-transform"
     >
       {[...testimonials, ...testimonials].map((testimonial, i) => {
         return (
-          <div key={i} className="pl-4 w-80 md:w-[24rem] shrink-0 flex-grow ">
+          <div key={i} className="w-80 shrink-0 flex-grow pl-4 md:w-[24rem]">
             <TestimonialCard testimonial={testimonial} />
           </div>
         );
@@ -122,7 +131,7 @@ function TestimonialCard({
   testimonial: Testimonial;
 }) {
   return (
-    <div className="bg-background h-full  rounded-lg space-y-2 p-6">
+    <div className="bg-background h-full space-y-2 rounded-lg border p-6">
       <div className="text-xs">{name}</div>
       <p className="text-xs">{testimonial}</p>
     </div>

@@ -15,14 +15,16 @@ export default function SectionTitle({
   return (
     <Animate
       className={cn(
-        'max-w-md md:max-w-screen-md mx-auto text-center space-y-8',
+        'mx-auto max-w-md space-y-8 text-center md:max-w-screen-md',
         className,
       )}
     >
-      <p className="text-sm-semibold md:text-xl tracking-widest text-primary">
+      <p className="text-sm-semibold text-primary tracking-widest md:text-xl">
         {subtitle}
       </p>
-      <h2 className="text-h1 md:text-display">{title}</h2>
+      <h2 className="text-h1 md:text-display text-primary-foreground">
+        {title}
+      </h2>
     </Animate>
   );
 }

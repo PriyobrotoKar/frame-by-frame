@@ -14,13 +14,13 @@ export default function HeroSection() {
       </div>
 
       <Animate className="pt-16 md:pt-0">
-        <h1 className="text-h1 md:text-display mx-auto max-w-md md:max-w-none">
+        <h1 className="text-h1 text-primary-foreground md:text-display mx-auto max-w-md tracking-tight md:max-w-none">
           Grow on socials & print money on{' '}
-          <span className="from-primary via-primary/70 to-primary bg-gradient-to-r via-20% bg-clip-text text-transparent">
+          <span className="from-primary via-secondary to-primary bg-gradient-to-r via-20% bg-clip-text text-transparent">
             autopilot.
           </span>
         </h1>
-        <p className="text-muted-foreground mx-auto mt-10 max-w-80 text-lg md:max-w-xl">
+        <p className="mx-auto mt-10 max-w-80 text-lg md:max-w-xl">
           Master the exact systems elite creators use to scale fast and monetize
           their brands without chasing trends.
         </p>
