@@ -2,8 +2,8 @@ import Image from 'next/image';
 import Animate from './Animate';
 import { Button } from './ui/button';
 import { Dialog, DialogTrigger } from './ui/dialog';
-import WaitlistDialogContent from './WaitlistDialogConent';
 import Paralax from './Parallax';
+import ScheduleDialog from './ScheduleDialog';
 
 interface Service {
   title: string;
@@ -187,7 +187,7 @@ export default function Program() {
               <Button>Take Action</Button>
             </DialogTrigger>
 
-            <WaitlistDialogContent />
+            <ScheduleDialog />
           </Dialog>
         </Animate>
       </div>

@@ -3,7 +3,7 @@ import Animate from './Animate';
 import { Button } from './ui/button';
 import YoutubePlayer from './YoutubePlayer';
 import { Dialog, DialogTrigger } from './ui/dialog';
-import WaitlistDialogContent from './WaitlistDialogConent';
+import ScheduleDialog from './ScheduleDialog';
 
 export default function HeroSection() {
   return (
@@ -32,7 +32,7 @@ export default function HeroSection() {
             <Button>Take Action</Button>
           </DialogTrigger>
 
-          <WaitlistDialogContent />
+          <ScheduleDialog />
         </Dialog>
         <div className="mt-12 flex justify-center gap-4">
           <div className="flex">

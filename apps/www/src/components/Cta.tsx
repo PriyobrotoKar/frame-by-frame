@@ -1,7 +1,7 @@
 import Animate from './Animate';
 import { Button } from './ui/button';
 import { Dialog, DialogTrigger } from './ui/dialog';
-import WaitlistDialogContent from './WaitlistDialogConent';
+import ScheduleDialog from './ScheduleDialog';
 
 export default function Cta() {
   return (
@@ -20,7 +20,7 @@ export default function Cta() {
             <Button>Take Action</Button>
           </DialogTrigger>
 
-          <WaitlistDialogContent />
+          <ScheduleDialog />
         </Dialog>
       </Animate>
     </div>

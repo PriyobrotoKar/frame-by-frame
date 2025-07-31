@@ -26,6 +26,11 @@ export const nextJsConfig = [
       globals: {
         ...globals.serviceworker,
       },
+      parserOptions: {
+        ecmaFeatures: {
+          jsx: true,
+        },
+      },
     },
   },
   {
@@ -52,6 +57,7 @@ export const nextJsConfig = [
     rules: {
       '@typescript-eslint/no-unused-vars': 'error',
       '@typescript-eslint/consistent-type-definitions': 'error',
+      'react/prop-types': 'off',
     },
   },
   {
