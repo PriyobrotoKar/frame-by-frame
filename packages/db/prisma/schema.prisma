@@ -18,6 +18,11 @@ enum Role {
   ADMIN
 }
 
+enum BookingCreator {
+  USER
+  APP
+}
+
 enum AuthProvider {
   DISCORD
   GOOGLE
@@ -446,9 +451,9 @@ model AttachmentTrash {
 }
 
 model Contact {
-  id               String   @id @default(cuid())
+  id               String @id @default(cuid())
   name             String
-  email            String   @unique
+  email            String @unique
   instagram        String
   niche            String
   contentFrequency String
@@ -457,7 +462,21 @@ model Contact {
   currentIncome    String
   interest         String
   amountToInvest   String
-  bookedAt         DateTime
+
+  booking Booking? @relation(fields: [bookingId], references: [id])
+  bookingId String? @unique
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model Booking {
+  id        String         @id @default(cuid())
+  createdBy BookingCreator @default(APP)
+  eventId   String?
+  bookedAt  DateTime
+
+  contact Contact?
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt

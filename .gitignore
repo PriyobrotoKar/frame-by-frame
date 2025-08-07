@@ -65,3 +65,4 @@ terraform.tfvars
 prisma/generated
 
 *.zip
+*.txt
