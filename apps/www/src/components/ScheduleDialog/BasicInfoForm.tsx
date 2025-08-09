@@ -15,6 +15,7 @@ import { Instagram, MailIcon, UserIcon } from 'lucide-react';
 import Image from 'next/image';
 import { useAtom } from 'jotai';
 import { scheduleMeetingAtom } from '@/lib/store';
+import { getContact } from '@/app/actions/contact';
 
 const schema = z.object({
   name: z.string().min(2).max(100),
@@ -25,9 +26,13 @@ const schema = z.object({
 interface BasicInfoFormProps {
   goToNextStep: () => void;
   goToPreviousStep: () => void;
+  setIsAlreadyContacted: (value: boolean) => void;
 }
 
-export default function BasicInfoForm({ goToNextStep }: BasicInfoFormProps) {
+export default function BasicInfoForm({
+  goToNextStep,
+  setIsAlreadyContacted,
+}: BasicInfoFormProps) {
   const [scheduleMeeting, setScheduleMeeting] = useAtom(scheduleMeetingAtom);
   const form = useForm({
     resolver: zodResolver(schema),
@@ -38,7 +43,21 @@ export default function BasicInfoForm({ goToNextStep }: BasicInfoFormProps) {
     },
   });
 
-  const handleSubmit = form.handleSubmit((data) => {
+  async function fetchContact() {
+    if (!scheduleMeeting?.email) return;
+
+    try {
+      const res = await getContact(scheduleMeeting.email);
+      if (res.data) {
+        setIsAlreadyContacted(true);
+      }
+    } catch (error) {
+      console.error(error);
+    }
+  }
+
+  const handleSubmit = form.handleSubmit(async (data) => {
+    await fetchContact();
     setScheduleMeeting((prev) => ({
       ...prev,
       ...data,
@@ -47,8 +66,8 @@ export default function BasicInfoForm({ goToNextStep }: BasicInfoFormProps) {
   });
 
   return (
-    <div className="space-y-10">
-      <DialogHeader className="gap-10">
+    <div className="space-y-4 md:space-y-10">
+      <DialogHeader className="md:gap-10">
         <div className="space-y-2 text-center">
           <div>
             <Image
@@ -74,7 +93,7 @@ export default function BasicInfoForm({ goToNextStep }: BasicInfoFormProps) {
       </DialogHeader>
 
       <Form {...form}>
-        <form onSubmit={handleSubmit} className="space-y-10">
+        <form onSubmit={handleSubmit} className="space-y-6 md:space-y-10">
           <div className="space-y-5">
             <FormField
               name="name"

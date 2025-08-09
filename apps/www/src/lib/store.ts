@@ -51,3 +51,7 @@ export const scheduleMeetingAtom = atomWithStorage<ScheduleMeeting | null>(
     getOnInit: true,
   },
 );
+
+export const stepAtom = atomWithStorage<number>('last-step', 0, undefined, {
+  getOnInit: true,
+});

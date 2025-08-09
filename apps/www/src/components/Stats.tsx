@@ -1,10 +1,9 @@
 import Image from 'next/image';
 import Animate from './Animate';
-import { Button } from './ui/button';
 
 export default function Stats() {
   return (
-    <section className="relative space-y-10 overflow-hidden px-6 py-16 md:py-60 lg:px-0">
+    <section className="relative space-y-10 overflow-hidden px-0 py-40 md:py-60 lg:px-0">
       <Animate
         className={
           'mx-auto mt-32 max-w-md space-y-8 text-center md:max-w-screen-md'
@@ -25,11 +24,6 @@ export default function Stats() {
           Learn the industry-standard editing workflow that makes you
           indispensable and puts you in control of your income.
         </p>
-        <a href="https://discord.gg/devgotmoney" className="md:hidden">
-          <Button variant={'outline'} size={'sm'}>
-            Join Discord
-          </Button>
-        </a>
       </Animate>
 
       <div className="from-background absolute bottom-0 -z-10 h-1/2 w-full bg-gradient-to-t"></div>
@@ -51,7 +45,7 @@ export default function Stats() {
             height={1980}
             priority
           />
-          <div className="bg-primary/60 absolute inset-0 left-1/2 -z-10 h-[60vh] w-3/4 -translate-x-1/2 translate-y-1/3 scale-[1.8] rounded-full blur-3xl md:h-[100rem] md:translate-y-[15%] md:scale-125"></div>
+          <div className="bg-primary/60 absolute inset-0 left-1/2 -z-10 h-[60vh] w-3/4 -translate-x-1/2 translate-y-1/2 scale-[1.8] rounded-full blur-3xl md:h-[100rem] md:translate-y-[15%] md:scale-125"></div>
         </div>
       </Animate>
     </section>

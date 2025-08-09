@@ -73,7 +73,7 @@ export default function AppointmentCalendar({
   onTimeChange,
   bookedDates,
 }: AppointmentCalendarProps) {
-  const timeSlots = generateTimeSlots(8, 12);
+  const timeSlots = generateTimeSlots(12, 24);
 
   const structuredBookings: Record<string, string[]> = {};
   const fullBookedDates: Date[] = [];
@@ -118,8 +118,8 @@ export default function AppointmentCalendar({
   }, [date, selectedTime]);
 
   return (
-    <div className="flex">
-      <div className="bg-input rounded-xl p-6">
+    <div className="flex max-h-[24rem] flex-col gap-8 overflow-y-auto md:max-h-none md:flex-row md:gap-0">
+      <div className="bg-input rounded-xl p-4 md:p-6">
         <Calendar
           required
           mode="single"
@@ -137,7 +137,7 @@ export default function AppointmentCalendar({
             ...fullBookedDates,
           ]}
           showOutsideDays={false}
-          className="bg-transparent p-0 [--cell-size:2.5rem]"
+          className="bg-transparent p-0 [--cell-size:2rem] md:[--cell-size:2.5rem]"
           formatters={{
             formatWeekdayName: (date) => {
               return date.toLocaleString('en-US', { weekday: 'short' });
@@ -150,7 +150,7 @@ export default function AppointmentCalendar({
           <h3 className="text-primary-foreground text-xl">Select slot</h3>
           <p className="text-sm">Online meeting of 1 hr</p>
         </div>
-        <div className="no-scrollbar inset-y-0 right-0 flex max-h-72 w-full flex-col gap-4 overflow-y-auto border-t px-6 md:max-h-[22rem] md:w-full md:border-t-0">
+        <div className="no-scrollbar inset-y-0 right-0 flex max-h-72 w-full flex-col gap-4 overflow-y-auto px-6 md:max-h-[22rem] md:w-full">
           <div className="grid gap-2">
             {timeSlots.map((time) => (
               <Button

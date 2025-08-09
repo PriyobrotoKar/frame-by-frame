@@ -59,7 +59,7 @@ const services: Service[] = [
 
 export default function Program() {
   return (
-    <section className="relative space-y-16 md:space-y-24">
+    <section className="relative space-y-16 overflow-hidden md:space-y-24">
       <div className="space-y-20">
         <Animate
           className={
@@ -83,14 +83,15 @@ export default function Program() {
           <div className="bg-accent/60 blur-4xl relative left-1/2 top-0 hidden h-[65rem] w-[40rem] -translate-x-1/2 -translate-y-2/3 rounded-[50%] md:block"></div>
         </div>
 
-        <div className="flex justify-center gap-6 pb-40 md:gap-16">
+        <div className="flex justify-center gap-0 pb-40 md:gap-16">
           <Paralax
             inputRange={[0, 1]}
             outputRangeY={[150, -50]}
             axis="y"
             offset={['start end', 'end start']}
+            className="z-0"
           >
-            <div className="relative flex aspect-[3/5] w-36 -rotate-3 items-center justify-center overflow-hidden rounded-lg md:w-60">
+            <div className="relative flex aspect-[3/5] w-32 -rotate-3 items-center justify-center overflow-hidden rounded-lg md:w-60">
               <video
                 src={'/reels/reel-1.mp4'}
                 autoPlay
@@ -106,8 +107,9 @@ export default function Program() {
             outputRangeY={[150, 50]}
             axis="y"
             offset={['start end', 'end start']}
+            className="z-10 shadow-xl"
           >
-            <div className="relative flex aspect-[3/5] w-36 rotate-[4deg] items-center justify-center overflow-hidden rounded-lg md:w-60">
+            <div className="relative flex aspect-[3/5] w-32 rotate-[4deg] items-center justify-center overflow-hidden rounded-lg md:w-60">
               <video
                 src={'/reels/reel-2.mp4'}
                 loop
@@ -123,8 +125,9 @@ export default function Program() {
             outputRangeY={[150, -100]}
             axis="y"
             offset={['start end', 'end start']}
+            className="z-0"
           >
-            <div className="relative flex aspect-[3/5] w-36 -rotate-2 items-center justify-center overflow-hidden rounded-lg md:w-60">
+            <div className="relative flex aspect-[3/5] w-32 -rotate-2 items-center justify-center overflow-hidden rounded-lg md:w-60">
               <video
                 src={'/reels/reel-3.mp4'}
                 autoPlay
@@ -143,33 +146,16 @@ export default function Program() {
           y: 20,
           scale: 0.95,
         }}
-        className="space-y-10 px-10 pt-28 md:pt-0"
+        className="space-y-10 px-10 pt-10 md:pt-0"
       >
-        {services.map((service) => {
+        {services.map((service, i) => {
           return (
-            <div
-              key={service.title}
-              className="from-accent mx-auto flex max-w-4xl flex-col justify-center gap-5 rounded-xl border bg-gradient-to-r p-8 md:flex-row"
-            >
-              <div className="shrink-0">
-                <Image
-                  className="rounded-lg object-cover"
-                  src={service.image}
-                  alt={service.title}
-                  width={135}
-                  height={135}
-                />
+            <div key={i}>
+              <div className="md:hidden">
+                <ServiceCard service={service} size="sm" />
               </div>
-              <div className="flex-1 space-y-4 md:space-y-6">
-                <div className="space-y-2 md:space-y-2">
-                  <p className="text-primary font-semibold uppercase tracking-widest">
-                    {service.subtitle}
-                  </p>
-                  <h3 className="text-primary-foreground text-lg md:text-xl">
-                    {service.title}
-                  </h3>
-                </div>
-                <p>{service.description}</p>
+              <div className="hidden md:block">
+                <ServiceCard service={service} size="lg" />
               </div>
             </div>
           );
@@ -177,7 +163,7 @@ export default function Program() {
       </Animate>
       <div className="relative overflow-hidden py-8">
         <div className="bg-accent/50 absolute bottom-28 left-1/2 top-1/2 -z-20 h-[10rem] w-[20rem] -translate-x-1/2 -translate-y-1/2 rounded-[50%] blur-3xl"></div>
-        <Animate className="mx-auto max-w-md space-y-6 px-6 py-20 text-center md:max-w-screen-md">
+        <Animate className="mx-auto max-w-md space-y-6 px-6 text-center md:max-w-screen-md md:py-20">
           <p className="mx-auto max-w-80 md:max-w-screen-md">
             From beginner to advanced—master the skills, build your brand, and
             start closing high-paying clients with confidence
@@ -194,3 +180,70 @@ export default function Program() {
     </section>
   );
 }
+
+const ServiceCard = ({
+  service,
+  size = 'lg',
+}: {
+  service: Service;
+  size: 'sm' | 'lg';
+}) => {
+  if (size === 'sm') {
+    return (
+      <div
+        key={service.title}
+        className="from-accent mx-auto max-w-4xl justify-center space-y-2 rounded-xl border bg-gradient-to-r p-6"
+      >
+        <div className="flex gap-4">
+          <div className="shrink-0">
+            <Image
+              className="rounded-lg object-cover"
+              src={service.image}
+              alt={service.title}
+              width={68}
+              height={68}
+            />
+          </div>
+          <div className="space-y-2 md:space-y-2">
+            <p className="text-primary font-semibold uppercase tracking-widest">
+              {service.subtitle}
+            </p>
+            <h3 className="text-primary-foreground text-lg md:text-xl">
+              {service.title}
+            </h3>
+          </div>
+        </div>
+
+        <p>{service.description}</p>
+      </div>
+    );
+  }
+
+  return (
+    <div
+      key={service.title}
+      className="from-accent mx-auto flex max-w-4xl flex-col justify-center gap-5 rounded-xl border bg-gradient-to-r p-8 md:flex-row"
+    >
+      <div className="shrink-0">
+        <Image
+          className="rounded-lg object-cover"
+          src={service.image}
+          alt={service.title}
+          width={135}
+          height={135}
+        />
+      </div>
+      <div className="flex-1 space-y-4 md:space-y-6">
+        <div className="space-y-2 md:space-y-2">
+          <p className="text-primary font-semibold uppercase tracking-widest">
+            {service.subtitle}
+          </p>
+          <h3 className="text-primary-foreground text-lg md:text-xl">
+            {service.title}
+          </h3>
+        </div>
+        <p>{service.description}</p>
+      </div>
+    </div>
+  );
+};

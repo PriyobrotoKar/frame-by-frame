@@ -7,7 +7,7 @@ import Testimonial from '@/components/Testimonial';
 
 export default function Home() {
   return (
-    <div className="mb-16 space-y-40 md:mt-28 md:space-y-40">
+    <div className="mb-16 space-y-10 md:mt-28 md:space-y-40">
       <HeroSection />
       <Stats />
       <Program />

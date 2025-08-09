@@ -9,9 +9,13 @@ import { createContact, getBookings } from '@/app/actions/contact';
 
 interface ScheduleFormProps {
   goToPreviousStep: () => void;
+  setIsBookedSuccess: (value: boolean) => void;
 }
 
-const ScheduleForm = ({ goToPreviousStep }: ScheduleFormProps) => {
+const ScheduleForm = ({
+  goToPreviousStep,
+  setIsBookedSuccess,
+}: ScheduleFormProps) => {
   const [date, setDate] = useState<Date>(
     new Date(
       new Date().getFullYear(),
@@ -54,6 +58,7 @@ const ScheduleForm = ({ goToPreviousStep }: ScheduleFormProps) => {
     };
 
     await createContact(data);
+    setIsBookedSuccess(true);
   };
 
   useEffect(() => {

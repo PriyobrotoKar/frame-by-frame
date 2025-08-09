@@ -5,8 +5,9 @@ import { Inter } from '@/fonts';
 import { Toaster } from '@/components/ui/sonner';
 
 export const metadata: Metadata = {
-  title: 'Frame by Frame',
-  description: 'Become More Profitable as a Video Editor Today',
+  title: 'Domicon',
+  description:
+    'Master the exact systems elite creators use to scale fast and monetize their brands without chasing trends.',
 };
 
 export default function RootLayout({
@@ -17,7 +18,7 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body
-        className={` ${Inter.className} md:text-body text-xs antialiased md:font-normal`}
+        className={` ${Inter.className} md:text-body overflow-x-hidden text-xs antialiased md:font-normal`}
       >
         <Header />
         {children}

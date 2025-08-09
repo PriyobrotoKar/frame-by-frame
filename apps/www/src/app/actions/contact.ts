@@ -25,6 +25,8 @@ const schema = z.object({
   bookedAt: z.date().min(new Date()),
 });
 
+export type SchemaType = z.infer<typeof schema>;
+
 export const createContact = async (data: ScheduleMeeting) => {
   try {
     const parsedData = await schema.parseAsync(data);
@@ -39,7 +41,7 @@ export const createContact = async (data: ScheduleMeeting) => {
       throw new Error('Contact already exists');
     }
 
-    await Promise.all([
+    const [sheetData, calenderData] = await Promise.all([
       addToSheet({
         ...parsedData,
         bookedAt: parsedData.bookedAt.toLocaleString('en-US', {
@@ -47,7 +49,11 @@ export const createContact = async (data: ScheduleMeeting) => {
         }),
       }),
       addToCalender({
-        attendee: parsedData.email,
+        details: parsedData,
+        attendee: {
+          email: parsedData.email,
+          name: parsedData.name,
+        },
         startDate: parsedData.bookedAt.toISOString(),
         endDate: new Date(
           parsedData.bookedAt.getTime() + 60 * 60 * 1000,
@@ -55,8 +61,21 @@ export const createContact = async (data: ScheduleMeeting) => {
       }),
     ]);
 
+    console.log('Data appended:', sheetData);
+    console.log('Event added to calendar:', calenderData);
+
+    const { bookedAt, ...details } = parsedData;
+
     const contact = await db.contact.create({
-      data: parsedData,
+      data: {
+        ...details,
+        booking: {
+          create: {
+            bookedAt,
+            eventId: calenderData.id,
+          },
+        },
+      },
     });
 
     return contact;
@@ -68,14 +87,28 @@ export const createContact = async (data: ScheduleMeeting) => {
   }
 };
 
-export const getBookings = async () => {
+export const getContact = async (email: string) => {
   try {
-    const bookings = await db.contact.findMany({
-      select: {
-        id: true,
-        bookedAt: true,
+    const contact = await db.contact.findUnique({
+      where: {
+        email,
       },
     });
+
+    return {
+      data: contact,
+    };
+  } catch (error) {
+    console.error('Error fetching contact:', error);
+    return {
+      error: 'Failed to fetch contact',
+    };
+  }
+};
+
+export const getBookings = async () => {
+  try {
+    const bookings = await db.booking.findMany({});
 
     return {
       data: bookings,

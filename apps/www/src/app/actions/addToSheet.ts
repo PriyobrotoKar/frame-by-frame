@@ -15,7 +15,7 @@ export const addToSheet = async (data: Record<string, string>) => {
   const values = [Object.values(data)];
 
   try {
-    const data = await sheets.spreadsheets.values.append({
+    const response = await sheets.spreadsheets.values.append({
       spreadsheetId: sheetId,
       range,
       valueInputOption: 'RAW',
@@ -24,7 +24,8 @@ export const addToSheet = async (data: Record<string, string>) => {
         values,
       },
     });
-    console.log('Data appended:', data);
+
+    return response.data;
   } catch (error) {
     console.error((error as Error).message);
     throw error;
