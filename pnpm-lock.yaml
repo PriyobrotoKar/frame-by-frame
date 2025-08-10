@@ -345,6 +345,9 @@ importers:
       '@hookform/resolvers':
         specifier: ^5.1.1
         version: 5.1.1(react-hook-form@7.59.0(react@19.1.0))
+      '@prisma/nextjs-monorepo-workaround-plugin':
+        specifier: ^6.13.0
+        version: 6.13.0
       '@radix-ui/react-dialog':
         specifier: ^1.1.6
         version: 1.1.14(@types/react-dom@19.1.6(@types/react@19.1.8))(@types/react@19.1.8)(react-dom@19.1.0(react@19.1.0))(react@19.1.0)
@@ -1895,6 +1898,9 @@ packages:
 
   '@prisma/internals@5.14.0-dev.34':
     resolution: {integrity: sha512-FKToi0h7DFkSZ+eAo737RisLAlRrHq2VPRnm53aVe7LH1J4qwVhl7U+Gy9CsifUgi5VDX311M2W5hyaRcBs46A==}
+
+  '@prisma/nextjs-monorepo-workaround-plugin@6.13.0':
+    resolution: {integrity: sha512-RUNHn4SDb5lu8k7AcS2N2O4pftYPu0rVVRNOG6qzekup+1alb1ezgykAhsWhS15a/Sa2TThyLSegP+Ef8+3xlw==}
 
   '@prisma/prisma-schema-wasm@5.14.0-6.264f24ce0b2f544ff968ff76bfaa999de1161361':
     resolution: {integrity: sha512-lMNW0WEI+eP5gPn+blBj2yK2znvQlWQbbcOdbqR6PmOOMZRPXbfoC1LgxFn0QrZalJ1csJSFPjmQiYcrv9/39w==}
@@ -9131,6 +9137,8 @@ snapshots:
       '@prisma/schema-files-loader': 5.14.0-dev.34
       arg: 5.0.2
       prompts: 2.4.2
+
+  '@prisma/nextjs-monorepo-workaround-plugin@6.13.0': {}
 
   '@prisma/prisma-schema-wasm@5.14.0-6.264f24ce0b2f544ff968ff76bfaa999de1161361': {}
 
