@@ -1,4 +1,5 @@
 import { calendar_v3, google } from 'googleapis';
+import { DateTime } from 'luxon';
 import auth from '@/lib/googleAuth';
 import { NextResponse } from 'next/server';
 import { db, Prisma } from '@frame-by-frame/db';
@@ -13,6 +14,7 @@ const storeSyncToken = async (token: string) => {
 
 const getSyncToken = async () => {
   try {
+    return null;
     const token = await redis.get<string>('syncToken');
     return token;
   } catch (error) {
@@ -33,11 +35,13 @@ const createBookingChunks = (event: calendar_v3.Schema$Event) => {
   let time = startTime.getTime();
 
   while (time < endTime.getTime()) {
-    const newStartTime = new Date(time);
+    const newStartTime = DateTime.fromMillis(time)
+      .setZone('Asia/Kolkata')
+      .toJSDate();
     newStartTime.setMinutes(0);
     newStartTime.setSeconds(0);
 
-    console.log('newStartTime', newStartTime.toLocaleString());
+    console.log('newStartTime', newStartTime, newStartTime.toLocaleString());
 
     const newEvent: Prisma.BookingCreateInput = {
       eventId: event.id ?? null,
