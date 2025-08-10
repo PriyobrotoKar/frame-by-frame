@@ -14,7 +14,6 @@ const storeSyncToken = async (token: string) => {
 
 const getSyncToken = async () => {
   try {
-    return null;
     const token = await redis.get<string>('syncToken');
     return token;
   } catch (error) {
