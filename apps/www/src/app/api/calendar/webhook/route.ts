@@ -1,18 +1,18 @@
 import { calendar_v3, google } from 'googleapis';
-import fs from 'node:fs';
 import auth from '@/lib/googleAuth';
 import { NextResponse } from 'next/server';
 import { db, Prisma } from '@frame-by-frame/db';
+import redis from '@/lib/redis';
 
 const calendar = google.calendar({ version: 'v3', auth });
 
 const storeSyncToken = async (token: string) => {
-  await fs.promises.writeFile('syncToken.txt', token);
+  await redis.set('syncToken', token);
 };
 
 const getSyncToken = async () => {
   try {
-    const token = await fs.promises.readFile('syncToken.txt', 'utf8');
+    const token = await redis.get<string>('syncToken');
     return token;
   } catch (error) {
     console.error('Error reading sync token:', error);
