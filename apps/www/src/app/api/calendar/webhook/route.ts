@@ -3,6 +3,7 @@ import auth from '@/lib/googleAuth';
 import { NextResponse } from 'next/server';
 import { db, Prisma } from '@frame-by-frame/db';
 import redis from '@/lib/redis';
+import { revalidatePath } from 'next/cache';
 
 const calendar = google.calendar({ version: 'v3', auth });
 
@@ -239,6 +240,8 @@ export const POST = async () => {
   if (syncToken === null) {
     await initialSyncCalendar();
 
+    revalidatePath('/');
+
     return NextResponse.json(
       {
         message: 'Webhook received successfully',
@@ -268,6 +271,8 @@ export const POST = async () => {
   }
 
   await processChangedEvents(changedEvents);
+
+  revalidatePath('/');
 
   return NextResponse.json(
     {
