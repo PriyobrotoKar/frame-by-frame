@@ -62,7 +62,7 @@ override.tf.json
 terraform.rc
 terraform.tfvars
 
-prisma/generated
+**/generated
 
 *.zip
 *.txt
