@@ -6,7 +6,7 @@ export default function Stats() {
     <section className="relative space-y-10 overflow-hidden px-0 py-40 md:py-60 lg:px-0">
       <Animate
         className={
-          'mx-auto mt-32 max-w-md space-y-8 text-center md:max-w-screen-md'
+          'mx-auto mt-32 max-w-md space-y-5 text-center md:max-w-screen-md md:space-y-8'
         }
       >
         <p className="text-sm-semibold from-secondary via-primary to-secondary bg-gradient-to-r bg-clip-text tracking-widest text-transparent md:text-xl">
@@ -20,7 +20,7 @@ export default function Stats() {
         </h2>
       </Animate>
       <Animate className="space-y-12 text-center" delay={0.4}>
-        <p className="mx-auto max-w-72 text-center md:max-w-screen-sm">
+        <p className="mx-auto max-w-80 text-center md:max-w-screen-sm">
           Learn the industry-standard editing workflow that makes you
           indispensable and puts you in control of your income.
         </p>

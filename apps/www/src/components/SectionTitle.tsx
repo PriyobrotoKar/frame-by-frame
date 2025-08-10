@@ -15,7 +15,7 @@ export default function SectionTitle({
   return (
     <Animate
       className={cn(
-        'mx-auto max-w-md space-y-8 text-center md:max-w-screen-md',
+        'mx-auto max-w-md space-y-5 text-center md:max-w-screen-md md:space-y-8',
         className,
       )}
     >

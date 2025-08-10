@@ -3,7 +3,7 @@ import { Mail } from 'lucide-react';
 
 export default function Footer() {
   return (
-    <footer className="space-y-12 max-w-screen-sm mx-auto text-center">
+    <footer className="mx-auto max-w-screen-sm space-y-12 text-center">
       <div>
         <Image
           className="mx-auto"
@@ -14,12 +14,12 @@ export default function Footer() {
         />
       </div>
       <div className="space-y-6 text-xs">
-        <p className="max-w-80 md:max-w-none mx-auto">
-          Note: The program doesn&apos;t guarantee success, it is up to students
-          to implement and assess to attain desired results.
+        <p className="mx-auto max-w-80 md:max-w-none">
+          A 100% refund, $1K in cash and a free pizza delivered to your doorstep
+          if we fail to deliver a month worth of content.
         </p>
         <a
-          className="block w-fit mx-auto"
+          className="mx-auto block w-fit"
           href="mailto:moneyprojectd@gmail.com"
         >
           <Mail />

@@ -20,7 +20,7 @@ export default function HeroSection() {
             autopilot.
           </span>
         </h1>
-        <p className="mx-auto mt-10 max-w-80 text-lg md:max-w-xl">
+        <p className="mx-auto mt-8 max-w-80 md:mt-10 md:max-w-xl md:text-lg">
           Master the exact systems elite creators use to scale fast and monetize
           their brands without chasing trends.
         </p>

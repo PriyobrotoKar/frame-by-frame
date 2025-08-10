@@ -3,7 +3,7 @@ import { Button } from './ui/button';
 
 export default function Header() {
   return (
-    <header className="mt-28 flex items-center justify-center md:mx-16 md:mt-16 md:justify-between lg:mx-28">
+    <header className="mt-16 flex items-center justify-center md:mx-16 md:mt-16 md:justify-between lg:mx-28">
       <div>
         <Image
           src={'/logo.svg'}

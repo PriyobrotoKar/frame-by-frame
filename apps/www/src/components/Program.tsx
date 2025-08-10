@@ -60,10 +60,10 @@ const services: Service[] = [
 export default function Program() {
   return (
     <section className="relative space-y-16 overflow-hidden md:space-y-24">
-      <div className="space-y-20">
+      <div className="space-y-10 md:space-y-20">
         <Animate
           className={
-            'mx-auto mt-32 max-w-md space-y-8 text-center md:max-w-screen-md'
+            'mx-auto mt-32 max-w-md space-y-5 text-center md:max-w-screen-md md:space-y-8'
           }
         >
           <p className="text-sm-semibold from-secondary via-primary to-secondary bg-gradient-to-r bg-clip-text tracking-widest text-transparent md:text-xl">
@@ -91,7 +91,7 @@ export default function Program() {
             offset={['start end', 'end start']}
             className="z-0"
           >
-            <div className="relative flex aspect-[3/5] w-32 -rotate-3 items-center justify-center overflow-hidden rounded-lg md:w-60">
+            <div className="relative flex aspect-[3/5] w-32 -rotate-3 items-center justify-center overflow-hidden rounded-lg shadow-lg md:w-60">
               <video
                 src={'/reels/reel-1.mp4'}
                 autoPlay
@@ -109,7 +109,7 @@ export default function Program() {
             offset={['start end', 'end start']}
             className="z-10 shadow-xl"
           >
-            <div className="relative flex aspect-[3/5] w-32 rotate-[4deg] items-center justify-center overflow-hidden rounded-lg md:w-60">
+            <div className="relative flex aspect-[3/5] w-32 rotate-[4deg] items-center justify-center overflow-hidden rounded-lg shadow-lg md:w-60">
               <video
                 src={'/reels/reel-2.mp4'}
                 loop
@@ -127,7 +127,7 @@ export default function Program() {
             offset={['start end', 'end start']}
             className="z-0"
           >
-            <div className="relative flex aspect-[3/5] w-32 -rotate-2 items-center justify-center overflow-hidden rounded-lg md:w-60">
+            <div className="relative flex aspect-[3/5] w-32 -rotate-2 items-center justify-center overflow-hidden rounded-lg shadow-lg md:w-60">
               <video
                 src={'/reels/reel-3.mp4'}
                 autoPlay
@@ -146,7 +146,7 @@ export default function Program() {
           y: 20,
           scale: 0.95,
         }}
-        className="space-y-10 px-10 pt-10 md:pt-0"
+        className="space-y-10 px-10 pt-4 md:pt-0"
       >
         {services.map((service, i) => {
           return (
@@ -194,7 +194,7 @@ const ServiceCard = ({
         key={service.title}
         className="from-accent mx-auto max-w-4xl justify-center space-y-2 rounded-xl border bg-gradient-to-r p-6"
       >
-        <div className="flex gap-4">
+        <div className="flex flex-col gap-4">
           <div className="shrink-0">
             <Image
               className="rounded-lg object-cover"
@@ -205,7 +205,7 @@ const ServiceCard = ({
             />
           </div>
           <div className="space-y-2 md:space-y-2">
-            <p className="text-primary font-semibold uppercase tracking-widest">
+            <p className="text-primary text-xs font-semibold uppercase tracking-widest">
               {service.subtitle}
             </p>
             <h3 className="text-primary-foreground text-lg md:text-xl">
