@@ -28,8 +28,12 @@ const createBookingChunks = (event: calendar_v3.Schema$Event) => {
 
   const bookings = [];
 
-  const startTime = new Date(event.start.dateTime);
-  const endTime = new Date(event.end.dateTime);
+  const startTime = DateTime.fromISO(event.start.dateTime)
+    .setZone('Asia/Kolkata')
+    .toJSDate();
+  const endTime = DateTime.fromISO(event.end.dateTime)
+    .setZone('Asia/Kolkata')
+    .toJSDate();
 
   let time = startTime.getTime();
 
