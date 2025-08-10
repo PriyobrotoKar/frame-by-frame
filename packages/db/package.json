@@ -2,18 +2,18 @@
   "name": "@frame-by-frame/db",
   "version": "1.0.0",
   "description": "",
-  "main": "dist/index.js",
-  "types": "dist/index.d.ts",
+  "exports": {
+    ".": "./src/index.ts"
+  },
   "scripts": {
-    "generate": "prisma generate",
-    "migrate": "pnpx dotenv-cli -e ../../.env -- prisma migrate dev",
-    "reset": "pnpx dotenv-cli -e ../../.env -- prisma migrate reset",
-    "studio": "pnpx dotenv-cli -e ../../.env -- prisma studio",
-    "migrate-stage": "pnpx dotenv-cli -e ../../.env.staging -- prisma migrate deploy",
-    "studio-stage": "pnpx dotenv-cli -e ../../.env.staging -- prisma studio",
-    "seed-sync": "pnpx dotenv-cli -e ../../.env -- pnpx @snaplet/seed sync",
-    "seed": "pnpx dotenv-cli -e ../../.env -- pnpx tsx ./prisma/seed.ts",
-    "build": "pnpm generate && npx tsc"
+    "db:generate": "prisma generate",
+    "db:migrate": "pnpx dotenv-cli -e ../../.env -- prisma migrate dev",
+    "db:reset": "pnpx dotenv-cli -e ../../.env -- prisma migrate reset",
+    "db:studio": "pnpx dotenv-cli -e ../../.env -- prisma studio",
+    "db:migrate-stage": "pnpx dotenv-cli -e ../../.env.staging -- prisma migrate deploy",
+    "db:studio-stage": "pnpx dotenv-cli -e ../../.env.staging -- prisma studio",
+    "db:seed-sync": "pnpx dotenv-cli -e ../../.env -- pnpx @snaplet/seed sync",
+    "db:seed": "pnpx dotenv-cli -e ../../.env -- pnpx tsx ./prisma/seed.ts"
   },
   "devDependencies": {
     "@frame-by-frame/eslint-config": "workspace:*",
