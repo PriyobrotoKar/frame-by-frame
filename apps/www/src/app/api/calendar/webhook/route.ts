@@ -260,7 +260,7 @@ export const POST = async () => {
     singleEvents: true,
   });
 
-  console.log(response.data);
+  console.log(response.data.items, response.data.nextSyncToken);
 
   const changedEvents = response.data.items;
 
