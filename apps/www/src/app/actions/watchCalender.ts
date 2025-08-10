@@ -6,8 +6,6 @@ const baseUrl =
   process.env.VERCEL_URL ??
   'https://webhook.site/3a4329be-ca30-45ad-a9be-bdd0dd393651';
 
-console.log(baseUrl);
-
 export const watchCalender = async () => {
   try {
     const calendar = google.calendar({ version: 'v3', auth });
