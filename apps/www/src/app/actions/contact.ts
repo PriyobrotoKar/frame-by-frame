@@ -38,7 +38,7 @@ export const createContact = async (data: ScheduleMeeting) => {
     });
 
     if (isAlreadySchduled) {
-      throw new Error('Contact already exists');
+      throw new Error('Contact already exists!');
     }
 
     const [sheetData, calenderData] = await Promise.all([
