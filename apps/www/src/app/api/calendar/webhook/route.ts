@@ -37,6 +37,8 @@ const createBookingChunks = (event: calendar_v3.Schema$Event) => {
     newStartTime.setMinutes(0);
     newStartTime.setSeconds(0);
 
+    console.log('newStartTime', newStartTime.toLocaleString());
+
     const newEvent: Prisma.BookingCreateInput = {
       eventId: event.id ?? null,
       createdBy: 'USER',

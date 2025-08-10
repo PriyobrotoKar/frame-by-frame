@@ -4,21 +4,27 @@ import { v4 as uuidv4 } from 'uuid';
 
 const baseUrl =
   process.env.VERCEL_URL ??
-  'https://webhook.site/9f427cf1-942e-47bb-a0c7-9886b72acf6c';
+  'https://webhook.site/3a4329be-ca30-45ad-a9be-bdd0dd393651';
+
+console.log(baseUrl);
 
 export const watchCalender = async () => {
-  const calendar = google.calendar({ version: 'v3', auth });
+  try {
+    const calendar = google.calendar({ version: 'v3', auth });
 
-  const response = await calendar.events.watch({
-    calendarId: 'mail@domicon.co',
-    requestBody: {
-      id: uuidv4(),
-      type: 'web_hook',
-      address: `${baseUrl}/api/calendar/webhook`,
-    },
-  });
+    const response = await calendar.events.watch({
+      calendarId: 'mail@domicon.co',
+      requestBody: {
+        id: uuidv4(),
+        type: 'web_hook',
+        address: `${baseUrl}/api/calendar/webhook`,
+      },
+    });
 
-  console.log(response.data);
+    console.log(response.data);
+  } catch (error) {
+    console.error(error);
+  }
 };
 
 watchCalender();
