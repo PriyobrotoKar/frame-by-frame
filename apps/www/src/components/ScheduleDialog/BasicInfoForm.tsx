@@ -16,6 +16,7 @@ import Image from 'next/image';
 import { useAtom } from 'jotai';
 import { scheduleMeetingAtom } from '@/lib/store';
 import { getContact } from '@/app/actions/contact';
+import { useState } from 'react';
 
 const schema = z.object({
   name: z.string().min(2).max(100),
@@ -34,6 +35,8 @@ export default function BasicInfoForm({
   setIsAlreadyContacted,
 }: BasicInfoFormProps) {
   const [scheduleMeeting, setScheduleMeeting] = useAtom(scheduleMeetingAtom);
+  const [isSubmitting, setIsSubmitting] = useState(false);
+
   const form = useForm({
     resolver: zodResolver(schema),
     defaultValues: {
@@ -43,11 +46,9 @@ export default function BasicInfoForm({
     },
   });
 
-  async function fetchContact() {
-    if (!scheduleMeeting?.email) return;
-
+  async function fetchContact(data: z.infer<typeof schema>) {
     try {
-      const res = await getContact(scheduleMeeting.email);
+      const res = await getContact(data.email);
       if (res.data) {
         setIsAlreadyContacted(true);
       }
@@ -57,12 +58,16 @@ export default function BasicInfoForm({
   }
 
   const handleSubmit = form.handleSubmit(async (data) => {
-    await fetchContact();
+    setIsSubmitting(true);
+
+    await fetchContact(data);
     setScheduleMeeting((prev) => ({
       ...prev,
       ...data,
     }));
     goToNextStep();
+
+    setIsSubmitting(false);
   });
 
   return (
@@ -151,7 +156,7 @@ export default function BasicInfoForm({
               </Button>
             </DialogClose>
 
-            <Button type="submit" size={'sm'}>
+            <Button disabled={isSubmitting} type="submit" size={'sm'}>
               Continue
             </Button>
           </DialogFooter>
