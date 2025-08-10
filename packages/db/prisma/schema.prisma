@@ -1,0 +1,484 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions? Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider = "prisma-client-js"
+  binaryTargets = ["native", "rhel-openssl-3.0.x"]
+  output   = "../generated/prisma"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+enum Role {
+  USER
+  ADMIN
+}
+
+enum BookingCreator {
+  USER
+  APP
+}
+
+enum AuthProvider {
+  DISCORD
+  GOOGLE
+}
+
+enum AttachmentType {
+  PDF
+  ZIP
+}
+
+enum VideoStatus {
+  NOT_STARTED
+  PENDING
+  PROCESSING
+  READY
+  FAILED
+}
+
+enum OrderStatus {
+  PENDING
+  COMPLETED
+  FAILED
+}
+
+enum PaymentStatus {
+  AUTHORIZED
+  SUCCESS
+  FAILED
+  REFUNDED
+}
+
+enum NotificationType {
+  ALERT
+  GIFT
+}
+
+model User {
+  id           String  @id @default(cuid())
+  name         String
+  email        String  @unique
+  profilePic   String?
+  phone        String?
+  role         Role    @default(USER)
+  refreshToken String? @unique
+
+  discordId String? @unique
+  googleId  String? @unique
+
+  authProvider      AuthProvider
+  orders            Order[]
+  notifications     Notification[]
+  courseProgresses  UserCourseProgress[]
+  chapterProgresses UserChapterProgress[]
+  lessonProgresses  UserLessonProgress[]
+
+  activity UserActivity?
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model Course {
+  id String @id @default(cuid())
+
+  versions         CourseVersion[]
+  orders           Order[]
+  monthlyAnalytics MonthlyAnalytics[]
+  dailyAnalytics   DailyAnalytics[]
+  userProgresses   UserCourseProgress[]
+  userActivity     UserActivity[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model CourseVersion {
+  id String @id @default(cuid())
+
+  title       String
+  subtitle    String?
+  description String?
+  image       String?
+  slug        String
+  price       Int? // Price in cents, e.g., 1999 for $19.99
+  currency    String? @default("INR")
+  isPublished Boolean @default(false)
+
+  trailer   Video?  @relation(fields: [trailerId], references: [id])
+  trailerId String? @unique
+
+  courseId String
+  course   Course @relation(fields: [courseId], references: [id])
+
+  chapters        Chapter[]
+  learnings       CourseLearnings[]
+  instructors     Instructor[]
+  videoTrash      VideoTrash[]
+  documentTrash   DocumentTrash[]
+  attachmentTrash AttachmentTrash[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model CourseLearnings {
+  id String @id @default(cuid())
+
+  title       String
+  description String?
+
+  courseVersionId String
+  courseVersion   CourseVersion @relation(fields: [courseVersionId], references: [id])
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model Instructor {
+  id String @id @default(cuid())
+
+  name            String
+  specialization  String?
+  profilePic      String?
+  experienceYears Int     @default(0)
+  followers       Int     @default(0)
+  revenue         Int     @default(0)
+
+  courseVersionId String
+  courseVersion   CourseVersion @relation(fields: [courseVersionId], references: [id])
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model Chapter {
+  id    String @id @default(cuid())
+  title String
+  slug  String
+  order Int
+
+  documents         Document[]
+  videos            Video[]
+  chapterProgresses UserChapterProgress[]
+  userActivity      UserActivity[]
+
+  courseVersion   CourseVersion? @relation(fields: [courseVersionId], references: [id])
+  courseVersionId String?
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@unique([courseVersionId, slug]) // Ensure unique slug per course version
+}
+
+model Document {
+  id       String  @id @default(cuid())
+  title    String
+  content  String?
+  order    Int
+  slug     String
+  duration Int     @default(0)
+
+  chapterId String
+  chapter   Chapter @relation(fields: [chapterId], references: [id], onDelete: Cascade)
+
+  attachments      Attachment[]
+  lessonProgresses UserLessonProgress[]
+  userActivity     UserActivity[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@unique([chapterId, slug]) // Ensure unique slug per chapter
+}
+
+model Video {
+  id          String      @id @default(cuid())
+  title       String
+  slug        String
+  description String?
+  url         String?
+  order       Int
+  status      VideoStatus @default(NOT_STARTED)
+  duration    Int         @default(0)
+
+  course CourseVersion?
+
+  chapter   Chapter? @relation(fields: [chapterId], references: [id], onDelete: Cascade)
+  chapterId String?
+
+  attachments      Attachment[]
+  lessonProgresses UserLessonProgress[]
+  userActivity     UserActivity[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@unique([chapterId, slug]) // Ensure unique slug per chapter
+}
+
+model Attachment {
+  id   String         @id @default(cuid())
+  name String
+  url  String
+  type AttachmentType
+  size Int
+
+  documentId String?
+  document   Document? @relation(fields: [documentId], references: [id], onDelete: Cascade)
+
+  videoId String?
+  video   Video?  @relation(fields: [videoId], references: [id], onDelete: Cascade)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model Order {
+  id String @id @default(cuid())
+
+  userId String
+  user   User   @relation(fields: [userId], references: [id])
+
+  courseId String
+  course   Course @relation(fields: [courseId], references: [id])
+
+  status   OrderStatus @default(PENDING)
+  amount   Int // Amount in cents, e.g., 1999 for $19.99
+  currency String      @default("INR")
+
+  orderId String @unique
+
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+  payments  Payment[]
+
+  @@unique([userId, courseId]) // Ensure a user can only order a course once
+}
+
+model Payment {
+  id String @id @default(cuid())
+
+  orderId String
+  order   Order  @relation(fields: [orderId], references: [id])
+
+  status   PaymentStatus
+  amount   Int // Amount in cents, e.g., 1999 for $19.99
+  currency String        @default("INR")
+
+  paymentId     String @unique
+  paymentMethod String
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model MonthlyAnalytics {
+  id           String @id @default(cuid())
+  totalSales   Int    @default(0)
+  monthlySales Int    @default(0)
+  totalOrders  Int    @default(0)
+
+  course   Course @relation(fields: [courseId], references: [id])
+  courseId String
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model DailyAnalytics {
+  id         String @id @default(cuid())
+  totalSales Int    @default(0)
+
+  course   Course @relation(fields: [courseId], references: [id])
+  courseId String
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model Notification {
+  id      String           @id @default(cuid())
+  message String
+  type    NotificationType
+
+  readBy User[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model UserCourseProgress {
+  id String @id @default(cuid())
+
+  userId String
+  user   User   @relation(fields: [userId], references: [id])
+
+  courseId String
+  course   Course @relation(fields: [courseId], references: [id])
+
+  chapterProgresses UserChapterProgress[]
+
+  progress Int @default(0) // Progress in percentage
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@unique([userId, courseId]) // Ensure unique progress per user and course version
+}
+
+model UserChapterProgress {
+  id String @id @default(cuid())
+
+  userId String
+  user   User   @relation(fields: [userId], references: [id])
+
+  chapterId String
+  chapter   Chapter @relation(fields: [chapterId], references: [id], onDelete: Cascade)
+
+  courseProgressId String
+  courseProgress   UserCourseProgress   @relation(fields: [courseProgressId], references: [id], onDelete: Cascade)
+  lessonProgresses UserLessonProgress[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@unique([userId, chapterId]) // Ensure unique progress per user and chapter
+}
+
+model UserLessonProgress {
+  id String @id @default(cuid())
+
+  userId String
+  user   User   @relation(fields: [userId], references: [id])
+
+  videoId String?
+  video   Video?  @relation(fields: [videoId], references: [id])
+
+  documentId String?
+  document   Document? @relation(fields: [documentId], references: [id])
+
+  chapterProgressId String
+  chapterProgress   UserChapterProgress @relation(fields: [chapterProgressId], references: [id], onDelete: Cascade)
+
+  progress  Int     @default(0) // Progress in percentage
+  completed Boolean @default(false)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@unique([userId, videoId]) // Ensure unique progress per user and video
+  @@unique([userId, documentId]) // Ensure unique progress per user and video
+}
+
+model UserActivity {
+  id               String @id @default(cuid())
+  activeDaysOfWeek Int[]
+
+  courseId String
+  course   Course @relation(fields: [courseId], references: [id], onDelete: Cascade)
+
+  chapterId String
+  chapter   Chapter @relation(fields: [chapterId], references: [id], onDelete: Cascade)
+
+  videoId String?
+  video   Video?  @relation(fields: [videoId], references: [id], onDelete: Cascade)
+
+  documentId String?
+  document   Document? @relation(fields: [documentId], references: [id], onDelete: Cascade)
+
+  user   User   @relation(fields: [userId], references: [id])
+  userId String @unique
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model VideoTrash {
+  id          String      @id @default(cuid())
+  title       String
+  slug        String
+  description String?
+  url         String?
+  order       Int
+  status      VideoStatus @default(NOT_STARTED)
+  duration    Int         @default(0)
+
+  courseVersion   CourseVersion @relation(fields: [courseVersionId], references: [id])
+  courseVersionId String
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@unique([courseVersionId, slug]) // Ensure unique slug per chapter
+}
+
+model DocumentTrash {
+  id       String  @id @default(cuid())
+  title    String
+  content  String?
+  order    Int
+  slug     String
+  duration Int     @default(0)
+
+  courseVersion   CourseVersion @relation(fields: [courseVersionId], references: [id])
+  courseVersionId String
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@unique([courseVersionId, slug]) // Ensure unique slug per chapter
+}
+
+model AttachmentTrash {
+  id   String         @id @default(cuid())
+  name String
+  url  String
+  type AttachmentType
+  size Int
+
+  courseVersion   CourseVersion @relation(fields: [courseVersionId], references: [id])
+  courseVersionId String
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model Contact {
+  id               String @id @default(cuid())
+  name             String
+  email            String @unique
+  instagram        String
+  niche            String
+  contentFrequency String
+  challenge        String
+  desiredIncome    String
+  currentIncome    String
+  interest         String
+  amountToInvest   String
+
+  booking Booking? @relation(fields: [bookingId], references: [id])
+  bookingId String? @unique
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model Booking {
+  id        String         @id @default(cuid())
+  createdBy BookingCreator @default(APP)
+  eventId   String?
+  bookedAt  DateTime
+
+  contact Contact?
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}

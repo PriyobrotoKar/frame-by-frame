@@ -1,0 +1,20 @@
+{
+  "name": "file-destroyer",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "build": "npx tsc"
+  },
+  "devDependencies": {
+    "@frame-by-frame/typescript-config": "workspace:*",
+    "@types/aws-lambda": "^8.10.149",
+    "@types/node": "^24.0.0"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "@aws-sdk/client-s3": "^3.842.0"
+  }
+}

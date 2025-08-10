@@ -1,0 +1,110 @@
+name: Deploy API
+
+on:
+  push:
+    branches:
+      - develop
+    paths: ['apps/api/**']
+  workflow_dispatch:
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    name: Validate API
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Install pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          version: 9.5.0
+          run_install: false
+
+      - name: Install Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: 'pnpm'
+
+      - name: Install packages
+        run: pnpm i
+
+      - name: Check Formatting
+        run: pnpm run format:check:api
+
+      - name: Run Lint
+        run: pnpm run lint:api
+
+  deploy:
+    needs: validate
+    runs-on: ubuntu-latest
+    environment: stage
+    name: Deploy API
+
+    env:
+      AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+      AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+      AWS_DEFAULT_REGION: ap-south-1
+      AWS_DEFAULT_PROFILE: framebyframe
+      TF_VAR_env_vars: >-
+        {
+          "FRONTEND_URL": "${{ vars.FRONTEND_URL }}",
+          "GOOGLE_CLIENT_ID": "${{ secrets.GOOGLE_CLIENT_ID }}",
+          "GOOGLE_CLIENT_SECRET": "${{ secrets.GOOGLE_CLIENT_SECRET }}",
+          "DISCORD_CLIENT_ID": "${{ secrets.DISCORD_CLIENT_ID }}",
+          "DISCORD_CLIENT_SECRET": "${{ secrets.DISCORD_CLIENT_SECRET }}",
+          "JWT_SECRET": "${{ secrets.JWT_SECRET }}",
+          "JWT_EXPIRES_IN": "${{ secrets.JWT_EXPIRES_IN }}",
+          "REFRESH_JWT_SECRET": "${{ secrets.REFRESH_JWT_SECRET }}",
+          "REFRESH_JWT_EXPIRES_IN": "${{ secrets.REFRESH_JWT_EXPIRES_IN }}",
+          "DATABASE_URL": "${{ secrets.DATABASE_URL }}",
+          "ADMIN_EMAILS": "${{secrets.ADMIN_EMAILS}}",
+          "AWS_BUCKET": "${{secrets.AWS_BUCKET}}",
+          "AWS_TEMP_BUCKET": "${{secrets.AWS_TEMP_BUCKET}}",
+          "API_KEY": "${{secrets.API_KEY}}",
+          "R2_ENDPOINT": "${{secrets.R2_ENDPOINT}}",
+          "R2_ACCESS_KEY_ID": "${{secrets.R2_ACCESS_KEY_ID}}",
+          "R2_SECRET_ACCESS_KEY": "${{secrets.R2_SECRET_ACCESS_KEY}}"
+          "RAZORPAY_KEY_ID": "${{secrets.RAZORPAY_KEY_ID}}",
+          "RAZORPAY_KEY_SECRET": "${{secrets.RAZORPAY_KEY_SECRET}}",
+          "RAZORPAY_WEBHOOK_SECRET": "${{secrets.RAZORPAY_WEBHOOK_SECRET}}"
+        }
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Install pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          version: 9.5.0
+          run_install: false
+
+      - name: Install Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: 'pnpm'
+
+      - name: Configure AWS credentials
+        run: |
+          mkdir -p ~/.aws
+          echo "[$AWS_DEFAULT_PROFILE]" > ~/.aws/credentials
+          echo "aws_access_key_id = $AWS_ACCESS_KEY_ID" >> ~/.aws/credentials
+          echo "aws_secret_access_key = $AWS_SECRET_ACCESS_KEY" >> ~/.aws/credentials
+          echo "region = $AWS_DEFAULT_REGION" >> ~/.aws/credentials
+
+      - name: Set up Terraform
+        uses: hashicorp/setup-terraform@v3
+        with:
+          terraform_version: 1.11.3
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+
+      - name: Run deploy script
+        run: |
+          chmod +x ./scripts/deploy-api.sh
+          ./scripts/deploy-api.sh ./infra/envs/stage stage-framebyframe/api

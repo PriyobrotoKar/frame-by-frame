@@ -1,0 +1,32 @@
+{
+  "name": "@frame-by-frame/db",
+  "version": "1.0.0",
+  "description": "",
+  "exports": {
+    ".": "./src/index.ts"
+  },
+  "scripts": {
+    "db:generate": "prisma generate",
+    "db:migrate": "pnpx dotenv-cli -e ../../.env -- prisma migrate dev",
+    "db:reset": "pnpx dotenv-cli -e ../../.env -- prisma migrate reset",
+    "db:studio": "pnpx dotenv-cli -e ../../.env -- prisma studio",
+    "db:migrate-stage": "pnpx dotenv-cli -e ../../.env.staging -- prisma migrate deploy",
+    "db:studio-stage": "pnpx dotenv-cli -e ../../.env.staging -- prisma studio",
+    "db:seed-sync": "pnpx dotenv-cli -e ../../.env -- pnpx @snaplet/seed sync",
+    "db:seed": "pnpx dotenv-cli -e ../../.env -- pnpx tsx ./prisma/seed.ts"
+  },
+  "devDependencies": {
+    "@frame-by-frame/eslint-config": "workspace:*",
+    "@frame-by-frame/typescript-config": "workspace:*",
+    "@snaplet/copycat": "^6.0.0",
+    "@snaplet/seed": "^0.98.0",
+    "@types/node": "^22.15.2",
+    "prisma": "6.6.0"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "@prisma/client": "6.6.0"
+  }
+}

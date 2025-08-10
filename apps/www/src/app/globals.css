@@ -1,0 +1,135 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+body {
+  font-family: Arial, Helvetica, sans-serif;
+}
+
+@layer base {
+  :root {
+    --background: 0 3% 7%;
+    --foreground: 0, 16%, 63%;
+    --card: 0 0% 100%;
+    --card-foreground: 240 10% 3.9%;
+    --popover: 0 0% 100%;
+    --popover-foreground: 240 10% 3.9%;
+    --primary: 14 74% 55%;
+    --primary-foreground: 240 22% 96%;
+    --secondary: 23 81% 59%;
+    --secondary-foreground: 240 5.9% 10%;
+    --muted: 0 0% 34%;
+    --muted-foreground: 240 3.8% 46.1%;
+    --accent: 10 43% 13%;
+    --accent-foreground: 240 5.9% 10%;
+    --destructive: 0 84.2% 60.2%;
+    --destructive-foreground: 0 0% 98%;
+    --border: 0 1% 13%;
+    --input: 0 1% 13%;
+    --ring: 0 19% 32%;
+    --chart-1: 12 76% 61%;
+    --chart-2: 173 58% 39%;
+    --chart-3: 197 37% 24%;
+    --chart-4: 43 74% 66%;
+    --chart-5: 27 87% 67%;
+    --radius: 0.5rem;
+  }
+  .dark {
+    --background: 240 10% 3.9%;
+    --foreground: 0 0% 98%;
+    --card: 240 10% 3.9%;
+    --card-foreground: 0 0% 98%;
+    --popover: 240 10% 3.9%;
+    --popover-foreground: 0 0% 98%;
+    --primary: 0 0% 98%;
+    --primary-foreground: 240 5.9% 10%;
+    --secondary: 240 3.7% 15.9%;
+    --secondary-foreground: 0 0% 98%;
+    --muted: 240 3.7% 15.9%;
+    --muted-foreground: 240 5% 64.9%;
+    --accent: 240 3.7% 15.9%;
+    --accent-foreground: 0 0% 98%;
+    --destructive: 0 62.8% 30.6%;
+    --destructive-foreground: 0 0% 98%;
+    --border: 240 3.7% 15.9%;
+    --input: 240 3.7% 15.9%;
+    --ring: 240 4.9% 83.9%;
+    --chart-1: 220 70% 50%;
+    --chart-2: 160 60% 45%;
+    --chart-3: 30 80% 55%;
+    --chart-4: 280 65% 60%;
+    --chart-5: 340 75% 55%;
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+  body {
+    @apply bg-background text-foreground;
+  }
+}
+
+.no-scrollbar {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+
+.secondary-btn-animation {
+  position: relative;
+  overflow: hidden;
+}
+
+.secondary-btn-animation:hover::before {
+  translate: 0;
+  transition-duration: 0.05s;
+  transition-delay: 0.4s;
+}
+
+.secondary-btn-animation:hover::after {
+  scale: 1;
+  transition: scale 0.4s ease-in-out;
+}
+
+.secondary-btn-animation::before {
+  content: '';
+  position: absolute;
+  z-index: -10;
+  width: 100%;
+  height: 100%;
+  background-color: hsl(var(--foreground));
+  transition: translate 0.4s ease-in-out;
+  translate: 0 -100%;
+}
+
+.secondary-btn-animation::after {
+  content: '';
+  position: absolute;
+  z-index: -10;
+  width: 100%;
+  aspect-ratio: 1 / 1;
+  background-color: hsl(var(--foreground));
+  border-radius: 50%;
+  transform-origin: center bottom;
+  scale: 0;
+}
+
+input:-webkit-autofill,
+input:-webkit-autofill:hover,
+input:-webkit-autofill:focus,
+textarea:-webkit-autofill,
+textarea:-webkit-autofill:hover,
+textarea:-webkit-autofill:focus,
+select:-webkit-autofill,
+select:-webkit-autofill:hover,
+select:-webkit-autofill:focus {
+  appearance: 'none';
+  border: 1px solid transparent;
+  -webkit-text-fill-color: hsl(var(--foreground));
+  -webkit-box-shadow: 0 0 0px 1000px hsl(var(--input)) inset;
+  box-shadow: 0 0 0px 1000px hsl(var(--input)) inset;
+  transition: background-color 5000s ease-in-out 0s;
+  color: hsl(var(--foreground));
+  caret-color: hsl(var(--foreground));
+}
