@@ -40,9 +40,8 @@ const createBookingChunks = (event: calendar_v3.Schema$Event) => {
   while (time < endTime.getTime()) {
     const newStartTime = DateTime.fromMillis(time)
       .setZone('Asia/Kolkata')
+      .set({ minute: 0, second: 0, millisecond: 0 }) // round in IST
       .toJSDate();
-    newStartTime.setMinutes(0);
-    newStartTime.setSeconds(0);
 
     console.log('newStartTime', newStartTime, newStartTime.toLocaleString());
 
@@ -97,7 +96,7 @@ const initialSyncCalendar = async () => {
       maxResults: 250,
     });
 
-    console.log('Recent events:', response.data);
+    console.log('Recent events:', response.data.items);
 
     const filteredEvents = response.data.items?.filter(
       (event) => !blacklistedEvents.includes(event.summary ?? ''),
