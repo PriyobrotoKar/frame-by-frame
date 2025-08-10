@@ -67,7 +67,7 @@ const testimonials: Testimonial[] = [
 ];
 export default function Testimonial() {
   return (
-    <section className="relative space-y-28 overflow-x-hidden pb-32">
+    <section className="relative space-y-28 pb-32">
       <div className="absolute inset-0 -z-10 flex h-[60vh] w-full -translate-y-1/4 justify-between overflow-hidden md:h-[150rem]">
         <div className="bg-accent md:blur-4xl h-[30rem] w-[40rem] -translate-x-full translate-y-1/3 rounded-[50%] blur-3xl md:h-[65rem]"></div>
         <div className="bg-accent md:blur-4xl relative right-0 h-[30rem] w-[40rem] translate-x-full translate-y-full rounded-[50%] blur-3xl md:h-[65rem] md:translate-y-1/2"></div>
