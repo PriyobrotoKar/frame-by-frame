@@ -16,6 +16,7 @@ const ScheduleForm = ({
   goToPreviousStep,
   setIsBookedSuccess,
 }: ScheduleFormProps) => {
+  const [isSubmitting, setIsSubmitting] = useState(false);
   const [date, setDate] = useState<Date>(
     new Date(
       new Date().getFullYear(),
@@ -36,6 +37,8 @@ const ScheduleForm = ({
 
     const [hour, minute] = time.split(':');
     if (!hour || !minute) return;
+
+    setIsSubmitting(true);
 
     const twentyFourHour = (parseInt(hour) % 12) + (ampm === 'PM' ? 12 : 0);
 
@@ -58,6 +61,8 @@ const ScheduleForm = ({
     };
 
     await createContact(data);
+
+    setIsSubmitting(false);
     setIsBookedSuccess(true);
   };
 
@@ -101,7 +106,7 @@ const ScheduleForm = ({
           Go Back
         </Button>
 
-        <Button onClick={handleSubmit} size={'sm'}>
+        <Button disabled={isSubmitting} onClick={handleSubmit} size={'sm'}>
           Confirm meeting
         </Button>
       </DialogFooter>
