@@ -10,7 +10,7 @@ export default function Stats() {
         }
       >
         <p className="text-sm-semibold from-secondary via-primary to-secondary bg-gradient-to-r bg-clip-text tracking-widest text-transparent md:text-xl">
-          150+ GLOBAL STUDENTS
+          305+ DFY DOMINATORS
         </p>
         <h2 className="text-h1 text-primary-foreground md:text-display">
           Revolutionizing digital{' '}
@@ -20,9 +20,17 @@ export default function Stats() {
         </h2>
       </Animate>
       <Animate className="space-y-12 text-center" delay={0.4}>
-        <p className="mx-auto max-w-80 text-center md:max-w-screen-sm">
-          Learn the industry-standard editing workflow that makes you
-          indispensable and puts you in control of your income.
+        <p className="mx-auto max-w-80 text-center md:max-w-2xl">
+          We only take a{' '}
+          <span className="text-primary-foreground font-semibold">
+            handful of people each month
+          </span>{' '}
+          to keep delivery founder-led and results sharp. If this is full,
+          you’ll roll to next month’s intake.
+          <br />
+          <span className="text-primary-foreground font-semibold">
+            Secure your slot now!
+          </span>
         </p>
       </Animate>
 

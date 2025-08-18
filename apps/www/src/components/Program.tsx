@@ -24,7 +24,7 @@ const services: Service[] = [
     subtitle: '30 Viral-Ready Reels',
     title: 'Short-form content, done for you.',
     description:
-      'We produce 30 professionally edited, platform-optimized reels every month, designed to hook, retain, and convert your audience.',
+      'We produce 20-30 professionally edited, platform-optimized reels every month, designed to hook, retain, and convert your audience.',
     image: '/services/image-2.png',
   },
   {
@@ -165,12 +165,12 @@ export default function Program() {
         <div className="bg-accent/50 absolute bottom-28 left-1/2 top-1/2 -z-20 h-[10rem] w-[20rem] -translate-x-1/2 -translate-y-1/2 rounded-[50%] blur-3xl"></div>
         <Animate className="mx-auto max-w-md space-y-6 px-6 text-center md:max-w-screen-md md:py-20">
           <p className="mx-auto max-w-80 md:max-w-screen-md">
-            From beginner to advanced—master the skills, build your brand, and
-            start closing high-paying clients with confidence
+            Master the exact systems elite creators use to scale fast and
+            monetize their brands without chasing trends.
           </p>
           <Dialog>
             <DialogTrigger asChild className="mt-6">
-              <Button>Take Action</Button>
+              <Button>Get in touch now</Button>
             </DialogTrigger>
 
             <ScheduleDialog />

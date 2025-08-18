@@ -52,7 +52,7 @@ export default function FrequencyForm({
     <div className="flex min-h-[32rem] flex-col justify-center space-y-10">
       <DialogHeader className="gap-10">
         <div className="space-y-3">
-          <DialogTitle>Which niche are you in?</DialogTitle>
+          <DialogTitle>Are you currently creating content?</DialogTitle>
           <DialogDescription>
             Explain which niche are currently in or desire to be in.
           </DialogDescription>
