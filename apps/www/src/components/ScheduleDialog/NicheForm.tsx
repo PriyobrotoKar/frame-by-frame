@@ -49,7 +49,7 @@ export default function NicheForm({
         <div className="space-y-3">
           <DialogTitle>Which niche are you in?</DialogTitle>
           <DialogDescription>
-            Explain which niche are currently in or desire to be in.
+            Explain which niche you are currently in or desire to be in.
           </DialogDescription>
         </div>
       </DialogHeader>

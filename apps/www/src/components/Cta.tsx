@@ -14,7 +14,7 @@ export default function Cta() {
             Dominators.
           </span>{' '}
         </h2>
-        <p className="mx-auto max-w-80 md:max-w-screen-md">
+        <p className="mx-auto max-w-80 md:max-w-xl">
           Whether you&apos;re just starting out or scaling to eight figures, we
           give you the tools, strategy, and edge to dominate your market.
         </p>

@@ -3,7 +3,7 @@ import Animate from './Animate';
 
 export default function Stats() {
   return (
-    <section className="relative space-y-10 overflow-hidden px-0 py-40 md:py-60 lg:px-0">
+    <section className="relative space-y-10 overflow-hidden px-0 py-40 md:py-64 lg:px-0">
       <Animate
         className={
           'mx-auto mt-32 max-w-md space-y-5 text-center md:max-w-screen-md md:space-y-8'

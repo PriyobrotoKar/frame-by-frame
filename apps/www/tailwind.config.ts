@@ -120,9 +120,13 @@ export default {
           '0%': { transform: 'translateX(0%)' },
           '100%': { transform: 'translateX(-50%)' },
         },
+        gradient: {
+          to: { '--gradient-angle': '360deg' },
+        },
       },
       animation: {
         marque: 'marque var(--duration) linear infinite',
+        gradient: 'gradient 4s linear infinite',
       },
       borderRadius: {
         lg: 'var(--radius)',

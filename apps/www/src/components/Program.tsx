@@ -164,7 +164,7 @@ export default function Program() {
       <div className="relative overflow-hidden py-8">
         <div className="bg-accent/50 absolute bottom-28 left-1/2 top-1/2 -z-20 h-[10rem] w-[20rem] -translate-x-1/2 -translate-y-1/2 rounded-[50%] blur-3xl"></div>
         <Animate className="mx-auto max-w-md space-y-6 px-6 text-center md:max-w-screen-md md:py-20">
-          <p className="mx-auto max-w-80 md:max-w-screen-md">
+          <p className="mx-auto max-w-80 md:max-w-xl">
             Master the exact systems elite creators use to scale fast and
             monetize their brands without chasing trends.
           </p>

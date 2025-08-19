@@ -48,7 +48,7 @@ export default function InterestForm({
       <DialogHeader className="gap-10">
         <div className="space-y-3">
           <DialogTitle>
-            What makes you interested in working 1-on-1 with Dev & team.
+            What makes you interested in working 1-on-1 with Dev & his team.
           </DialogTitle>
           <DialogDescription>
             To understand and validate your expectations

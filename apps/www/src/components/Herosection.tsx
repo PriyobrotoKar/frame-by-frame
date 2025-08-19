@@ -29,7 +29,7 @@ export default function HeroSection() {
         </div>
         <Dialog>
           <DialogTrigger asChild className="mt-12">
-            <Button>Take Action</Button>
+            <Button>Book a Strategy Call</Button>
           </DialogTrigger>
 
           <ScheduleDialog />
@@ -59,6 +59,20 @@ export default function HeroSection() {
         <div className="hidden pt-20 md:block">
           <YoutubePlayer />
         </div>
+      </Animate>
+
+      <Animate className="mx-auto max-w-md space-y-6 px-6 text-center md:max-w-screen-md md:py-20">
+        <p className="mx-auto max-w-80 md:max-w-lg">
+          Plug into elite creator systems to grow faster and convert attention
+          into seven-figure revenue.
+        </p>
+        <Dialog>
+          <DialogTrigger asChild className="mt-6">
+            <Button>Book a Strategy Call</Button>
+          </DialogTrigger>
+
+          <ScheduleDialog />
+        </Dialog>
       </Animate>
     </section>
   );
