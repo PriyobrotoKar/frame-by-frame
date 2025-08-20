@@ -6,6 +6,7 @@ import { DialogFooter, DialogHeader, DialogTitle } from '../ui/dialog';
 import { useAtom } from 'jotai';
 import { scheduleMeetingAtom } from '@/lib/store';
 import { createContact, getBookings } from '@/app/actions/contact';
+import { createActionSecret } from '@/lib/utils';
 
 interface ScheduleFormProps {
   goToPreviousStep: () => void;
@@ -50,20 +51,18 @@ const ScheduleForm = ({
     bookedAt.setHours(twentyFourHour);
     bookedAt.setMinutes(parseInt(minute));
 
-    setScheduleMeeting((prev) => ({
-      ...prev,
-      bookedAt,
-    }));
-
     const data = {
       ...scheduleMeeting,
       bookedAt,
     };
 
-    await createContact(data);
+    const secret = await createActionSecret();
+    await createContact(data, secret);
 
     setIsSubmitting(false);
     setIsBookedSuccess(true);
+
+    setScheduleMeeting(null);
   };
 
   useEffect(() => {

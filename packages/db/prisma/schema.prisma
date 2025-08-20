@@ -454,7 +454,7 @@ model AttachmentTrash {
 model Contact {
   id               String @id @default(cuid())
   name             String
-  email            String @unique
+  email            String
   instagram        String
   niche            String
   contentFrequency String

@@ -31,8 +31,11 @@
       "outputs": []
     },
     "dev": {
-      "dependsOn": ["^db:generate"],
+      "dependsOn": ["^db:build", "^db:generate"],
       "persistent": true,
+      "cache": false
+    },
+    "db:build": {
       "cache": false
     },
     "db:generate": {

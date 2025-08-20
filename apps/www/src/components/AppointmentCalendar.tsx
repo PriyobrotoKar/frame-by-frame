@@ -128,11 +128,20 @@ export default function AppointmentCalendar({
           defaultMonth={date}
           startMonth={new Date()}
           endMonth={
-            new Date(new Date().getFullYear(), new Date().getMonth() + 1)
+            new Date(
+              new Date().getFullYear(),
+              new Date().getMonth(),
+              new Date().getDate() + 5,
+            )
           }
           disabled={[
             {
               before: new Date(),
+              after: new Date(
+                new Date().getFullYear(),
+                new Date().getMonth(),
+                new Date().getDate() + 5,
+              ),
             },
             ...fullBookedDates,
           ]}
