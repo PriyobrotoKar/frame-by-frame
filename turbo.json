@@ -17,7 +17,7 @@
     "AWS_BUCKET",
     "AWS_TEMP_BUCKET",
     "API_KEY",
-    "VERCEL_URL"
+    "VERCEL_PROJECT_PRODUCTION_URL"
   ],
   "ui": "tui",
   "tasks": {

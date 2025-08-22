@@ -2,8 +2,8 @@ import { google } from 'googleapis';
 import auth from '@/lib/googleAuth';
 import { v4 as uuidv4 } from 'uuid';
 
-const baseUrl = process.env.VERCEL_URL
-  ? `https://${process.env.VERCEL_URL}`
+const baseUrl = process.env.VERCEL_PROJECT_PRODUCTION_URL
+  ? `https://${process.env.VERCEL_PROJECT_PRODUCTION_URL}`
   : 'https://webhook.site/3a4329be-ca30-45ad-a9be-bdd0dd393651';
 
 export const watchCalender = async () => {
