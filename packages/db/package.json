@@ -13,7 +13,7 @@
     "db:studio-stage": "pnpx dotenv-cli -e ../../.env.staging -- prisma studio",
     "db:seed-sync": "pnpx dotenv-cli -e ../../.env -- pnpx @snaplet/seed sync",
     "db:seed": "pnpx dotenv-cli -e ../../.env -- pnpx tsx ./prisma/seed.ts",
-    "db:build": "pnpm run db:generate && tsc"
+    "db:build": "pnpm run db:generate && tsc -b"
   },
   "devDependencies": {
     "@frame-by-frame/eslint-config": "workspace:*",

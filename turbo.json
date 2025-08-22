@@ -21,7 +21,7 @@
   "ui": "tui",
   "tasks": {
     "build": {
-      "dependsOn": ["^build", "^db:generate"],
+      "dependsOn": ["^build", "^db:build"],
       "outputs": [".next/**", "!.next/cache/**"]
     },
     "format": {
