@@ -16,13 +16,15 @@ export default function YoutubePlayer() {
   return (
     <motion.div
       style={{ scale }}
-      className="aspect-video overflow-hidden rounded-lg"
+      className="relative aspect-video"
       ref={playerRef}
     >
+      <div className="from-background to-background animate-gradient absolute -inset-1 rounded-lg bg-[conic-gradient(from_var(--gradient-angle)_at_50%_45%,var(--tw-gradient-stops))] via-orange-400 to-70% blur-sm"></div>
       <ReactPlayer
         width={'100%'}
         height={'100%'}
         src={'https://youtu.be/Bfh3WL4dRA4?si=rQ2y8YPTE-yqbwFS'}
+        className="overflow-hidden rounded-lg"
       />
     </motion.div>
   );

@@ -1,4 +1,4 @@
-import SectionTitle from './SectionTitle';
+import Animate from './Animate';
 
 interface Testimonial {
   name: string;
@@ -74,11 +74,21 @@ export default function Testimonial() {
       </div>
 
       <main className="mx-auto max-w-screen-md space-y-20 overflow-hidden">
-        <SectionTitle
-          className="px-6"
-          title="Students Who Chose Greatness"
-          subtitle="DEFYING LIMITS"
-        />
+        <Animate
+          className={
+            'mx-auto mt-32 max-w-md space-y-5 text-center md:max-w-screen-sm md:space-y-8'
+          }
+        >
+          <p className="text-sm-semibold from-secondary via-primary to-secondary bg-gradient-to-r bg-clip-text tracking-widest text-transparent md:text-xl">
+            DEFYING LIMITS
+          </p>
+          <h2 className="text-h1 text-primary-foreground md:text-display">
+            People Who Chose to{' '}
+            <span className="from-primary via-secondary to-primary bg-gradient-to-r via-20% bg-clip-text text-transparent">
+              Dominate.
+            </span>{' '}
+          </h2>
+        </Animate>
 
         <div className="bg-accent/50 absolute bottom-28 left-1/2 h-[20rem] w-[30rem] -translate-x-1/2 rounded-[50%] blur-3xl"></div>
 

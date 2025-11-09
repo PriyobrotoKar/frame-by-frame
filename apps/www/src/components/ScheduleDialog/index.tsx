@@ -12,10 +12,8 @@ import InterestForm from './InterestForm';
 import AmountInvestForm from './AmountInvestForm';
 import ScheduleForm from './ScheduleForm';
 import { cn } from '@/lib/utils';
-import { getContact } from '@/app/actions/contact';
 import { useAtomValue, useSetAtom } from 'jotai';
 import { scheduleMeetingAtom, stepAtom } from '@/lib/store';
-import AlreadyContacted from './AlreadyContacted';
 import SavedProgress from './SavedProgress';
 import MeetingBooked from './MeetingBooked';
 
@@ -36,7 +34,6 @@ export default function ScheduleDialog() {
   const [step, setStep] = useState(0);
 
   const [isBookedSuccess, setIsBookedSuccess] = useState<boolean>(false);
-  const [isAlreadyContacted, setIsAlreadyContacted] = useState(false);
   const [hasSavedProgress, setHasSavedProgress] = useState(false);
   const scheduleMeeting = useAtomValue(scheduleMeetingAtom);
 
@@ -50,23 +47,6 @@ export default function ScheduleDialog() {
   const goToPreviousStep = () => {
     setStep((prevStep) => Math.max(prevStep - 1, 0));
   };
-
-  useEffect(() => {
-    async function fetchContact() {
-      if (!scheduleMeeting?.email) return;
-
-      try {
-        const res = await getContact(scheduleMeeting.email);
-        if (res.data) {
-          setIsAlreadyContacted(true);
-        }
-      } catch (error) {
-        console.error(error);
-      }
-    }
-
-    fetchContact();
-  }, [scheduleMeeting?.email]);
 
   useEffect(() => {
     if (scheduleMeeting) return;
@@ -85,7 +65,6 @@ export default function ScheduleDialog() {
   }, []);
 
   if (isBookedSuccess) return <MeetingBooked />;
-  if (isAlreadyContacted) return <AlreadyContacted />;
   if (hasSavedProgress)
     return (
       <SavedProgress
@@ -104,7 +83,6 @@ export default function ScheduleDialog() {
       )}
     >
       <Form
-        setIsAlreadyContacted={setIsAlreadyContacted}
         goToNextStep={goToNextStep}
         goToPreviousStep={goToPreviousStep}
         setIsBookedSuccess={setIsBookedSuccess}

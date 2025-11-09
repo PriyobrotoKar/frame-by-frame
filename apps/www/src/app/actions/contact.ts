@@ -10,6 +10,7 @@ import z from 'zod';
 import { db } from '@frame-by-frame/db';
 import { addToSheet } from './addToSheet';
 import { addToCalender } from './addToCalender';
+import { verifyActionSecret } from '@/lib/utils';
 
 const schema = z.object({
   name: z.string().min(2).max(100),
@@ -27,19 +28,11 @@ const schema = z.object({
 
 export type SchemaType = z.infer<typeof schema>;
 
-export const createContact = async (data: ScheduleMeeting) => {
+export const createContact = async (data: ScheduleMeeting, secret: string) => {
   try {
+    await verifyActionSecret(secret);
+
     const parsedData = await schema.parseAsync(data);
-
-    const isAlreadySchduled = await db.contact.findUnique({
-      where: {
-        email: parsedData.email,
-      },
-    });
-
-    if (isAlreadySchduled) {
-      throw new Error('Contact already exists');
-    }
 
     const [sheetData, calenderData] = await Promise.all([
       addToSheet({
@@ -83,25 +76,6 @@ export const createContact = async (data: ScheduleMeeting) => {
     console.error('Error creating contact:', error);
     return {
       error: 'Failed to create contact',
-    };
-  }
-};
-
-export const getContact = async (email: string) => {
-  try {
-    const contact = await db.contact.findUnique({
-      where: {
-        email,
-      },
-    });
-
-    return {
-      data: contact,
-    };
-  } catch (error) {
-    console.error('Error fetching contact:', error);
-    return {
-      error: 'Failed to fetch contact',
     };
   }
 };

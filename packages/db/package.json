@@ -2,9 +2,8 @@
   "name": "@frame-by-frame/db",
   "version": "1.0.0",
   "description": "",
-  "exports": {
-    ".": "./src/index.ts"
-  },
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
   "scripts": {
     "db:generate": "prisma generate",
     "db:migrate": "pnpx dotenv-cli -e ../../.env -- prisma migrate dev",
@@ -13,7 +12,8 @@
     "db:migrate-stage": "pnpx dotenv-cli -e ../../.env.staging -- prisma migrate deploy",
     "db:studio-stage": "pnpx dotenv-cli -e ../../.env.staging -- prisma studio",
     "db:seed-sync": "pnpx dotenv-cli -e ../../.env -- pnpx @snaplet/seed sync",
-    "db:seed": "pnpx dotenv-cli -e ../../.env -- pnpx tsx ./prisma/seed.ts"
+    "db:seed": "pnpx dotenv-cli -e ../../.env -- pnpx tsx ./prisma/seed.ts",
+    "db:build": "pnpm run db:generate && tsc -b"
   },
   "devDependencies": {
     "@frame-by-frame/eslint-config": "workspace:*",

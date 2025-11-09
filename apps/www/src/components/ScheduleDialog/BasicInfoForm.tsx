@@ -15,7 +15,6 @@ import { Instagram, MailIcon, UserIcon } from 'lucide-react';
 import Image from 'next/image';
 import { useAtom } from 'jotai';
 import { scheduleMeetingAtom } from '@/lib/store';
-import { getContact } from '@/app/actions/contact';
 import { useState } from 'react';
 
 const schema = z.object({
@@ -27,13 +26,9 @@ const schema = z.object({
 interface BasicInfoFormProps {
   goToNextStep: () => void;
   goToPreviousStep: () => void;
-  setIsAlreadyContacted: (value: boolean) => void;
 }
 
-export default function BasicInfoForm({
-  goToNextStep,
-  setIsAlreadyContacted,
-}: BasicInfoFormProps) {
+export default function BasicInfoForm({ goToNextStep }: BasicInfoFormProps) {
   const [scheduleMeeting, setScheduleMeeting] = useAtom(scheduleMeetingAtom);
   const [isSubmitting, setIsSubmitting] = useState(false);
 
@@ -46,21 +41,9 @@ export default function BasicInfoForm({
     },
   });
 
-  async function fetchContact(data: z.infer<typeof schema>) {
-    try {
-      const res = await getContact(data.email);
-      if (res.data) {
-        setIsAlreadyContacted(true);
-      }
-    } catch (error) {
-      console.error(error);
-    }
-  }
-
   const handleSubmit = form.handleSubmit(async (data) => {
     setIsSubmitting(true);
 
-    await fetchContact(data);
     setScheduleMeeting((prev) => ({
       ...prev,
       ...data,

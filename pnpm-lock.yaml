@@ -378,6 +378,9 @@ importers:
       googleapis:
         specifier: ^144.0.0
         version: 144.0.0
+      jose:
+        specifier: ^6.0.10
+        version: 6.0.11
       jotai:
         specifier: ^2.12.5
         version: 2.12.5(@types/react@19.1.8)(react@19.1.0)
