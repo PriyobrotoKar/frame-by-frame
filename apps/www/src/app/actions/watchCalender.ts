@@ -8,6 +8,7 @@ const baseUrl = process.env.VERCEL_PROJECT_PRODUCTION_URL
 
 export const watchCalender = async () => {
   try {
+    console.log('Creating calendar watch...');
     const calendar = google.calendar({ version: 'v3', auth });
 
     const response = await calendar.events.watch({
@@ -20,6 +21,7 @@ export const watchCalender = async () => {
     });
 
     console.log(response.data);
+    console.log('Watching for calendar events...');
   } catch (error) {
     console.error(error);
   }
