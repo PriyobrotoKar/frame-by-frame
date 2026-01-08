@@ -1,7 +1,7 @@
 'use client';
 import { useScroll, useTransform, motion } from 'motion/react';
+import MuxPlayer from '@mux/mux-player-react';
 import React, { useRef } from 'react';
-import ReactPlayer from 'react-player';
 
 export default function YoutubePlayer() {
   const playerRef = useRef(null);
@@ -16,16 +16,29 @@ export default function YoutubePlayer() {
   return (
     <motion.div
       style={{ scale }}
-      className="relative aspect-video"
+      className="relative aspect-video w-full"
       ref={playerRef}
     >
-      <div className="from-background to-background animate-gradient absolute -inset-1 rounded-lg bg-[conic-gradient(from_var(--gradient-angle)_at_50%_45%,var(--tw-gradient-stops))] via-orange-400 to-70% blur-sm"></div>
-      <ReactPlayer
-        width={'100%'}
-        height={'100%'}
-        src={'https://youtu.be/Bfh3WL4dRA4?si=rQ2y8YPTE-yqbwFS'}
-        className="overflow-hidden rounded-lg"
-      />
+      <div className="animated-border-box-glow"></div>
+      <div className="animated-border-box flex items-center justify-center">
+        <div
+          style={{ width: 'calc(100% - 10px)', height: 'calc(100% - 10px)' }}
+          className="overflow-hidden rounded-lg"
+        >
+          <MuxPlayer
+            style={
+              {
+                '--bottom-controls': 'none',
+              } as React.CSSProperties
+            }
+            className="block object-cover"
+            defaultHiddenCaptions={true}
+            playbackId="ojsqNncHjLj01SEVP4z7bo1P2kGnf02500JCBNEBvFccvs"
+            poster="https://image.mux.com/ojsqNncHjLj01SEVP4z7bo1P2kGnf02500JCBNEBvFccvs/thumbnail.png?width=800&height=400&time=9"
+            accentColor="#2F1D17"
+          />
+        </div>
+      </div>
     </motion.div>
   );
 }

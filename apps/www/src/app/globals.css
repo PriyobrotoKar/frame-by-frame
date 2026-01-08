@@ -87,27 +87,25 @@ body {
   overflow: hidden;
 }
 
-.secondary-btn-animation:hover::before {
-  translate: 0;
-  transition-duration: 0.05s;
-  transition-delay: 0.4s;
-}
+/*.secondary-btn-animation:hover::before {
+  transition: scale 0.4s ease-in-out;
+  scale: 0;
+}*/
 
 .secondary-btn-animation:hover::after {
   scale: 1;
-  transition: scale 0.4s ease-in-out;
 }
 
-.secondary-btn-animation::before {
+/*.secondary-btn-animation::before {
   content: '';
   position: absolute;
   z-index: -10;
   width: 100%;
   height: 100%;
-  background-color: hsl(var(--foreground));
+  background-color: hsl(var(--primary-foreground));
   transition: translate 0.4s ease-in-out;
   translate: 0 -100%;
-}
+}*/
 
 .secondary-btn-animation::after {
   content: '';
@@ -115,10 +113,11 @@ body {
   z-index: -10;
   width: 100%;
   aspect-ratio: 1 / 1;
-  background-color: hsl(var(--foreground));
+  background-color: hsl(var(--primary-foreground));
   border-radius: 50%;
   transform-origin: center bottom;
   scale: 0;
+  transition: scale 0.4s ease-in-out;
 }
 
 input:-webkit-autofill,
@@ -138,4 +137,68 @@ select:-webkit-autofill:focus {
   transition: background-color 5000s ease-in-out 0s;
   color: hsl(var(--foreground));
   caret-color: hsl(var(--foreground));
+}
+
+/*// Glow Border Animation //*/
+
+.animated-border-box,
+.animated-border-box-glow {
+  height: 100%;
+  width: 100%;
+  position: absolute;
+  overflow: hidden;
+  z-index: 0;
+  /* Border Radius */
+  border-radius: 10px;
+}
+
+.animated-border-box-glow {
+  overflow: hidden;
+  /* Glow Blur */
+  filter: blur(90px);
+}
+
+.animated-border-box:before,
+.animated-border-box-glow:before {
+  content: '';
+  z-index: -2;
+  text-align: center;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%) rotate(0deg);
+  position: absolute;
+  width: 200%;
+  height: 200%;
+  background-repeat: no-repeat;
+  background-position: 0 0;
+  /*border color, change middle color*/
+  background-image: conic-gradient(
+    rgba(0, 0, 0, 0),
+    hsl(var(--primary)),
+    rgba(0, 0, 0, 0) 25%
+  );
+  /* change speed here */
+  animation: rotate 4s linear infinite;
+}
+
+.animated-border-box:after {
+  content: '';
+  position: absolute;
+  z-index: -1;
+  /* border width */
+  left: 5px;
+  top: 5px;
+  /* double the px from the border width left */
+  width: calc(100% - 10px);
+  height: calc(100% - 10px);
+  /*bg color*/
+  background: #292a2e;
+  /*box border radius*/
+  border-radius: 7px;
+}
+
+@keyframes rotate {
+  100% {
+    transform: translate(-50%, -50%) rotate(1turn);
+  }
 }

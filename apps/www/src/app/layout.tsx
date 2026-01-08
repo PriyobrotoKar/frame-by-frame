@@ -3,6 +3,7 @@ import './globals.css';
 import Header from '@/components/Header';
 import { Inter } from '@/fonts';
 import { Toaster } from '@/components/ui/sonner';
+import { TooltipProvider } from '@/components/ui/tooltip';
 
 export const metadata: Metadata = {
   title: 'Domicon',
@@ -20,8 +21,10 @@ export default function RootLayout({
       <body
         className={` ${Inter.className} md:text-body overflow-x-hidden text-xs antialiased md:font-normal`}
       >
-        <Header />
-        {children}
+        <TooltipProvider>
+          <Header />
+          {children}
+        </TooltipProvider>
         <Toaster richColors />
       </body>
     </html>

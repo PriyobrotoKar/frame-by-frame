@@ -1,5 +1,6 @@
 import Image from 'next/image';
 import { Button } from './ui/button';
+import { Tooltip, TooltipContent, TooltipTrigger } from './ui/tooltip';
 
 export default function Header() {
   return (
@@ -14,11 +15,16 @@ export default function Header() {
         />
       </div>
       <div className="hidden md:block">
-        <a href="https://discord.gg/devgotmoney">
-          <Button variant={'outline'} size={'sm'}>
-            Join Discord
-          </Button>
-        </a>
+        <Tooltip>
+          <TooltipTrigger>
+            <Button variant={'outline'} size={'sm'} disabled>
+              Join Community
+            </Button>
+          </TooltipTrigger>
+          <TooltipContent>
+            <p>Coming Soon</p>
+          </TooltipContent>
+        </Tooltip>
       </div>
     </header>
   );
