@@ -31,7 +31,7 @@ export default function YoutubePlayer() {
                 '--bottom-controls': 'none',
               } as React.CSSProperties
             }
-            className="block object-cover"
+            className="block h-[101%] object-cover"
             defaultHiddenCaptions={true}
             playbackId="ojsqNncHjLj01SEVP4z7bo1P2kGnf02500JCBNEBvFccvs"
             poster="https://image.mux.com/ojsqNncHjLj01SEVP4z7bo1P2kGnf02500JCBNEBvFccvs/thumbnail.png?width=800&height=400&time=9"
