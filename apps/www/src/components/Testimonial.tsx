@@ -76,7 +76,7 @@ export default function Testimonial() {
       <main className="mx-auto max-w-screen-md space-y-20 overflow-hidden">
         <Animate
           className={
-            'mx-auto mt-32 max-w-md space-y-5 text-center md:max-w-screen-sm md:space-y-8'
+            'mx-auto mt-20 max-w-md space-y-5 text-center md:max-w-screen-sm md:space-y-8'
           }
         >
           <p className="text-sm-semibold from-secondary via-primary to-secondary bg-gradient-to-r bg-clip-text tracking-widest text-transparent md:text-xl">

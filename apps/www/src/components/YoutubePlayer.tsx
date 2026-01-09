@@ -23,7 +23,7 @@ export default function YoutubePlayer() {
       <div className="animated-border-box flex items-center justify-center">
         <div
           style={{ width: 'calc(100% - 10px)', height: 'calc(100% - 10px)' }}
-          className="overflow-hidden rounded-lg"
+          className="flex items-center justify-center overflow-hidden rounded-lg"
         >
           <MuxPlayer
             style={
@@ -31,7 +31,8 @@ export default function YoutubePlayer() {
                 '--bottom-controls': 'none',
               } as React.CSSProperties
             }
-            className="block h-[101%] object-cover"
+            className="block h-[103%]"
+            playsInline
             defaultHiddenCaptions={true}
             playbackId="ojsqNncHjLj01SEVP4z7bo1P2kGnf02500JCBNEBvFccvs"
             poster="https://image.mux.com/ojsqNncHjLj01SEVP4z7bo1P2kGnf02500JCBNEBvFccvs/thumbnail.png?width=800&height=400&time=9"

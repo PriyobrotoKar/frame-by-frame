@@ -95,6 +95,7 @@ export default function Program() {
               <video
                 src={'/reels/reel-1.mp4'}
                 autoPlay
+                playsInline
                 loop
                 muted
                 width={300}
@@ -114,6 +115,7 @@ export default function Program() {
                 src={'/reels/reel-2.mp4'}
                 loop
                 autoPlay
+                playsInline
                 muted
                 width={300}
                 height={600}
@@ -131,6 +133,7 @@ export default function Program() {
               <video
                 src={'/reels/reel-3.mp4'}
                 autoPlay
+                playsInline
                 loop
                 muted
                 width={300}
@@ -161,8 +164,8 @@ export default function Program() {
           );
         })}
       </Animate>
-      <div className="relative overflow-hidden py-8">
-        <div className="bg-accent/50 absolute bottom-28 left-1/2 top-1/2 -z-20 h-[10rem] w-[20rem] -translate-x-1/2 -translate-y-1/2 rounded-[50%] blur-3xl"></div>
+      <div className="relative !mt-8 py-20">
+        <div className="bg-accent/50 absolute bottom-40 left-1/2 top-1/2 -z-20 h-[10rem] w-[20rem] -translate-x-1/2 -translate-y-1/2 rounded-[50%] blur-3xl"></div>
         <Animate className="mx-auto max-w-md space-y-6 px-6 text-center md:max-w-screen-md md:py-20">
           <p className="mx-auto max-w-80 md:max-w-xl">
             Master the exact systems elite creators use to scale fast and
